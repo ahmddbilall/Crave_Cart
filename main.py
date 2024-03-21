@@ -2,17 +2,35 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
+
+
+
+
+
+
+
+
+
+
 @app.route('/')
-def index():
+def home():
     return render_template('index.html')
 
 
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/menu')
+def menu():
+    return render_template('menu.html')
 
 
+@app.route('/book')
+def book():
+    return render_template('book.html')
 
-
-#store pdfs in local mechine and in table just store the location of these pdfs. as pdfs are non structural dataset it is not recommended to store pdfs in tables.
 
 if __name__ == '__main__':
     app.run(debug=True,port = 5001)
