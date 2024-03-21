@@ -8,6 +8,7 @@ This project is being developed by a team of students as part of the "Database" 
 
 - [**Bilal Ahmad**](https://github.com/ahmddbilall)
 - [**Akhyar Chaudhary**](https://github.com/mac-360)
+- [**Talha Asif**](https://github.com/MuhammadTalhaAsif002)
 
 
 
