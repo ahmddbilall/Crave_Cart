@@ -1,0 +1,61 @@
+1. Users Table( UserID (Primary Key), Email ,Password (can be encrypted) , Name, Address, Phone, RegistrationDate, UserType (customer, Resturant) )
+
+2. Restaurants Table ( RestaurantID (Primary Key), Name, Description, Address, Phone, Website, OpeningHours )
+
+3. Menus Table ( MenuID (Primary Key), RestaurantID (Foreign Key), ItemName, Description, Price, Category)
+
+4. Orders Table ( OrderID (Primary Key), UserID (Foreign Key), RestaurantID (Foreign Key), OrderDate, TotalAmount, Status (pending, confirmed, delivered), DeliveryMethod (delivery, pickup, dine-in), SpecialRequests)
+
+5. OrderItems Table( OrderItemID (Primary Key)
+   - OrderID (Foreign Key)
+   - MenuID (Foreign Key)
+   - Quantity
+   - Subtotal
+
+6. *Reviews Table*:
+   - ReviewID (Primary Key)
+   - UserID (Foreign Key)
+   - RestaurantID (Foreign Key)
+   - Rating
+   - Comment
+   - ReviewDate
+
+7. *Favorites Table*:
+   - FavoriteID (Primary Key)
+   - UserID (Foreign Key)
+   - RestaurantID (Foreign Key)
+
+8. *Promotions Table*:
+   - PromotionID (Primary Key)
+   - RestaurantID (Foreign Key)
+   - Description
+   - Discount
+   - StartDate
+   - EndDate
+
+9. *Admins Table*:
+   - AdminID (Primary Key)
+   - Email
+   - Password (encrypted)
+   - RestaurantID (Foreign Key)
+
+10. *Recommendations Table*:
+   - RecommendationID (Primary Key)
+   - UserID (Foreign Key)
+   - RecommendedItemID
+   - RecommendationScore
+
+11. *CustomerSupportTickets Table*:
+   - TicketID (Primary Key)
+   - UserID (Foreign Key)
+   - IssueDescription
+   - Status
+   - AssignedTo
+   - Resolution
+
+12. *Locations Table*:
+   - LocationID (Primary Key)
+   - Latitude
+   - Longitude
+   - Address
+   - RestaurantID (Foreign Key)
