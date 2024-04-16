@@ -1,4 +1,4 @@
-1. Users Table( UserID (Primary Key), Email ,Password (can be encrypted) , Name, Address, Phone, RegistrationDate, UserType (customer, Resturant) )
+1. Users Table( UserID (Primary Key), Email ,Password (can be encrypted) , Name, Address, Phone, RegistrationDate )
 
 2. Restaurants Table ( RestaurantID (Primary Key), Name, Description, Address, Phone, Website, OpeningHours )
 

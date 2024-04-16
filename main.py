@@ -1,63 +1,168 @@
-from flask import Flask, render_template, request, redirect, url_for
-from sqlalchemy.orm import sessionmaker
-from DataBase import User
+from flask import Flask, render_template, redirect, request, session,flash,url_for
+import secrets
+import Database 
+import helpingFunctions
+from datetime import date
 
+secret_key = secrets.token_hex(16)
 app = Flask(__name__)
+app.secret_key = secret_key
+currentUser = ''
 
-session = sessionmaker()
+        
+        
+@app.route('/home')
+def home():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('home.html')
+
+
+
+
+@app.route('/search')
+def search():
+    return render_template('search.html')
+
+
+@app.route('/recommendation')
+def Recommendation():
+    return render_template('recommendation.html')
+
+@app.route('/favourites')
+def Favourites():
+    return render_template('favourites.html')
+
+@app.route('/discounts')
+def discounts():
+    return render_template('discounts.html')
+
+
+@app.route('/cart')
+def cart():
+    return render_template('cart.html')
+  
 
 
 
 @app.route('/')
-def home():
-    return render_template('index.html')
+def login_redirect():
+    if 'username' in session:
+        if currentUser == 'User':
+            return redirect(url_for('home'))
+        else:
+            return redirect(url_for('restaurantHome'))
+    return redirect(url_for('login'))
+
+
+
+
+
+
+
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if 'username' not in session:
+        return redirect('/login')
+    return render_template('profile.html', username=session['username'])
+
+
+
+
+
+
+
+
+
+
+
+#a seperate view for resturant
+
+
+
+@app.route('/restaurantHome')
+def restaurantHome():
+    return render_template('restaurantHome.html')
+
+
+
+
+@app.route('/logout')
+def logout():
+    session.pop('username', None)
+    return redirect('/')
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return render_template('404.html'), 404
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
     if request.method == 'POST':
-        username = request.form['username']
+        account_type = request.form['account-type']
         email = request.form['email']
         password = request.form['password']
+        confirm_password = request.form['confirm-password']
 
-        if session.query(User).filter_by(email=email).first():
-            return render_template('signup.html', message='Email already exists. Please choose a different email.')
-        
-        new_user = User(username=username, email=email, password=password)
-        session.add(new_user)
-        session.commit()
-        
-        return redirect(url_for('login'))
+        if not helpingFunctions.validate_email(email):
+            flash('Invalid email format', 'error')
+            return redirect(url_for('signup'))
 
+        if password != confirm_password:
+            flash('Password and confirm password do not match', 'error')
+            return redirect(url_for('signup'))
+        
+
+        if Database.email_exists(email):
+            flash('User with this email already exists', 'error')
+            return redirect(url_for('signup'))
+
+        registration_date = date.today().strftime("%Y-%m-%d")
+        if account_type == 'user':
+            status =Database.insert_user(email=email,password=password,registration_date=registration_date)
+            if status == '':
+                flash('User added successfully','success')
+                session['username'] = email
+                return redirect(url_for('home'))
+            else:
+                flash(status,'error')
+        elif account_type == 'restaurant':
+            status =Database.insert_restaurants(email=email,password=password,registration_date=registration_date)
+            if status == '':
+                flash('Restaurant added successfully','success')
+                session['username'] = email
+                return redirect(url_for('home'))
+            
+            else:
+                flash(status,'error')
     return render_template('signup.html')
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-
-        user = session.query(User).filter_by(email=email, password=password).first()
-        if user:
-            return redirect(url_for('/'))
+        status = Database.login_check(email=email,password=password)
+    
+        if status == 'User' or status == 'Restaurant':
+            currentUser = status
+            if (currentUser == 'User'):
+                session['username'] = email
+                return redirect(url_for('home'))
+            else:
+                session['username'] = email
+                return redirect(url_for('restaurantHome'))
         else:
-            return render_template('login.html', message='Invalid email or password. Please try again.')
-
+            flash(status,'error')
     return render_template('login.html')
 
 
-@app.route('/about')
-def about():
-    return render_template('about.html')
 
-@app.route('/menu')
-def menu():
-    return render_template('menu.html')
-
-
-@app.route('/book')
-def book():
-    return render_template('book.html')
 
 
 if __name__ == '__main__':
-    app.run(debug=True,port = 5001)
+    Database.create_tables()
+    app.run(debug=True, port=5001)
+    
