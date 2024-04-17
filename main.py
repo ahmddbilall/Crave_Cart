@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, session,flash,url_for
 import secrets
-import Database 
+import DataBase
 import helpingFunctions
 from datetime import date
 
@@ -22,24 +22,34 @@ def home():
 
 @app.route('/search')
 def search():
+    if 'username' not in session:
+        return redirect('/login')
     return render_template('search.html')
 
 
 @app.route('/recommendation')
 def Recommendation():
+    if 'username' not in session:
+        return redirect('/login')
     return render_template('recommendation.html')
 
 @app.route('/favourites')
 def Favourites():
+    if 'username' not in session:
+        return redirect('/login')
     return render_template('favourites.html')
 
 @app.route('/discounts')
 def discounts():
+    if 'username' not in session:
+        return redirect('/login')
     return render_template('discounts.html')
 
 
 @app.route('/cart')
 def cart():
+    if 'username' not in session:
+        return redirect('/login')
     return render_template('cart.html')
   
 
@@ -48,10 +58,13 @@ def cart():
 @app.route('/')
 def login_redirect():
     if 'username' in session:
-        if currentUser == 'User':
+        user = DataBase.EmailCheck(session['username'])
+        if user == 'User':
             return redirect(url_for('home'))
-        else:
+        elif user == 'Restaurant':
             return redirect(url_for('restaurantHome'))
+        else:
+            redirect(url_for('login'))
     return redirect(url_for('login'))
 
 
@@ -82,6 +95,8 @@ def profile():
 
 @app.route('/restaurantHome')
 def restaurantHome():
+    if 'username' not in session:
+        return redirect('/login')
     return render_template('restaurantHome.html')
 
 
@@ -114,13 +129,13 @@ def signup():
             return redirect(url_for('signup'))
         
 
-        if Database.email_exists(email):
+        if DataBase.email_exists(email):
             flash('User with this email already exists', 'error')
             return redirect(url_for('signup'))
 
         registration_date = date.today().strftime("%Y-%m-%d")
         if account_type == 'user':
-            status =Database.insert_user(email=email,password=password,registration_date=registration_date)
+            status =DataBase.insert_user(email=email,password=password,registration_date=registration_date)
             if status == '':
                 flash('User added successfully','success')
                 session['username'] = email
@@ -128,7 +143,7 @@ def signup():
             else:
                 flash(status,'error')
         elif account_type == 'restaurant':
-            status =Database.insert_restaurants(email=email,password=password,registration_date=registration_date)
+            status =DataBase.insert_restaurants(email=email,password=password,registration_date=registration_date)
             if status == '':
                 flash('Restaurant added successfully','success')
                 session['username'] = email
@@ -144,7 +159,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        status = Database.login_check(email=email,password=password)
+        status = DataBase.login_check(email=email,password=password)
     
         if status == 'User' or status == 'Restaurant':
             currentUser = status
@@ -163,6 +178,6 @@ def login():
 
 
 if __name__ == '__main__':
-    Database.create_tables()
+    DataBase.create_tables()
     app.run(debug=True, port=5001)
     

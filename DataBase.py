@@ -91,6 +91,22 @@ def login_check(email,password):
     except Exception as e:
         return f'Error: {str(e)}'
 
+def EmailCheck(email):
+    try:
+        cursor.execute('''SELECT * FROM Users Where email=?;''',[email])
+        user_data = cursor.fetchone()
+        if user_data:
+            return 'User'
+
+        cursor.execute('''SELECT * FROM Restaurants Where email=?;;''',[email])
+        user_data = cursor.fetchone()
+        if user_data:
+            return 'Restaurant'
+
+        return 'No data found with this email and password'
+    except Exception as e:
+        return f'Error: {str(e)}'
+
 
 def close_connection():
     connection.close()
