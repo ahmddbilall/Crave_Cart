@@ -5,7 +5,8 @@ cursor = connection.cursor()
 
 def create_tables():
     cursor.execute('''CREATE TABLE IF NOT EXISTS Users (
-                        Email TEXT PRIMARY KEY,
+                        UserID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Email TEXT,
                         Password TEXT,
                         Name TEXT,
                         Address TEXT,
@@ -14,7 +15,8 @@ def create_tables():
                     );''')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS Restaurants (
-                        Email TEXT PRIMARY KEY,
+                        RestaurantID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Email TEXT,
                         Name TEXT,
                         Password TEXT,
                         Description TEXT,
@@ -24,6 +26,33 @@ def create_tables():
                         OpeningHours TEXT,
                         RegistrationDate TEXT
                     );''')
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Menus (
+                        MenuID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        RestaurantID INTEGER,
+                        ItemName TEXT,
+                        Description TEXT,
+                        Price REAL,
+                        Category TEXT,
+                        ImagePNG TEXT,
+                        ImageJPG TEXT,
+                        FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID)
+                    );''')
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Promotions (
+                        PromotionID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        RestaurantID INTEGER,
+                        PromotionName TEXT,
+                        MenuID INTEGER,
+                        Description TEXT,
+                        Discount REAL,
+                        StartDate TEXT,
+                        EndDate TEXT,
+                        FOREIGN KEY (RestaurantID) REFERENCES Restaurants (RestaurantID),
+                        FOREIGN KEY (MenuID) REFERENCES Menus (MenuID)
+                    );''')
+    
+    
 
 
 
@@ -106,6 +135,35 @@ def EmailCheck(email):
         return 'No data found with this email and password'
     except Exception as e:
         return f'Error: {str(e)}'
+
+
+
+def get_menu_data(limit=100):
+    try:
+        cursor.execute('''SELECT ItemName, Description, Price, ImagePNG ,Category  FROM Menus LIMIT ?''',[limit])
+        return cursor.fetchall()
+    except sqlite3.Error as e:
+        print("Error fetching data from database:", e)
+        print('here')
+        return []
+
+
+def get_active_promotions(current_date,limit=100):
+    try:
+        cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
+                        WHERE p.StartDate <= ? AND p.EndDate >= ? Limit ?""", [current_date, current_date,limit])
+        rows = cursor.fetchall()
+        promotions_data = []
+        for row in rows:
+            promotion_name, price, discount, image = row
+            discounted_price = price * (1 - discount / 100)
+            promotions_data.append({'PromotionName': promotion_name,'Price': price,'Discount': discount,'Image': image,'DiscountedPrice': discounted_price})
+        return promotions_data
+    except sqlite3.Error as e:
+        print("Error fetching data from database:", e)
+        print('here2')
+        
+        return []
 
 
 def close_connection():

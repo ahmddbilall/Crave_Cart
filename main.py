@@ -4,10 +4,10 @@ import DataBase
 import helpingFunctions
 from datetime import date
 
+
 secret_key = secrets.token_hex(16)
 app = Flask(__name__)
 app.secret_key = secret_key
-currentUser = ''
 
         
         
@@ -15,7 +15,10 @@ currentUser = ''
 def home():
     if 'username' not in session:
         return redirect(url_for('login'))
-    return render_template('home.html')
+    
+    data = DataBase.get_menu_data(limit=10)
+    Pro = DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"), limit=2)
+    return render_template('home.html',menu_data=data,Promotions=Pro)
 
 
 
