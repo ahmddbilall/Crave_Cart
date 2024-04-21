@@ -27,30 +27,37 @@ def home():
 def search():
     if 'username' not in session:
         return redirect('/login')
-    print('I am in search')
-    if request.method == 'POST':
-        print('i am in post')
-        input = request.form['search-input']
-        print(input)
-        data = DataBase.getItemSearch(name=input)
-        print(data)
-    else:
-        print('I am in search all')
-        data = DataBase.get_menu_data(all=True)
     
-    return render_template('search.html', menu=data)
+    if request.method == 'POST':
+        input = request.form['search-input']
+        data = DataBase.getItemSearch(name=input)
+        if len(data) == 0:
+            data = DataBase.get_menu_data(all=True)
+            flash('Nothing found related to '+str(input),'error')
+            dataView = 'all'
+        else:
+            dataView = input
+    else:
+        data = DataBase.get_menu_data(all=True)
+        dataView = 'all'        
+    return render_template('search.html', menu=data,dataView=dataView)
 
-'''
-@app.route('/handle-search-input',methods=['GET','POST'])
-def searchItem():
+
+@app.route('/handle-Add-to-cart-from-search',methods=['GET','POST'])
+def addToCartSearch():
     if 'username' not in session:
         return redirect('/login')
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    Price = request.args.get('Price')
+    CustomerEmail = session['username'] 
     
-    inputValue = request.args.get('inputValue')
-    result = DataBase.getItemSearch(name=inputValue)
-    print(result)
-    return render_template('search.html',menu=result)
-'''
+    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail)
+    if output =='Item added to cart successfully!':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/search')
 
 @app.route('/handle-Add-to-cart-from-home',methods=['GET','POST'])
 def addToCartHome():
@@ -61,10 +68,12 @@ def addToCartHome():
     Description = request.args.get('Description')
     Price = request.args.get('Price')
     CustomerEmail = session['username'] 
-    if DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail):
-        flash('Item added to cart successfully!', 'success')
+    
+    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail)
+    if output =='Item added to cart successfully!':
+        flash(output, 'success')
     else:
-        flash('Item not addded in cart!', 'error')
+        flash(output, 'error')
     return redirect('/home')
 
 @app.route('/handle-Add-to-cart-Promotion-from-home',methods=['GET','POST'])
@@ -75,13 +84,14 @@ def addToCartPromotionHome():
     PromotionTitle = request.args.get('PromotionName')
     discounts = request.args.get('discount')
     CustomerEmail = session['username'] 
-    print(PromotionTitle,discounts,CustomerEmail)
-    if DataBase.addToCartPromotion(PromotionTitle=PromotionTitle,discounts=discounts,CustomerEmail=CustomerEmail):
-        flash('Item added to cart successfully!', 'success')
+    
+    output = DataBase.DataBase.addToCartPromotion(PromotionTitle=PromotionTitle,discounts=discounts,CustomerEmail=CustomerEmail)
+    if output =='Item added to cart successfully!':
+        flash(output, 'success')
     else:
-        flash('Item not addded in cart!', 'error')
+        flash(output, 'error')
     return redirect('/home')
-
+    
 
 
 @app.route('/recommendation')
@@ -115,6 +125,9 @@ def discounts():
 def cart():
     if 'username' not in session:
         return redirect('/login')
+    
+    data = DataBase.get_all_cart(session['username'])
+    
     return render_template('cart.html')
   
 

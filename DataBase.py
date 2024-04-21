@@ -191,12 +191,15 @@ def addToCart(menu_title,Description,Price,CustomerEmail,instructions=''):
         id = cursor.fetchone()[0]
         cursor.execute('''SELECT CustomerID FROM Customers where Email=?;''',[CustomerEmail])
         Cid = cursor.fetchone()[0]
+        cursor.execute('''SELECT * FROM Cart where Menuid=? and CustomerId =?;''',[id,Cid])
+        if cursor.fetchone():
+            return 'Item already added'
         cursor.execute('''INSERT INTO Cart (Menuid, CustomerId, Instructions)VALUES (?, ?, ?);''',[id,Cid,instructions])
         connection.commit()
-        return True
+        return 'Item added to cart successfully!'
     except Exception as e:
         print(str(e))
-        return False        
+        return 'Database error'       
 
 
 def addToCartPromotion(PromotionTitle,discounts,CustomerEmail,instructions=''):
@@ -207,12 +210,15 @@ def addToCartPromotion(PromotionTitle,discounts,CustomerEmail,instructions=''):
         cursor.execute('''SELECT CustomerID FROM Customers where Email=?;''',[CustomerEmail])
         Cid = cursor.fetchone()[0]
         print(Cid)
+        cursor.execute('''SELECT * FROM Cart where Menuid=? and CustomerId =?;''',[id,Cid])
+        if not cursor.fetchone():
+            return 'Item already added'
         cursor.execute('''INSERT INTO Cart (Menuid, CustomerId, Instructions)VALUES (?, ?, ?);''',[id,Cid,instructions])
         connection.commit()
-        return True
+        return 'Item added to cart successfully!'
     except Exception as e:
         print(str(e))
-        return False 
+        return 'Database error' 
 
 
 def get_menu_data(limit=100,all=False):
