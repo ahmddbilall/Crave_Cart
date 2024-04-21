@@ -31,6 +31,18 @@
 
 <body>
 
+  <div id="flash-message">
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+  </div>
+
   <div class="hero_area">
     <div class="bg-box">
       <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
@@ -68,6 +80,8 @@
               </li>
               
             </ul>
+            
+            
             <div class="user_option">
               <a href="profile" class="user_link">
                 <i class="fa fa-user" aria-hidden="true"></i>
@@ -125,18 +139,20 @@
                   <g>
                   </g>
                 </svg>
-              </a>
-              <form class="form-inline">
+               </a>
+               <form class="form-inline">
                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()">
                     <i class="fa fa-search" aria-hidden="true"></i>
                 </button>
-            </form>
-            <form class="form-inline">
-              <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
-                  <i class="fa fa-sign-out" aria-hidden="true"></i> 
-              </button>
-          </form>
-            </div>
+               </form>
+                <form class="form-inline">
+               <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
+                   <i class="fa fa-sign-out" aria-hidden="true"></i> 
+               </button>
+             </form>
+           </div>
+
+           
           </div>
         </nav>
       </div>
@@ -246,9 +262,8 @@
     <div class="offer_container">
       <div class="container ">
         
-        
-        {% for item in Promotions %}
         <div class="row">
+          {% for item in Promotions %}
           <div class="col-md-6  ">
             <div class="box ">
               <div class="img-box">
@@ -263,7 +278,7 @@
                 </h6>
                 
                 
-                <a href="">
+                <a href="#" class="add-to-cart-btn-promortion" data-PromotionName="{{item['PromotionName']}}" data-discount="{{item['Discount']}}">
                   Order Now <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                     <g>
                       <g>
@@ -376,7 +391,7 @@
                     <h6>
                       {{ item[2] }}
                     </h6>
-                    <a href="">
+                      <a href="#" class="add-to-cart-btn" data-item-name="{{ item[0] }}" data-description="{{ item[1] }}" data-price="{{ item[2] }}">
                       <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
                         <g>
                           <g>

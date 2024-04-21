@@ -165,6 +165,38 @@ a:focus {
   padding-left: 18%;
 }
 
+
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+#search-input {
+  border: 2px solid black;
+  border-radius: 20px;
+  width: 500px;
+  margin-left: 600px;
+  height: 30px;
+  padding: 5px 10px; /* Add padding for better appearance */
+}
+
+#search-btn {
+  border: none;
+  border-radius: 20px;
+  background-color: #ffbe33; /* Change button color as needed */
+  /*background-color: #1e1e1e; /* Change button color as needed */
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 10px; 
+  font-weight: bold;
+  width:100px
+}
+
+
+
 .custom_nav-container .navbar-nav .nav-item .nav-link {
   padding: 5px 20px;
   color: #ffffff;
@@ -176,6 +208,17 @@ a:focus {
 }
 
 .custom_nav-container .navbar-nav .nav-item:hover .nav-link, .custom_nav-container .navbar-nav .nav-item.active .nav-link {
+  color: #ffbe33;
+}
+.nav_search-btn:focus .fa-search,
+.nav_search-btn:hover .fa-search {
+    color: #ffbe33;
+}
+
+
+.custom_nav-container .navbar-nav .nav-item:hover .nav-link,
+.custom_nav-container .navbar-nav .nav-item.active .nav-link,
+.custom_nav-container .navbar-nav .nav-item.active .nav_search-btn .form-inline.active {
   color: #ffbe33;
 }
 

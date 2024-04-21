@@ -23,11 +23,65 @@ def home():
 
 
 
-@app.route('/search')
+@app.route('/search', methods=['GET', 'POST'])
 def search():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('search.html')
+    print('I am in search')
+    if request.method == 'POST':
+        print('i am in post')
+        input = request.form['search-input']
+        print(input)
+        data = DataBase.getItemSearch(name=input)
+        print(data)
+    else:
+        print('I am in search all')
+        data = DataBase.get_menu_data(all=True)
+    
+    return render_template('search.html', menu=data)
+
+'''
+@app.route('/handle-search-input',methods=['GET','POST'])
+def searchItem():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    inputValue = request.args.get('inputValue')
+    result = DataBase.getItemSearch(name=inputValue)
+    print(result)
+    return render_template('search.html',menu=result)
+'''
+
+@app.route('/handle-Add-to-cart-from-home',methods=['GET','POST'])
+def addToCartHome():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    Price = request.args.get('Price')
+    CustomerEmail = session['username'] 
+    if DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail):
+        flash('Item added to cart successfully!', 'success')
+    else:
+        flash('Item not addded in cart!', 'error')
+    return redirect('/home')
+
+@app.route('/handle-Add-to-cart-Promotion-from-home',methods=['GET','POST'])
+def addToCartPromotionHome():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    PromotionTitle = request.args.get('PromotionName')
+    discounts = request.args.get('discount')
+    CustomerEmail = session['username'] 
+    print(PromotionTitle,discounts,CustomerEmail)
+    if DataBase.addToCartPromotion(PromotionTitle=PromotionTitle,discounts=discounts,CustomerEmail=CustomerEmail):
+        flash('Item added to cart successfully!', 'success')
+    else:
+        flash('Item not addded in cart!', 'error')
+    return redirect('/home')
+
 
 
 @app.route('/recommendation')
@@ -36,17 +90,25 @@ def Recommendation():
         return redirect('/login')
     return render_template('recommendation.html')
 
+
 @app.route('/favourites')
 def Favourites():
     if 'username' not in session:
         return redirect('/login')
     return render_template('favourites.html')
 
+
+
+
 @app.route('/discounts')
 def discounts():
     if 'username' not in session:
         return redirect('/login')
     return render_template('discounts.html')
+
+
+
+
 
 
 @app.route('/cart')
@@ -58,11 +120,12 @@ def cart():
 
 
 
+
 @app.route('/')
 def login_redirect():
     if 'username' in session:
         user = DataBase.EmailCheck(session['username'])
-        if user == 'User':
+        if user == 'Customer':
             return redirect(url_for('home'))
         elif user == 'Restaurant':
             return redirect(url_for('restaurantHome'))
@@ -105,6 +168,18 @@ def restaurantHome():
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
@@ -133,14 +208,14 @@ def signup():
         
 
         if DataBase.email_exists(email):
-            flash('User with this email already exists', 'error')
+            flash('Customer with this email already exists', 'error')
             return redirect(url_for('signup'))
 
         registration_date = date.today().strftime("%Y-%m-%d")
-        if account_type == 'user':
+        if account_type == 'Customer':
             status =DataBase.insert_user(email=email,password=password,registration_date=registration_date)
             if status == '':
-                flash('User added successfully','success')
+                flash('Customer added successfully','success')
                 session['username'] = email
                 return redirect(url_for('home'))
             else:
@@ -151,7 +226,6 @@ def signup():
                 flash('Restaurant added successfully','success')
                 session['username'] = email
                 return redirect(url_for('home'))
-            
             else:
                 flash(status,'error')
     return render_template('signup.html')
@@ -164,9 +238,9 @@ def login():
         password = request.form['password']
         status = DataBase.login_check(email=email,password=password)
     
-        if status == 'User' or status == 'Restaurant':
+        if status == 'Customer' or status == 'Restaurant':
             currentUser = status
-            if (currentUser == 'User'):
+            if (currentUser == 'Customer'):
                 session['username'] = email
                 return redirect(url_for('home'))
             else:
@@ -175,6 +249,8 @@ def login():
         else:
             flash(status,'error')
     return render_template('login.html')
+
+
 
 
 
