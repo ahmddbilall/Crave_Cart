@@ -283,7 +283,7 @@ def AllUsers():
 
 
 @app.route('/handle-block-user',methods=['GET','POST'])
-def handleblockresturant():
+def handleblockuser():
     if 'admin' not in session:
         return redirect('adminlogin')
     
@@ -300,7 +300,7 @@ def handleblockresturant():
 
 
 @app.route('/handle-unbloack-user',methods=['GET','POST'])
-def handleunblockresturant():
+def handleunblockuser():
     if 'admin' not in session:
         return redirect('adminlogin')
     
