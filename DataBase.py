@@ -11,7 +11,10 @@ def create_tables():
                         Name TEXT,
                         Address TEXT,
                         Phone TEXT,
-                        RegistrationDate TEXT
+                        RegistrationDate TEXT,
+                        Blocked INTEGER DEFAULT 0,
+                        BlockedByAdmin INTEGER DEFAULT NULL,
+                        FOREIGN KEY (BlockedByAdmin) REFERENCES Admin(AdminID)
                     );''')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS Restaurants (
@@ -24,8 +27,21 @@ def create_tables():
                         Phone TEXT,
                         Website TEXT,
                         OpeningHours TEXT,
-                        RegistrationDate TEXT
+                        RegistrationDate TEXT,
+                        Blocked INTEGER DEFAULT 0,
+                        BlockedByAdmin INTEGER DEFAULT NULL,
+                        FOREIGN KEY (BlockedByAdmin) REFERENCES Admin(AdminID)
                     );''')
+
+    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Admin (
+                        AdminID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Email TEXT,
+                        Password TEXT,
+                        Name TEXT
+                    );''')
+
+    
     
     cursor.execute('''CREATE TABLE IF NOT EXISTS Menus (
                         MenuID INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -104,6 +120,26 @@ def insert_restaurants(email, password, name=None, address=None, phone=None, reg
     except Exception as e:
         return f'Error: {str(e)}'
 
+def insert_default_admin():
+    try:
+        cursor.execute('''SELECT * FROM Admin;''')
+        admin_data = cursor.fetchone()
+        
+        if not admin_data:
+            cursor.execute('''INSERT INTO Admin (Email, Password, Name) VALUES (?, ?, ?);''',
+                           ['bilalahmad@gmail.com', '1234567', 'Bilal Ahmad'])
+            connection.commit()
+    except Exception as e:
+        print(f"Error inserting default admin: {str(e)}")
+
+def get_admin_name(email):
+    try:
+        cursor.execute('''SELECT name FROM Admin where email=?;''',[email])
+        return cursor.fetchall()
+    except Exception as e:
+        print(str(e))
+        return []
+
 def get_all_Customers():
     try:
         cursor.execute('''SELECT * FROM Customers;''')
@@ -121,13 +157,103 @@ def get_all_restaurants():
         return []
 
 
-def get_all_cart(CustomerID):
+def get_all_cart(Customermail):
     try:
-        cursor.execute('''SELECT m.ItemName, m.Price, m.ImagePNG FROM CART c JOIN Menus m ON c.menuid = m.MenuID WHERE c.customerid = ?;''', [CustomerID])
-        return cursor.fetchall()
+        cursor.execute('''SELECT CustomerID from Customers where Email = ?;''', [Customermail])
+        id = cursor.fetchone()[0]
+        cursor.execute('''SELECT m.ItemName, m.Price, p.Discount, m.ImagePNG, c.Instructions 
+                          FROM CART c 
+                          JOIN Menus m ON c.menuid = m.MenuID 
+                          LEFT JOIN Promotions p ON c.menuid = p.MenuID 
+                          WHERE c.customerid = ?;''', [id])
+        cart_items = cursor.fetchall()
+        print(cart_items)
+        items_with_discounts = []
+        for item in cart_items:
+            item_name, price, discount, image, instructions = item
+            if discount is not None:  # Check if the item has an active promotion
+                discounted_price = price * (1 - discount / 100)  # Calculate discounted price
+            else:
+                discounted_price = 0  # If no discount, set discounted price to 0
+            items_with_discounts.append({
+                'ItemName': item_name,
+                'OriginalPrice': price,
+                'DiscountedPrice': discounted_price,
+                'ImagePNG': image,
+                'Instructions': instructions
+            })
+        return items_with_discounts
     except Exception as e:
         print(str(e))
         return []
+
+def Add_new_admin(email,password,name):
+    try:
+        cursor.execute('''INSERT INTO Admin (Email, Password, Name)
+                          VALUES (?, ?, ?);''',
+                       [email, password, name])
+        connection.commit()
+        return ''
+    except Exception as e:
+        return f'Error: {str(e)}'
+
+
+def blockResturant(resturantID,adminMail):
+    try:
+        cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", (adminMail))
+        admin_row = cursor.fetchone()
+        if admin_row:
+            adminID = admin_row[0]
+
+            cursor.execute("UPDATE Restaurants SET Blocked = 1, BlockedByAdmin = ? WHERE RestaurantID = ?", [adminID, resturantID])
+            connection.commit()
+            return True  
+        else:
+            return False 
+    except Exception as e:
+        print(e)
+        return False
+
+def blockResturant(CustomerID,adminMail):
+    try:
+        cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", (adminMail))
+        admin_row = cursor.fetchone()
+        if admin_row:
+            adminID = admin_row[0]
+
+            cursor.execute("UPDATE Customers SET Blocked = 1, BlockedByAdmin = ? WHERE CustomerID = ?", [adminID, CustomerID])
+            connection.commit()
+            return True  
+        else:
+            return False 
+    except Exception as e:
+        print(e)
+        return False
+    
+def unblockResturant(CustomerID):
+    try:
+        cursor.execute("UPDATE Customers SET Blocked = 0, BlockedByAdmin = NULL WHERE CustomerID = ?", [CustomerID])
+        connection.commit()
+        return True  
+    except Exception as e:
+        print( e)
+        return False
+
+
+def get_All_admins():
+    try: 
+        cursor.execute('''SELECT NAME , EMAIL FROM ADMIN;''')   
+        return cursor.fetchall()
+    except Exception as e:
+        return str(e) 
+
+def removeAdmin(name,email):
+    try:
+        cursor.execute('''DELETE FROM Admin where name=? and email=?;''',[email, name])
+        connection.commit()
+        return ''
+    except Exception as e:
+        return f'Error: {str(e)}'
 
 
 def email_exists(email):
@@ -148,7 +274,7 @@ def email_exists(email):
     except Exception as e:
         print(str(e))
         return None
-
+    
 
 def login_check(email,password):
     if email == None or password == None:
@@ -157,6 +283,7 @@ def login_check(email,password):
         cursor.execute('''SELECT * FROM Customers Where email=? AND password =?;''',[email,password])
         user_data = cursor.fetchone()
         if user_data:
+                #check for blocked or not
             return 'Customer'
 
         cursor.execute('''SELECT * FROM Restaurants Where email=? AND password =?;''',[email,password])
@@ -164,7 +291,25 @@ def login_check(email,password):
         if user_data:
             return 'Restaurant'
 
+        cursor.execute('''SELECT * FROM Admin Where email=? AND password =?;''',[email,password])
+        user_data = cursor.fetchone()
+        if user_data:
+            return 'admin'
         return 'No data found with this email and password'
+    except Exception as e:
+        return f'Error: {str(e)}'
+
+def login_check_Admin(email,password):
+    if email == None or password == None:
+        return 'Enter Values'
+    try:
+        cursor.execute('''SELECT * FROM Admin Where email=? AND password =?;''',[email,password])
+        user_data = cursor.fetchone()
+        if user_data:
+            return 'admin'
+        else:
+            return 'Not an Admin'
+        
     except Exception as e:
         return f'Error: {str(e)}'
 
@@ -185,6 +330,7 @@ def EmailCheck(email):
     except Exception as e:
         return f'Error: {str(e)}'
 
+
 def addToCart(menu_title,Description,Price,CustomerEmail,instructions=''):
     try:
         cursor.execute('''SELECT MenuID FROM Menus where ItemName=? and Description=? and Price=?;''',[menu_title,Description,Price])
@@ -192,7 +338,7 @@ def addToCart(menu_title,Description,Price,CustomerEmail,instructions=''):
         cursor.execute('''SELECT CustomerID FROM Customers where Email=?;''',[CustomerEmail])
         Cid = cursor.fetchone()[0]
         cursor.execute('''SELECT * FROM Cart where Menuid=? and CustomerId =?;''',[id,Cid])
-        if cursor.fetchone():
+        if cursor.fetchall():
             return 'Item already added'
         cursor.execute('''INSERT INTO Cart (Menuid, CustomerId, Instructions)VALUES (?, ?, ?);''',[id,Cid,instructions])
         connection.commit()
@@ -206,12 +352,10 @@ def addToCartPromotion(PromotionTitle,discounts,CustomerEmail,instructions=''):
     try:
         cursor.execute('''SELECT MenuID FROM Promotions where PromotionName=? and Discount=?;''',[PromotionTitle,discounts])
         id = cursor.fetchone()[0]
-        print(id)
         cursor.execute('''SELECT CustomerID FROM Customers where Email=?;''',[CustomerEmail])
         Cid = cursor.fetchone()[0]
-        print(Cid)
         cursor.execute('''SELECT * FROM Cart where Menuid=? and CustomerId =?;''',[id,Cid])
-        if not cursor.fetchone():
+        if cursor.fetchall():
             return 'Item already added'
         cursor.execute('''INSERT INTO Cart (Menuid, CustomerId, Instructions)VALUES (?, ?, ?);''',[id,Cid,instructions])
         connection.commit()
@@ -242,9 +386,13 @@ def getItemSearch(name):
         return []
 
 
-def get_active_promotions(current_date,limit=100):
+def get_active_promotions(current_date,limit=100,all=False):
     try:
-        cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
+        if all:
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
+                        WHERE p.StartDate <= ? AND p.EndDate >= ?""", [current_date, current_date])
+        else:
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
                         WHERE p.StartDate <= ? AND p.EndDate >= ? Limit ?""", [current_date, current_date,limit])
         rows = cursor.fetchall()
         promotions_data = []

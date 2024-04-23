@@ -128,13 +128,12 @@
                   </svg>
                  </a>
                  <form class="form-inline active">
-                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()">
+                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()" >
                       <i class="fa fa-search" aria-hidden="true"></i>
-                      <span class="sr-only">(current)</span>
                   </button>
                  </form>
                   <form class="form-inline">
-                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
+                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()" >
                      <i class="fa fa-sign-out" aria-hidden="true"></i> 
                  </button>
                </form>
@@ -158,10 +157,14 @@
       <div class="row d-flex justify-content-center align-items-center h-100">
         <div class="col-10">
   
+          <!-- if item is is discount table then show other div else this one-->
+          {%if data[0]!=null%}
           <div class="d-flex justify-content-between align-items-center mb-4">
             <h3 class="fw-normal mb-0 text-black">Items in Cart:</h3>
           </div>
-          <!-- if item is is discount table then show other div else this one-->
+
+
+        {% for item in data%}
           <!-- items-->
         <div class="card rounded-3 mb-4" style="border: 2px solid #ABAAAA;">
             <div class="card-body p-4">
@@ -174,7 +177,7 @@
                 </div>
                 
                 <div class="col-md-3 col-lg-3 col-xl-3">
-                  <p class="lead fw-normal mb-2">Title</p>
+                  <p class="lead fw-normal mb-2">{{item['ItemName']}}</p>
                 </div>
                 
                 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
@@ -196,7 +199,7 @@
                   </button>
                 </div>
                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                  <h5 class="mb-0">$499.00</h5>
+                  <h5 class="mb-0">{{item['OriginalPrice']}}</h5>
                 </div>
                 <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                   <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
@@ -207,42 +210,49 @@
             <div class="container" style="margin-left:-13px;">
                 <div class="container__item">
                     <form class="form">
-                        <input type="Instructions" class="form__field" style="width:700px;height:30px;" placeholder="Enter Instructions for this item" />
+                        {%if item['Instructions'] == ''%}
+                          <input type="Instructions" class="form__field" style="width:700px;height:30px;" placeholder="Enter Instructions for this item" />
+                          {%else%}
+                          <input type="Instructions" class="form__field" style="width:700px;height:30px;" value={{item['Instructions']}} />
+                        {%endif%}
+                        
                         <button type="save" class="btn btn--primary btn--inside uppercase" style="height:32px;background-color: #ffbe33;color: white;border: 0px solid #ffbe33;">Save</button>
                     </form>
                 </div>
             </div>
           </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
+        {%endfor%}
 
         <!-- DiscountCode-->
-          <div class="card mb-4">
-            <div class="card-body p-4 d-flex flex-row" style="background-color: #353535;">
-              <div data-mdb-input-init class="form-outline flex-fill">
-                <label class="form-label" for="form1" style="color:#F7F6F6;">Discound code</label><br>
-                <input type="text" id="form1"  style="width:750px;height:50px;border: 2px solid #F7F6F6;border-radius: 6px;"/>
-                <button type="button" style="height:50px;width:100px;margin-left:15px;border-radius: 6px;background-color: #353535;color: #ffbe33;border: 2px solid #ffbe33;" >Apply</button>
-              </div>
+        <div class="card mb-4">
+          <div class="card-body p-4 d-flex flex-row" style="background-color: #353535;">
+            <div data-mdb-input-init class="form-outline flex-fill">
+              <label class="form-label" for="form1" style="color:#F7F6F6;">Discound code</label><br>
+              <input type="text" id="form1"  style="width:750px;height:50px;border: 2px solid #F7F6F6;border-radius: 6px;"/>
+              <button type="button" style="height:50px;width:100px;margin-left:15px;border-radius: 6px;background-color: #353535;color: #ffbe33;border: 2px solid #ffbe33;" >Apply</button>
             </div>
           </div>
+        </div>
 
-          <div class="card">
-            <div class="card-body">
-              <button type="button" style="width:900px;height:50px;background-color: #ffbe33;border-radius:10px;border: 0px solid #ffbe33;font-weight: bold;font-size:20px;">Order</button>
-            </div>
+        <div class="card">
+          <div class="card-body">
+            <button type="button" style="width:900px;height:50px;background-color: #ffbe33;border-radius:10px;border: 0px solid #ffbe33;font-weight: bold;font-size:20px;">Order</button>
           </div>
+        </div>
+
+        {%else%}
+        <br><br><br><br><br><br><br><br><br>
+          <h1 style="margin-left:150px;font-size:90px;">Nothing in the Cart</h1>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        {%endif%}
+
+
+
+
+
+
+        
   
         </div>
       </div>
@@ -350,6 +360,7 @@
   </script>
   <!-- bootstrap js -->
   <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+  <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
   <!-- owl slider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>

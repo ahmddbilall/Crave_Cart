@@ -6,7 +6,7 @@
 CART (menuid,customerid,Instructions)
 Orders(orderid,menuid,customerid,status (if true enable rating),quantity,instructions,rating)
 Favourites
-Discounts
+Promotions (discounts)
 
 when order completed
 Reviews(rate )
