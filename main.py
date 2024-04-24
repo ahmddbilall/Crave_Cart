@@ -70,8 +70,9 @@ def addToCartHome():
     Description = request.args.get('Description')
     Price = request.args.get('Price')
     CustomerEmail = session['username'] 
-    
+    print(menu_title,Description,Price,CustomerEmail)
     output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail)
+    print(output)
     if output =='Item added to cart successfully!':
         flash(output, 'success')
     else:
@@ -107,7 +108,8 @@ def Recommendation():
 def Favourites():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('favourites.html')
+    data =DataBase.get_favourite_data(session['username'])
+    return render_template('favourites.html',menu=data,result=len(data))
 
 
 @app.route('/handle-Add-to-favourite-from-home',methods=['GET','POST'])
@@ -128,15 +130,12 @@ def addToFavourite():
     return redirect('/home')
 
 
-
 @app.route('/discounts')
 def discounts():
     if 'username' not in session:
         return redirect('/login')
     data= DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"),all=True)
-    print(data)
-    return render_template('discounts.html',data=data)
-
+    return render_template('discounts.html',data=data,result=len(data))
 
 @app.route('/cart')
 def cart():
@@ -147,8 +146,6 @@ def cart():
     print(dataa)
     return render_template('cart.html',data=dataa)
   
-
-
 @app.route('/')
 def login_redirect():
     if 'username' in session:
@@ -160,7 +157,6 @@ def login_redirect():
         else:
             redirect(url_for('login'))
     return redirect(url_for('login'))
-
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
@@ -180,6 +176,10 @@ def profile():
 
 
 
+
+
+
+
 @app.route('/restaurantHome')
 def restaurantHome():
     if 'username' not in session:
@@ -192,14 +192,13 @@ def restaurantHome():
 
 
 
-# Admin 
+# Starts Admin functions 
 
 @app.route('/admin')
 def admin():
     if 'admin' in session:
         redirect(url_for('adminHome'))
     return redirect(url_for('adminlogin'))
-
 
 @app.route('/adminHome')
 def adminHome():
@@ -221,7 +220,6 @@ def adminlogin():
     
     return render_template('Adminlogin.html')
 
-
 @app.route('/Add-new-admin',methods=['GET','POST'])
 def AddNewadmin():
     if 'admin' not in session:
@@ -237,15 +235,12 @@ def AddNewadmin():
             flash(name + ' add as admin','success')
     return render_template('AddnewAdmin.html')
 
-
-
 @app.route('/remove-admin',methods=['GET','POST'])
 def removeadmin():
     if 'admin' not in session:
         return redirect('adminlogin')
     
     return render_template('removeAdmin.html',admins = DataBase.get_All_admins())
-
 
 @app.route('/handle-remove-admin',methods=['GET','POST'])
 def handleremoveadmin():
@@ -268,19 +263,12 @@ def handleremoveadmin():
     
     return redirect('remove-admin')
 
-
-
-
 @app.route('/All-Users')
 def AllUsers():
     if 'admin' not in session:
         return redirect('adminlogin')
     
     return render_template('allusers.html',users=DataBase.get_all_Customers())
-
-
-
-
 
 @app.route('/handle-block-user',methods=['GET','POST'])
 def handleblockuser():
@@ -298,8 +286,7 @@ def handleblockuser():
     
     return redirect('All-Users')
 
-
-@app.route('/handle-unbloack-user',methods=['GET','POST'])
+@app.route('/handle-unblock-user',methods=['GET','POST'])
 def handleunblockuser():
     if 'admin' not in session:
         return redirect('adminlogin')
@@ -315,29 +302,12 @@ def handleunblockuser():
     
     return redirect('All-Users')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 @app.route('/All-Resturants')
 def AllResturants():
     if 'admin' not in session:
         return redirect('adminlogin')
     
     return render_template('allresturants.html',resturants=DataBase.get_all_restaurants())
-
-
-
-
 
 @app.route('/handle-block-resturant',methods=['GET','POST'])
 def handleblockresturant():
@@ -355,8 +325,7 @@ def handleblockresturant():
     
     return redirect('All-Resturants')
 
-
-@app.route('/handle-unbloack-resturant',methods=['GET','POST'])
+@app.route('/handle-unblock-resturant',methods=['GET','POST'])
 def handleunblockresturant():
     if 'admin' not in session:
         return redirect('adminlogin')
@@ -372,12 +341,12 @@ def handleunblockresturant():
     
     return redirect('All-Resturants')
 
-
-
 @app.route('/logoutAdmin')
 def adminlogout():
     session.pop('admin',None)
     return redirect('/')
+
+# End Admin
 
 
 

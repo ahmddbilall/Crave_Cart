@@ -33,7 +33,13 @@ def create_tables():
                         FOREIGN KEY (BlockedByAdmin) REFERENCES Admin(AdminID)
                     );''')
 
-    
+    cursor.execute('''CREATE TABLE IF NOT EXISTS Favourites (
+                        FavouriteID INTEGER PRIMARY KEY AUTOINCREMENT,
+                        UserID INTEGER,
+                        MenuID INTEGER,
+                        FOREIGN KEY (UserID) REFERENCES Users(UserID),
+                        FOREIGN KEY (MenuID) REFERENCES Menus(MenuID)
+                    );''')
     cursor.execute('''CREATE TABLE IF NOT EXISTS Admin (
                         AdminID INTEGER PRIMARY KEY AUTOINCREMENT,
                         Email TEXT,
@@ -214,7 +220,7 @@ def blockResturant(resturantID,adminMail):
         print(e)
         return False
 
-def blockResturant(CustomerID,adminMail):
+def blockUser(CustomerID,adminMail):
     try:
         cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", (adminMail))
         admin_row = cursor.fetchone()
@@ -230,7 +236,7 @@ def blockResturant(CustomerID,adminMail):
         print(e)
         return False
     
-def unblockResturant(CustomerID):
+def unblockUser(CustomerID):
     try:
         cursor.execute("UPDATE Customers SET Blocked = 0, BlockedByAdmin = NULL WHERE CustomerID = ?", [CustomerID])
         connection.commit()
@@ -239,6 +245,15 @@ def unblockResturant(CustomerID):
         print( e)
         return False
 
+    
+def unblockResturant(CustomerID):
+    try:
+        cursor.execute("UPDATE Restaurants SET Blocked = 0, BlockedByAdmin = NULL WHERE CustomerID = ?", [CustomerID])
+        connection.commit()
+        return True  
+    except Exception as e:
+        print( e)
+        return False
 
 def get_All_admins():
     try: 
@@ -374,6 +389,35 @@ def get_menu_data(limit=100,all=False):
         return cursor.fetchall()
     except sqlite3.Error as e:
         print("Error fetching data from database:", e)
+        return []
+
+
+def get_favourite_data(customerEmail):
+    try:
+        cursor.execute("SELECT CustomerID FROM Customers WHERE Email = ?", [customerEmail])
+        CustomerID = cursor.fetchone()
+        if CustomerID is None:
+            return []  
+
+        cursor.execute('''SELECT m.ItemName, m.Price, m.Description, m.ImagePNG 
+                          FROM Favourites f
+                          JOIN Menus m ON f.MenuID = m.MenuID
+                          WHERE f.CustomerID = ?''', [CustomerID[0]])
+        favorite_items = cursor.fetchall()
+
+        filtered_favorite_items = []
+        for item in favorite_items:
+            cursor.execute('''SELECT r.Blocked 
+                              FROM Menus m
+                              JOIN Restaurants r ON m.RestaurantID = r.RestaurantID
+                              WHERE m.ItemName = ?''', [item[0]])
+            restaurant_blocked = cursor.fetchone()
+            if restaurant_blocked is None or restaurant_blocked[0] == 0:
+                filtered_favorite_items.append(item)
+
+        return filtered_favorite_items
+    except Exception as e:
+        print(str(e))
         return []
 
 
