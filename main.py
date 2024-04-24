@@ -20,7 +20,7 @@ def home():
     
     data = DataBase.get_menu_data(limit=10)
     Pro = DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"), limit=2)
-    return render_template('home.html',menu_data=data,Promotions=Pro)
+    return render_template('user/home.html',menu_data=data,Promotions=Pro)
 
 
 
@@ -41,7 +41,7 @@ def search():
     else:
         data = DataBase.get_menu_data(all=True)
         dataView = 'all'        
-    return render_template('search.html', menu=data,dataView=dataView)
+    return render_template('user/search.html', menu=data,dataView=dataView)
 
 
 @app.route('/handle-Add-to-cart-from-search',methods=['GET','POST'])
@@ -101,7 +101,7 @@ def addToCartPromotionHome():
 def Recommendation():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('recommendation.html')
+    return render_template('user/recommendation.html')
 
 
 @app.route('/favourites')
@@ -109,7 +109,7 @@ def Favourites():
     if 'username' not in session:
         return redirect('/login')
     data =DataBase.get_favourite_data(session['username'])
-    return render_template('favourites.html',menu=data,result=len(data))
+    return render_template('user/favourites.html',menu=data,result=len(data))
 
 
 @app.route('/handle-Add-to-favourite-from-home',methods=['GET','POST'])
@@ -135,7 +135,7 @@ def discounts():
     if 'username' not in session:
         return redirect('/login')
     data= DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"),all=True)
-    return render_template('discounts.html',data=data,result=len(data))
+    return render_template('user/discounts.html',data=data,result=len(data))
 
 @app.route('/cart')
 def cart():
@@ -144,7 +144,7 @@ def cart():
     
     dataa = DataBase.get_all_cart(session['username'])
     print(dataa)
-    return render_template('cart.html',data=dataa)
+    return render_template('user/cart.html',data=dataa)
   
 @app.route('/')
 def login_redirect():
@@ -162,7 +162,7 @@ def login_redirect():
 def profile():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('profile.html', username=session['username'])
+    return render_template('user/profile.html', username=session['username'])
 
 
 
@@ -184,7 +184,7 @@ def profile():
 def restaurantHome():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('restaurantHome.html')
+    return render_template('restaurant/restaurantHome.html')
 
 
 
@@ -204,7 +204,7 @@ def admin():
 def adminHome():
     if 'admin' not in session:
         return redirect('adminlogin')
-    return render_template('adminHome.html',name=DataBase.get_admin_name(session['admin']))
+    return render_template('admin/adminHome.html',name=DataBase.get_admin_name(session['admin']))
 
 @app.route('/adminlogin',methods=['GET', 'POST'])
 def adminlogin():
@@ -218,7 +218,7 @@ def adminlogin():
         else:
             flash(status,'error')
     
-    return render_template('Adminlogin.html')
+    return render_template('admin/Adminlogin.html')
 
 @app.route('/Add-new-admin',methods=['GET','POST'])
 def AddNewadmin():
@@ -233,14 +233,14 @@ def AddNewadmin():
     
         if status == '':
             flash(name + ' add as admin','success')
-    return render_template('AddnewAdmin.html')
+    return render_template('admin/AddnewAdmin.html')
 
 @app.route('/remove-admin',methods=['GET','POST'])
 def removeadmin():
     if 'admin' not in session:
         return redirect('adminlogin')
     
-    return render_template('removeAdmin.html',admins = DataBase.get_All_admins())
+    return render_template('admin/removeAdmin.html',admins = DataBase.get_All_admins())
 
 @app.route('/handle-remove-admin',methods=['GET','POST'])
 def handleremoveadmin():
@@ -268,7 +268,7 @@ def AllUsers():
     if 'admin' not in session:
         return redirect('adminlogin')
     
-    return render_template('allusers.html',users=DataBase.get_all_Customers())
+    return render_template('admin/allusers.html',users=DataBase.get_all_Customers())
 
 @app.route('/handle-block-user',methods=['GET','POST'])
 def handleblockuser():
@@ -307,7 +307,7 @@ def AllResturants():
     if 'admin' not in session:
         return redirect('adminlogin')
     
-    return render_template('allresturants.html',resturants=DataBase.get_all_restaurants())
+    return render_template('admin/allresturants.html',resturants=DataBase.get_all_restaurants())
 
 @app.route('/handle-block-resturant',methods=['GET','POST'])
 def handleblockresturant():
