@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
+
+  <title> Cart </title>
+
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+
+<body class="sub_page">
+  <div id="flash-message">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    </div>
+
+
+
+  <!-- header section strats -->
+  <div class="hero_area">
+       <div class="bg-box">
+       <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+      </div>
+      <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="home">
+            <span>
+              Crave Cart
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  mx-auto ">
+              <li class="nav-item">
+                <a class="nav-link" href="home">Home </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="recommendation">Recommendations  </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="discounts">Discounts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="favourites">Favourites</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="trackorders">Orders</a>
+              </li>
+            </ul>
+
+            <div class="user_option">
+                <a href="profile" class="user_link">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
+                <a class="cart_link" href="cart">
+                  <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                    <g>
+                      <g>
+                        <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                      </g>
+                    </g>
+                    <g>
+                      <g>
+                        <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                     C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                      </g>
+                    </g>
+                    <g>
+                      <g>
+                        <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                      </g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                  </svg>
+                 </a>
+                 <form class="form-inline active">
+                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()" >
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                  </button>
+                 </form>
+                  <form class="form-inline">
+                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()" >
+                     <i class="fa fa-sign-out" aria-hidden="true"></i> 
+                 </button>
+               </form>
+             </div>
+
+
+
+
+
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+  </div>
+
+
+
+  <section class="h-100" >
+    <div class="container h-100 py-5">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-10">
+  
+          <!-- if item is is discount table then show other div else this one-->
+          {%if data[0]!=null%}
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3 class="fw-normal mb-0 text-black">Items in Cart:</h3>
+          </div>
+
+
+        {% for item in data%}
+          <!-- items-->
+        <div class="card rounded-3 mb-4" style="border: 2px solid #ABAAAA;">
+            <div class="card-body p-4">
+
+              <div class="row d-flex justify-content-between align-items-center">
+                <div class="col-md-2 col-lg-2 col-xl-2">
+                  <img
+                    src="{{url_for('static',filename='images/'+item['ImagePNG'])}}"
+                    class="img-fluid rounded-3" alt="Cotton T-shirt">
+                </div>
+
+              
+                
+                <div class="col-md-3 col-lg-3 col-xl-3">
+                  <p class="lead fw-normal mb-2">{{item['ItemName']}}</p>
+                </div>
+                
+                <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                      <!-- minus sign-->
+                      <i class='fas'>&#xf068;</i>
+                  </button>
+                  <input id="quantityInput" min="1" name="quantity" value="{{item['quantity']}}" type="number"
+                      class="form-control form-control-sm" />
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                      <!--plus sign-->
+                      <i class="fas fa-plus"></i>
+                  </button>
+              </div>
+                <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
+                  <h5 class="mb-0">{{item['OriginalPrice']}}</h5>
+                  <h5 class="mb-0">{{item['DiscountedPrice']}}</h5>
+                </div>
+
+
+                <div class="col-md-1 col-lg-1 col-xl-1 text-end">
+                  <a href="#!" class="text-danger" id="delete-button" data-menuid={{item['menuid']}} ><i class="fas fa-trash fa-lg"></i></a>
+              </div>
+              
+                
+            </div>
+            <br>
+            <div class="container" style="margin-left:-13px;">
+                <div class="container__item">
+                    <form class="form">
+                        {%if item['Instructions'] == ''%}
+                          <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" placeholder="Enter Instructions for this item" />
+                          {%else%}
+                          <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" value="{{item['Instructions']}}" />
+                        {%endif%}
+                        
+                        <button type="save" class="btn btn--primary btn--inside uppercase save-button" data-menuid={{item['menuid']}} style="height:32px;background-color: #ffbe33;color: white;border: 0px solid #ffbe33;">Save</button>
+                    </form>
+                </div>
+            </div>
+
+          </div>
+        </div>
+        {%endfor%}
+
+        
+
+        <div class="card">
+          <div class="card-body">
+            <button type="button" class="orderButtonCart" style="width:900px;height:50px;background-color: #ffbe33;border-radius:10px;border: 0px solid #ffbe33;font-weight: bold;font-size:20px;">Order</button>
+          </div>
+        </div>
+
+        {%else%}
+        <br><br><br><br><br><br><br><br><br>
+          <h1 style="margin-left:150px;font-size:90px;">Nothing in the Cart</h1>
+          <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        {%endif%}
+
+
+
+
+
+
+        
+  
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 footer-col">
+                <div class="footer_detail">
+                    <a href="#" class="footer-logo">Crave Cart</a>
+                    <p>Crave Cart is a convenient and innovative platform that brings together a diverse range of restaurants and culinary delights, allowing users to explore and order their favorite dishes with ease.</p>
+                    <div class="footer_social">
+                        <a ><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4></h4>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4>Contact Us</h4>
+                <p>If you have any questions or need assistance, feel free to contact us:</p>
+                
+                <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
+                <p> <i class="fa fa-phone"></i> +1234567890</p>
+                <p> <i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
+            </div>
+        </div>
+        <div class="footer-info">
+            <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
+                <span id="displayYear"></span><a href="/Aboutus"> About Developers </a>
+            </p>
+        </div>
+    </div>
+</footer>
+  <!-- footer section -->
+
+
+
+
+  <!-- jQery -->
+  <script src="{{url_for('static',filename='js/jquery-3.4.1.min.js')}}"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+  <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <!-- custom js -->
+  <script src="{{url_for('static',filename='js/custom.js')}}"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+</body>
+
+</html>

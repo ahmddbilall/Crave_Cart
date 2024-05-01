@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="">
+    </head>
+<body>
+
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+             {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                  {{ message }}
+                </div>
+              {% endfor %}
+             {% endif %}
+            {% endwith %}
+        </div>   
+
+
+
+    <h1>List of Admins</h1>
+    <ul>
+        {% for admin in admins %}
+            <li>
+                <h5>{{ admin[0] }}</h5>
+                <a href="#" class="remove-admin" data-name="{{ admin[0] }}" data-email="{{ admin[1] }}">
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path d="M17 5h-3V3h-4v2H7v2h10V5zM5 19h14c1.1 0 1.99-.9 1.99-2L21 8c0-1.1-.89-2-1.99-2H17l-1-1H8L7 6H5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2zm9-14h-4v2h4V5z"/>
+                    </svg>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+
+
+</body>
+</html>

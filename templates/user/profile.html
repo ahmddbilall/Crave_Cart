@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
+
+  <title> User Profile </title>
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
+  <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+
+
+  <style>
+    body {
+        color: black;
+    }
+
+    .title {
+        color: black;
+    }
+
+    .edit-btn {
+      
+        color:  #3a3f42!important;
+        text-transform: uppercase;
+        background: #ffffff;
+        padding: 3px 214px; /* Adjusted padding for edit button */
+        border: 4px solid #ffbe33 !important;
+        border-radius: 6px;
+        display: inline-block;
+        transition: all 0.3s ease 0s;
+        cursor: pointer;
+        margin-top: 20px; /* Added margin-top to separate button from form */
+    }
+
+    .edit-btn:hover {
+        color: white !important;
+        border-radius: 50px;
+        border-color: #494949 !important;
+        transition: all 0.3s ease 0s;
+    }
+
+    .container {
+        max-width: 800px;
+        position: relative; /* Added position relative to container */
+    }
+
+    input[type="text"], input[type="email"], input[type="password"] {
+        transition: box-shadow 0.3s ease-in-out, border-color 0.3s ease-in-out;
+        border: 2px solid #ccc;
+        transform: scale(1);
+    }
+
+    input[type="text"]:hover, input[type="email"]:hover, input[type="password"]:hover {
+        box-shadow: 0 0 8px rgba(32,191,107,0.8);
+        border-color: #20bf6b;
+        transform: scale(1.05);
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        width: 48%;
+        display: inline-block;
+        margin-right: 2%;
+    }
+
+    .form-group:nth-child(2n) {
+        margin-right: 0;
+    }
+
+    .toggle-password:hover {
+        transform: scale(1);
+        transition: transform 0.3s ease;
+    }
+
+    #password-input:hover + .input-group-append .toggle-password {
+        transform: scale(1.05);
+    }
+
+    /* Added CSS to position the image */
+    .profile-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 150px; /* Adjusted width of the image */
+        margin-top: 20px; /* Added margin-top to separate image from top */
+        margin-left: 20px; /* Added margin-left to separate image from left */
+        z-index: 999; /* Added z-index to ensure image is above other elements */
+    }
+
+    /* Removed border lines from the form */
+    .border-right {
+        border-right: none !important;
+    }
+  </style>
+
+
+</head>
+
+<body class="sub_page">
+
+  <div id="flash-message">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+     {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+     {% endif %}
+    {% endwith %}
+  </div>
+
+
+
+  <div class="hero_area">
+    <div class="bg-box">
+      <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+    </div>
+    <!-- header section strats -->
+    <header class="header_section">
+      <div class="container">
+        <nav class="navbar navbar-expand-lg custom_nav-container ">
+          <a class="navbar-brand" href="home">
+            <span>
+              Crave Cart
+            </span>
+          </a>
+
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class=""> </span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav  mx-auto ">
+              <li class="nav-item">
+                <a class="nav-link" href="home">Home </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="recommendation">Recommendations  </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="discounts">Discounts</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="favourites">Favourites</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="trackorders">Orders</a>
+              </li>
+            </ul>
+
+
+            <div class="user_option">
+                <a href="profile" class="user_link">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
+                <a class="cart_link" href="cart">
+                  <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
+                    <g>
+                      <g>
+                        <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
+                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
+                      </g>
+                    </g>
+                    <g>
+                      <g>
+                        <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
+                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
+                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
+                     C457.728,97.71,450.56,86.958,439.296,84.91z" />
+                      </g>
+                    </g>
+                    <g>
+                      <g>
+                        <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
+                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
+                      </g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                    <g>
+                    </g>
+                  </svg>
+                 </a>
+                 <form class="form-inline active">
+                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()">
+                      <i class="fa fa-search" aria-hidden="true"></i>
+                      <span class="sr-only">(current)</span>
+                  </button>
+                 </form>
+                  <form class="form-inline">
+                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
+                     <i class="fa fa-sign-out" aria-hidden="true"></i> 
+                 </button>
+               </form>
+             </div>
+
+
+
+
+
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+  </div>
+
+
+
+  <!-- user -->
+
+  <div class="container rounded #3a3f42 mt-5 mb-5">
+    <img class="rounded-circle profile-image" src="{{ url_for('static', filename='images/' + data[5]) }}">
+
+      <div class="row">
+          <div class="col-md-4 border-right">
+              <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+              </div>
+          </div>
+          <div class="col-md-8 border-right">
+              <div class="p-3 py-5">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                      <h4 class="text-right title">Profile Settings</h4>
+                  </div>
+                  
+                  
+                  
+                  
+                  <form id="profile-form" action='/profile' method="POST" enctype="multipart/form-data">
+                      <div class="form-group">
+                          <label class="labels">Name</label>
+                          <div class="input-group">
+                              <input type="text" class="form-control" placeholder="name" id="name" name="name" value="{{data[2]}}" readonly>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="labels">Image</label>
+                          <div class="input-group">
+                            <input type="file" id="image" name="image"  accept="image/jpeg" class="form-control" value="{{ data[5] }}" disabled>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="labels">Email ID</label>
+                          <div class="input-group">
+                              <input type="email" class="form-control" name="email" placeholder="enter email id" id="email"  value="{{data[0]}}" readonly>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="labels">Password</label>
+                          <div class="input-group">
+                              <input type="password"   class="form-control" name="password-input" id="password-input" placeholder="password" value="{{data[1]}}" readonly>
+                              <div class="input-group-append">
+                                  <button class="btn btn-outline-secondary toggle-password" type="button">
+                                      <i class="fa fa-eye"></i>
+                                  </button>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="labels">Mobile Number</label>
+                          <div class="input-group">
+                              <input type="text" class="form-control" placeholder="enter phone number" id="phone" name="phone" value="{{data[4]}}" readonly>
+                          </div>
+                      </div>
+                      <div class="form-group">
+                          <label class="labels">Address</label>
+                          <div class="input-group">
+                              <input type="text" id="address" name="address"  class="form-control" placeholder="enter address" value="{{data[3]}}" readonly>
+                          </div>
+                      </div>
+                      <div class="form-group text-center" style="margin-left:-230px;" >
+                        <button class="btn btn-outline-secondary edit-btn" type="button" id="edit">Edit</button>
+                      </div>
+                  </form>
+
+
+
+              </div>
+          </div>
+      </div>
+  </div>
+    
+    
+
+
+
+
+
+
+
+
+
+
+  <br><br><br>
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 footer-col">
+                <div class="footer_detail">
+                    <a href="#" class="footer-logo">Crave Cart</a>
+                    <p>Crave Cart is a convenient and innovative platform that brings together a diverse range of restaurants and culinary delights, allowing users to explore and order their favorite dishes with ease.</p>
+                    <div class="footer_social">
+                        <a ><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4></h4>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4>Contact Us</h4>
+                <p>If you have any questions or need assistance, feel free to contact us:</p>
+                
+                <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
+                <p> <i class="fa fa-phone"></i> +1234567890</p>
+                <p> <i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
+            </div>
+        </div>
+        <div class="footer-info">
+            <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
+                <span id="displayYear"></span><a href="/Aboutus"> About Developers </a>
+            </p>
+        </div>
+    </div>
+</footer>
+  <!-- footer section -->
+
+
+
+
+  <!-- jQery -->
+  <script src="{{url_for('static',filename='js/jquery-3.4.1.min.js')}}"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+  <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <!-- custom js -->
+  <script src="{{url_for('static',filename='js/custom.js')}}"></script>
+  <!-- Google Map -->
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
+  </script>
+  <!-- End Google Map -->
+
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+      
+
+      $(document).ready(function() {
+        $('.edit-btn').click(function() {
+            var form = $('#profile-form');
+            var inputs = $(this).closest('form').find('input');
+            if (inputs.prop('readonly')) {
+                inputs.prop('readonly', false);
+                $('#image').prop('disabled', false);
+                $(this).text('Save');
+            } else {
+                form.submit();  
+                inputs.prop('readonly', true);
+                $('#image').prop('disabled', true);
+                $(this).text('Edit');
+            }
+        });
+
+    
+  
+          // Toggle password visibility
+          $('.toggle-password').click(function() {
+              $(this).find('span').toggleClass('fa-eye fa-eye-slash');
+              let input = $(this).closest('.input-group').find('input');
+              if (input.attr('type') === 'password') {
+                  input.attr('type', 'text');
+              } else {
+                  input.attr('type', 'password');
+              }
+          });
+      });
+  </script>
+
+</body>
+
+</html>
+
+
+
+
+

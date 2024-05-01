@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Admin Dashboard</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+</head>
+
+<body>
+    <div id="flash-message">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+         {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+         {% endif %}
+        {% endwith %}
+    </div>    
+
+
+
+    <!--    1. add a new admin DONE
+            2. remove an admin (only by owner) DONE
+            3. see all resturants DONE
+            4. block and unblock a restuarent DONE
+            5. see all users 
+            6. block and unblock a user -->
+    <h1>Hello {{name[0]}}</h1>
+
+    <a href="/Add-new-admin">Add a new admin</a>
+    
+    <br><br><br><br>
+    <a href="/remove-admin">Remove Admin</a>
+
+    <br><br><br><br>
+    <a href="/All-Resturants">See all resturants</a>
+    
+
+    <br><br><br><br>
+    <a href="/All-Users">See all resturants</a>
+    
+    <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+
+
+</body>
+
+
+</html>
