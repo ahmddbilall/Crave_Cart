@@ -199,22 +199,18 @@
                 
                 <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
                   <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                    
-                    <!-- minus sign-->
-                    <i class='fas'>&#xf068;</i>
-                </button>
-  
-                  <input id="form1" min="0" name="quantity" value="1" type="number"
-                    class="form-control form-control-sm" />
-  
-                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
-                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                    
-                    <!--plus sign-->
-                    <i class="fas fa-plus"></i>
+                      onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
+                      <!-- minus sign-->
+                      <i class='fas'>&#xf068;</i>
                   </button>
-                </div>
+                  <input id="quantityInput" min="1" name="quantity" value="{{item['quantity']}}" type="number"
+                      class="form-control form-control-sm" />
+                  <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
+                      onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
+                      <!--plus sign-->
+                      <i class="fas fa-plus"></i>
+                  </button>
+              </div>
                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                   <h5 class="mb-0">{{item['OriginalPrice']}}</h5>
                   <h5 class="mb-0">{{item['DiscountedPrice']}}</h5>
@@ -222,7 +218,7 @@
 
 
                 <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                  <a href="#!" class="text-danger" id="delete-button" data-menuid={{item['menuid']}}><i class="fas fa-trash fa-lg"></i></a>
+                  <a href="#!" class="text-danger" id="delete-button" data-menuid={{item['menuid']}} ><i class="fas fa-trash fa-lg"></i></a>
               </div>
               
                 
@@ -234,7 +230,7 @@
                         {%if item['Instructions'] == ''%}
                           <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" placeholder="Enter Instructions for this item" />
                           {%else%}
-                          <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" value={{item['Instructions']}} />
+                          <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" value="{{item['Instructions']}}" />
                         {%endif%}
                         
                         <button type="save" class="btn btn--primary btn--inside uppercase save-button" data-menuid={{item['menuid']}} style="height:32px;background-color: #ffbe33;color: white;border: 0px solid #ffbe33;">Save</button>
@@ -250,7 +246,7 @@
 
         <div class="card">
           <div class="card-body">
-            <button type="button" style="width:900px;height:50px;background-color: #ffbe33;border-radius:10px;border: 0px solid #ffbe33;font-weight: bold;font-size:20px;">Order</button>
+            <button type="button" class="orderButtonCart" style="width:900px;height:50px;background-color: #ffbe33;border-radius:10px;border: 0px solid #ffbe33;font-weight: bold;font-size:20px;">Order</button>
           </div>
         </div>
 

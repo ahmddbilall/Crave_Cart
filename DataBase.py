@@ -77,6 +77,7 @@ def create_tables():
                         menuid INTEGER,
                         customerid INTEGER,
                         Instructions TEXT,
+                        quantity INTEGER DEFAULT 1,
                         FOREIGN KEY (menuid) REFERENCES Menus (MenuID),
                         FOREIGN KEY (customerid) REFERENCES Customers (CustomerID)
                     );''')
@@ -88,6 +89,7 @@ def create_tables():
                         status TEXT,
                         quantity INTEGER,
                         instructions TEXT,
+    
                         Date TEXT,
                         FOREIGN KEY (menuid) REFERENCES Menus (MenuID),
                         FOREIGN KEY (customerid) REFERENCES Customers (CustomerID)
@@ -204,27 +206,27 @@ def get_all_restaurants():
 
 def get_all_cart(Customerid):
     try:
-        cursor.execute('''SELECT m.ItemName, m.Price, p.Discount, m.ImagePNG, c.Instructions ,m.Menuid
+        cursor.execute('''SELECT m.ItemName, m.Price, p.Discount, m.ImagePNG, c.Instructions ,m.Menuid , c.quantity
                           FROM CART c 
                           JOIN Menus m ON c.menuid = m.MenuID 
                           LEFT JOIN Promotions p ON c.menuid = p.MenuID 
                           WHERE c.customerid = ?;''', [Customerid])
         cart_items = cursor.fetchall()
-        print(cart_items)
         items_with_discounts = []
         for item in cart_items:
-            item_name, price, discount, image, instructions ,menuid= item
-            if discount is not None:  # Check if the item has an active promotion
-                discounted_price = price * (1 - discount / 100)  # Calculate discounted price
+            item_name, price, discount, image, instructions ,menuid,quantity= item
+            if discount is not None:  
+                discounted_price = price * (1 - discount / 100)
             else:
-                discounted_price = 0  # If no discount, set discounted price to 0
+                discounted_price = price  
             items_with_discounts.append({
                 'ItemName': item_name,
                 'OriginalPrice': price,
                 'DiscountedPrice': discounted_price,
                 'ImagePNG': image,
                 'Instructions': instructions,
-                'menuid':menuid
+                'menuid':menuid,
+                'quantity':quantity
             })
         return items_with_discounts
     except Exception as e:
@@ -240,6 +242,78 @@ def Add_new_admin(email,password,name):
         return ''
     except Exception as e:
         return f'Error: {str(e)}'
+
+def placeOrder(customerid,date):
+    try:
+        
+        cursor.execute('''INSERT INTO Orders (menuid, customerid, status, quantity, instructions, Date)
+                          SELECT menuid, customerid, 'delivered', quantity, Instructions, ? 
+                          FROM CART WHERE customerid = ?''', [date,customerid])
+        
+        cursor.execute('''DELETE FROM CART WHERE customerid = ?''', [customerid])
+        
+        connection.commit()
+        
+        return 'Order placed successfully!'
+    except Exception as e:
+        print(str(e))
+        return 'Database error'
+
+
+
+def get_order_details(customer_id):
+    try:
+        cursor.execute('''SELECT O.orderid, M.ItemName, M.ImageJPG, O.quantity, O.Date, O.status, R.Rating, R.Comment, O.instructions, M.price,M.Menuid
+                          FROM Orders O
+                          INNER JOIN Menus M ON O.menuid = M.MenuID
+                          LEFT JOIN Ratings R ON O.orderid = R.OrderID
+                          WHERE O.customerid = ?''', (customer_id,))
+        
+        order_details = cursor.fetchall()
+
+        order_details_list = []
+        for item in order_details:
+            
+            order_id, item_name, image_jpg, quantity, order_date, status, rating, comment, instructions, price,menuid = item
+
+            discount = get_discount_for_item_on_date(menuid, order_date)
+            if discount is not None:
+                discounted_price = price * (1 - discount / 100)
+                price = discounted_price
+            item_dict = {
+                'OrderID': order_id,
+                'ItemName': item_name,
+                'ImageJPG': image_jpg,
+                'Quantity': quantity,
+                'Date': order_date,
+                'Status': status,
+                'Rating': rating,
+                'Comment': comment,
+                'Instructions': instructions,
+                'Price': price
+            }
+            order_details_list.append(item_dict)
+        
+        return order_details_list
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return None
+
+def get_discount_for_item_on_date(menuid, order_date):
+    try:
+        cursor.execute('''SELECT p.Discount
+                          FROM Promotions p
+                          WHERE menuid = ? AND ? BETWEEN p.StartDate AND p.EndDate''', (menuid, order_date))
+        result = cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return None
+    
+
 
 
 def blockResturant(resturantID,adminMail):
@@ -283,7 +357,8 @@ def unblockUser(CustomerID):
         print( e)
         return False
 
-    
+
+
 def unblockResturant(CustomerID):
     try:
         cursor.execute("UPDATE Restaurants SET Blocked = 0, BlockedByAdmin = NULL WHERE CustomerID = ?", [CustomerID])
@@ -384,13 +459,17 @@ def EmailCheck(id):
         return f'Error: {str(e)}'
 
 
-def addToCart(menu_title,Description,Price,Customerid,instructions=''):
+def addToCart(menu_title,Description,Price,Customerid,instructions=' '):
     try:
+        print(menu_title,Description,Price)
+        
         cursor.execute('''SELECT MenuID FROM Menus where ItemName=? and Description=? and Price=?;''',[menu_title,Description,Price])
         id = cursor.fetchone()[0]
+        print(id)
         cursor.execute('''SELECT * FROM Cart where Menuid=? and CustomerId =?;''',[id,Customerid])
         if cursor.fetchall():
             return 'Item already added'
+        print('i am here')
         cursor.execute('''INSERT INTO Cart (Menuid, CustomerId, Instructions)VALUES (?, ?, ?);''',[id,Customerid,instructions])
         connection.commit()
         return 'Item added to cart successfully!'
@@ -427,17 +506,33 @@ def removeFromcart(menuid,Customerid):
         print(str(e))
         return 'Database error' 
     
-def instructionUpdateFromcart(menuid, Customerid, instruction):
+def UpdateFromcart(menuid, Customerid, instruction,quantity):
     try:
-        cursor.execute('''UPDATE CART SET instructions=? WHERE menuid=? AND customerid=?;''', [instruction, menuid, Customerid])
+        cursor.execute('''UPDATE CART SET instructions=? , quantity=? WHERE menuid=? AND customerid=?;''', [instruction,quantity, menuid, Customerid])
         connection.commit()
-        return 'Instruction added or updated!'
+        return 'item updated!'
     except Exception as e:
         print(str(e))
         return 'Database error'
 
+def UpdateRating(Customerid,orderid, rating,comment):
+    try:
+        cursor.execute('''SELECT RatingID FROM Ratings WHERE OrderID = ? AND CustomerID = ?''', (orderid, Customerid))
+        existing_rating = cursor.fetchone()
+        if existing_rating:
+            rating_id = existing_rating[0]
+            cursor.execute('''UPDATE Ratings SET Rating = ?, Comment = ? WHERE RatingID = ?''', (rating, comment, rating_id))
+        else:
+            cursor.execute('''SELECT menuid FROM Orders WHERE orderid = ? AND customerid = ?''', (orderid, Customerid))
+            menuid = cursor.fetchone()[0]
+            cursor.execute('''INSERT INTO Ratings (OrderID, CustomerID, MenuID, Rating, Comment) VALUES (?, ?, ?, ?, ?)''',
+                           (orderid, Customerid, menuid, rating, comment))
 
-
+        connection.commit()
+        return 'Rating updated successfully!'
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return 'Database error'
 
 
 def get_Menu_With_Id(ids):
@@ -498,24 +593,24 @@ def getItemSearch(name):
 def get_active_promotions(current_date,limit=100,all=False,png=False):
     try:
         if all and png:
-            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImagePNG FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImagePNG, m.itemname FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
                         WHERE p.StartDate <= ? AND p.EndDate >= ?""", [current_date, current_date])
         else:
-            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG,m.itemName  FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
                         WHERE p.StartDate <= ? AND p.EndDate >= ? Limit ?""", [current_date, current_date,limit])
         rows = cursor.fetchall()
         promotions_data = []
         for row in rows:
-            promotion_name, price, discount, image = row
+            promotion_name, price, discount, image ,itemName= row
             discounted_price = price * (1 - discount / 100)
-            promotions_data.append({'PromotionName': promotion_name,'Price': price,'Discount': discount,'Image': image,'DiscountedPrice': discounted_price})
+            promotions_data.append({'PromotionName': promotion_name,'Price': price,'Discount': discount,'Image': image,'DiscountedPrice': discounted_price,'itemName':itemName})
         return promotions_data
     except sqlite3.Error as e:
         print("Error fetching data from database:", e)
         
         return []
 
-def addToFavourites(menu_title,Description,Price,Customerid,PromotionName=''):
+def addToFavourites(Customerid,menu_title='',Description='',Price='',PromotionName=''):
     try:
         if PromotionName == '':
             cursor.execute('''SELECT MenuID FROM Menus where ItemName=? and Description=? and Price=?;''',[menu_title,Description,Price])

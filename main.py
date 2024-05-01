@@ -72,6 +72,41 @@ def addToCartSearch():
     return redirect('/search')
 
 
+@app.route('/handle-Add-to-cart-from-recommend',methods=['GET','POST'])
+def addToCartrecommend():
+    if 'username' not in session:
+        return redirect('/login')
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    Price = request.args.get('Price')
+    Customerid = session['username'] 
+    
+    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
+    if output =='Item added to cart successfully!':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/recommendation')
+
+@app.route('/handle-Add-to-cart-from-favourite',methods=['GET','POST'])
+def addToCartfavourite():
+    if 'username' not in session:
+        return redirect('/login')
+    menu_titlee = request.args.get('ItemName')
+    Descriptionn = request.args.get('Description')
+    Pricee = request.args.get('Price')
+    Customerid = session['username'] 
+    print(menu_titlee,Descriptionn,Pricee)
+    print(Descriptionn)
+    output = DataBase.addToCart(menu_title=menu_titlee,Description=Descriptionn,Price=Pricee,Customerid=Customerid)
+    if output =='Item added to cart successfully!':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/favourites')
+
+
+
 @app.route('/handle-Add-to-cart-from-home',methods=['GET','POST'])
 def addToCartHome():
     if 'username' not in session:
@@ -101,7 +136,6 @@ def addToCartPromotionHome():
     Customerid = session['username'] 
     
     output = DataBase.addToCartPromotion(PromotionTitle=PromotionTitle,discounts=discounts,Customerid=Customerid)
-    print(output)
     if output =='Item added to cart successfully!':
         
         flash(output, 'success')
@@ -142,7 +176,7 @@ def Favourites():
 
 
 @app.route('/handle-Add-to-favourite-from-home',methods=['GET','POST'])
-def addToFavourite():
+def addToFavouriteHome():
     if 'username' not in session:
         return redirect('/login')
     
@@ -158,6 +192,58 @@ def addToFavourite():
         flash(output, 'error')
     return redirect('/home')
 
+
+
+@app.route('/handle-remove-to-favourite-from-favourites',methods=['GET','POST'])
+def removeFromFavourite():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    Price = request.args.get('Price')
+    Customerid = session['username'] 
+    
+    output = DataBase.addToFavourites(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
+    if output =='Item added to cart successfully!' or output == 'Item Removed from Favourites':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/favourites')
+
+@app.route('/handle-Add-to-favourite-from-search',methods=['GET','POST'])
+def addToFavouriteSearch():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    Price = request.args.get('Price')
+    Customerid = session['username'] 
+    
+    output = DataBase.addToFavourites(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
+    if output =='Item added to cart successfully!' or output == 'Item Removed from Favourites':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/search')
+
+@app.route('/handle-Add-to-favourite-from-recommend',methods=['GET','POST'])
+def addToFavouriterecommend():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    Price = request.args.get('Price')
+    Customerid = session['username'] 
+    
+    output = DataBase.addToFavourites(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
+    if output =='Item added to cart successfully!' or output == 'Item Removed from Favourites':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/recommendation')
 
 @app.route('/handle-Add-to-fav-Promotion-from-discount',methods=['GET','POST'])
 def addToFavouriteDiscount():
@@ -228,15 +314,27 @@ def instructionfromCart():
     
     menuid = request.args.get('menuid')
     instruction = request.args.get('instruction')
+    quantity = request.args.get('quantity')
     Customerid = session['username'] 
-    output = DataBase.instructionUpdateFromcart(menuid=menuid,Customerid=Customerid,instruction=instruction)
-    print(output)
-    if output =='Instruction added or updated!':
+    output = DataBase.UpdateFromcart(menuid=menuid,Customerid=Customerid,instruction=instruction,quantity=quantity)
+    if output =='item updated!':
         flash(output, 'success')
     else:
         flash(output, 'error')
     return redirect('/cart') 
 
+@app.route('/handle-order-from-cart',methods=['GET','POST'])
+def orderfromCart():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    Customerid = session['username'] 
+    output = DataBase.placeOrder(customerid=Customerid,date=date.today().strftime("%Y-%m-%d"))
+    if output =='Order placed successfully!':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/cart') 
 
  
   
@@ -253,7 +351,6 @@ def profile():
     data = DataBase.get_customer_info(id = session['username'])
     
     if request.method == 'POST':
-        print('In post')
         name = request.form['name']
         email = request.form['email']
         password = request.form['password-input']
@@ -278,12 +375,25 @@ def profile():
 
 @app.route('/trackorders')
 def trackOrders():
+    if 'username' not in session:
+        return redirect('/login')
+
+    data = DataBase.get_order_details(customer_id=session['username'])
+    return render_template('user/trackorders.html',order_details=data,dataLength=len(data))
+
+@app.route('/add-review',methods=['POST','GET'])
+def addReview():
+    if 'username' not in session:
+        return redirect('/login')
+
+    if request.method == 'POST':
+        rating = request.form['rating']
+        comment = request.form['comment']
+        order_id = request.form['order_id']
+        DataBase.UpdateRating(Customerid=session['username'],orderid=order_id, rating=rating,comment=comment)
+        
     
-    render_template('trackorders.html')
-    pass
-
-
-
+    return redirect('trackorders')
 
 
 # resturant

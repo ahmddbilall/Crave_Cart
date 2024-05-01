@@ -155,10 +155,47 @@
     <!-- end header section -->
 
 
+    {% if dataLength!=0%}
 
 
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        {% for item in order_details %}
 
+        
+          <div class="order-item">
+            <img src="{{ url_for('static', filename='images/' + item['ImageJPG']) }}">
+            <h3>{{ item['ItemName'] }}</h3>
+            <p>Quantity: {{ item['Quantity'] }}</p>
+            <p>Date: {{ item['Date'] }}</p>
+            <p>Status: {{ item['Status'] }}</p>
+            <p>Price: {{ item['Price'] }}</p>
+            {% if item['Status'] == 'delivered' %}
+            <form action="/add-review" method="post">
+                <input type="hidden" name="order_id" value="{{ item['OrderID'] }}">
+                <label for="rating">Rating:</label>
+                <input type="number" name="rating" min="1" max="5" value="{{item['Rating']}}">
+                <label for="comment">Comment:</label>
+                <textarea name="comment">{{item['Comment']}}</textarea>
+                <button type="submit">Add Review</button>
+            </form>
+          
+          
+          
+            {% endif %}
+          </div>
+
+
+
+        {% endfor %}
+
+    {%else%}
+    <br><br><br><br><br><br><br>
+    
+    <h1 style="margin-left:150px;font-size:90px;">No orders placed</h1>
+    
+    
+    <br><br><br><br><br><br><br><br>
+
+    {%endif%}
 
 
 

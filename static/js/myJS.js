@@ -127,8 +127,38 @@ function addToCartSearch(itemName, description, price) {
     window.location.href = '/handle-Add-to-cart-from-search?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
 }
 
+// for add to cart on search page
+var addToCartButtonrecommend = document.querySelectorAll('.add-to-cart-btn-recommend');
+addToCartButtonrecommend.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        addToCartrecommend(itemName, description, price);
+    });
+});
+function addToCartrecommend(itemName, description, price) {
+    window.location.href = '/handle-Add-to-cart-from-recommend?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
+}
 
 
+
+
+// for add to cart on search page
+var addToCartButtonfavourite = document.querySelectorAll('.add-to-cart-btn-favourites');
+addToCartButtonfavourite.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        addToCartfavourite(itemName, description, price);
+    });
+});
+function addToCartfavourite(itemName, description, price) {
+    window.location.href = '/handle-Add-to-cart-from-favourite?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
+}
 
 
 // for add to cart on discount 
@@ -167,28 +197,33 @@ function removeFromCart(menuid) {
 
 
 //add or edit instruction
-var saveButtonInstructionCart = document.querySelector('.save-button');
-saveButtonInstructionCart.addEventListener('click', function(event) {
-    event.preventDefault();
-    var instruction = document.getElementById('instruction-input').value;
-    var menuid = button.getAttribute('data-menuid');
-    instructionCart(menuid,instruction)
-});
+var saveButtonInstructionCart = document.querySelectorAll('.save-button');
+saveButtonInstructionCart.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var form = button.closest('.form');
+        var instruction = form.querySelector('.form__field').value;
+        var menuid = button.getAttribute('data-menuid');
+        var quantity = document.getElementById('quantityInput').value;
 
-function instructionCart(menuid,instruction) {
-    window.location.href = '/handle-instruction-from-cart?menuid=' + encodeURIComponent(menuid)+ '&instruction=' + encodeURIComponent(instruction);
+        instructionCart(menuid, instruction,quantity);
+    });
+});
+function instructionCart(menuid,instruction,quantity) {
+    window.location.href = '/handle-instruction-from-cart?menuid=' + encodeURIComponent(menuid)+ '&instruction=' + encodeURIComponent(instruction)+ '&quantity=' + encodeURIComponent(quantity);
 }
 
-
-
-
-
-
-
-
-
-
-
+//orderButtonCart
+var orderButtonInstructionCart = document.querySelectorAll('.orderButtonCart');
+orderButtonInstructionCart.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        placeorder();
+    });
+});
+function placeorder() {
+    window.location.href = '/handle-order-from-cart';
+}
 
 
 // for add to cart on home for promotions
@@ -201,10 +236,12 @@ document.addEventListener('click', function(event) {
         addToCartPromotionHome(PromotionName, discount);
     }
 });
-
 function addToCartPromotionHome(PromotionName, discount) {
     window.location.href = '/handle-Add-to-cart-Promotion-from-home?PromotionName=' + encodeURIComponent(PromotionName) + '&discount=' + encodeURIComponent(discount);
 }
+
+
+
 
 
 //add to favourites from discount
@@ -222,6 +259,22 @@ function addToFavPromotionHome(PromotionName) {
 
 
 
+//remove from favourites from favourite
+var removetofavouriteDiscount = document.querySelectorAll('.favorite-btn-favourite');
+removetofavouriteDiscount.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        removeToFavHome(itemName, description, price);
+    });
+});
+function removeToFavHome(itemName, description, price) {
+    window.location.href = '/handle-remove-to-favourite-from-favourites?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
+}
+
+
 
 //add to favourites from home
 var addtofavouriteHome = document.querySelectorAll('.favorite-btn');
@@ -236,6 +289,39 @@ addtofavouriteHome.forEach(function(button) {
 });
 function addToFavHome(itemName, description, price) {
     window.location.href = '/handle-Add-to-favourite-from-home?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
+}
+
+
+//add to favourites from search
+var addtofavouritesearch = document.querySelectorAll('.favorite-btn-search');
+addtofavouritesearch.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        addToFavSearch(itemName, description, price);
+    });
+});
+function addToFavSearch(itemName, description, price) {
+    window.location.href = '/handle-Add-to-favourite-from-search?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
+}
+
+
+
+//add to favourites from recommend
+var addtofavouriterecommend = document.querySelectorAll('.favorite-btn-recommend');
+addtofavouriterecommend.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        addToFavrecommend(itemName, description, price);
+    });
+});
+function addToFavrecommend(itemName, description, price) {
+    window.location.href = '/handle-Add-to-favourite-from-recommend?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
 }
 
 // For add to cart in home for menu items
