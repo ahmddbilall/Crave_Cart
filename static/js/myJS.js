@@ -11,7 +11,7 @@ setTimeout(function() {
     if (flashMessage) {
         flashMessage.style.display = 'none';
     }
-}, 2000);
+}, 4000);
 
 
 
@@ -131,28 +131,112 @@ function addToCartSearch(itemName, description, price) {
 
 
 
+// for add to cart on discount 
+var addToCartButtonsPromotionDiscounts = document.querySelectorAll('.add-to-cart-btn-discount');
+addToCartButtonsPromotionDiscounts.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var PromotionName = button.getAttribute('data-name');
+        addToCartPromotionDiscount(PromotionName);
+    });
+});
+function addToCartPromotionDiscount(PromotionName) {
+    window.location.href = '/handle-Add-to-cart-from-discount?PromotionName=' + encodeURIComponent(PromotionName);
+}
+
+
+
+
+
+
+
+// remove from cart
+var cartItemDelete = document.querySelectorAll('.text-danger');
+cartItemDelete.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var menuid = button.getAttribute('data-menuid');
+        removeFromCart(menuid)
+
+    });
+});
+function removeFromCart(menuid) {
+    window.location.href = '/handle-remove-from-cart?menuid=' + encodeURIComponent(menuid);
+}
+
+
+
+//add or edit instruction
+var saveButtonInstructionCart = document.querySelector('.save-button');
+saveButtonInstructionCart.addEventListener('click', function(event) {
+    event.preventDefault();
+    var instruction = document.getElementById('instruction-input').value;
+    var menuid = button.getAttribute('data-menuid');
+    instructionCart(menuid,instruction)
+});
+
+function instructionCart(menuid,instruction) {
+    window.location.href = '/handle-instruction-from-cart?menuid=' + encodeURIComponent(menuid)+ '&instruction=' + encodeURIComponent(instruction);
+}
+
+
+
+
+
+
+
+
 
 
 
 
 
 // for add to cart on home for promotions
-var addToCartButtonsPromotion = document.querySelectorAll('.add-to-cart-btn-promortion');
-addToCartButtonsPromotion.forEach(function(button) {
-    button.addEventListener('click', function(event) {
+document.addEventListener('click', function(event) {
+    if (event.target.matches('.add-to-cart-btn-promortion')) {
         event.preventDefault();
+        var button = event.target;
         var PromotionName = button.getAttribute('data-PromotionName');
         var discount = button.getAttribute('data-discount');
         addToCartPromotionHome(PromotionName, discount);
-    });
+    }
 });
+
 function addToCartPromotionHome(PromotionName, discount) {
     window.location.href = '/handle-Add-to-cart-Promotion-from-home?PromotionName=' + encodeURIComponent(PromotionName) + '&discount=' + encodeURIComponent(discount);
 }
 
 
+//add to favourites from discount
+var addtofavouriteDiscount = document.querySelectorAll('.favorite-btn-discount');
+addtofavouriteDiscount.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var PromotionName = button.getAttribute('data-name');
+        addToFavPromotionHome(PromotionName);
+    });
+});
+function addToFavPromotionHome(PromotionName) {
+    window.location.href = '/handle-Add-to-fav-Promotion-from-discount?PromotionName=' + encodeURIComponent(PromotionName);
+}
 
 
+
+
+//add to favourites from home
+var addtofavouriteHome = document.querySelectorAll('.favorite-btn');
+addtofavouriteHome.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        addToFavHome(itemName, description, price);
+    });
+});
+function addToFavHome(itemName, description, price) {
+    window.location.href = '/handle-Add-to-favourite-from-home?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
+}
 
 // For add to cart in home for menu items
 var addToCartButtons = document.querySelectorAll('.add-to-cart-btn');

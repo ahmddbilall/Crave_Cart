@@ -3,13 +3,24 @@ import secrets
 import DataBase
 import helpingFunctions
 from datetime import date
-
+import os
+from werkzeug.utils import secure_filename
 
 secret_key = secrets.token_hex(16)
 app = Flask(__name__)
 app.secret_key = secret_key
+app.config['UPLOAD_FOLDER'] = 'static/images'
 
+
+  
+  
         
+
+
+
+
+
+
 
 # USER
       
@@ -18,7 +29,7 @@ def home():
     if 'username' not in session:
         return redirect(url_for('login'))
     
-    data = DataBase.get_menu_data(limit=10)
+    data = DataBase.get_menu_data(limit=6)
     Pro = DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"), limit=2)
     return render_template('user/home.html',menu_data=data,Promotions=Pro)
 
@@ -51,9 +62,9 @@ def addToCartSearch():
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
-    CustomerEmail = session['username'] 
+    Customerid = session['username'] 
     
-    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail)
+    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
     if output =='Item added to cart successfully!':
         flash(output, 'success')
     else:
@@ -69,9 +80,9 @@ def addToCartHome():
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
-    CustomerEmail = session['username'] 
-    print(menu_title,Description,Price,CustomerEmail)
-    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail)
+    Customerid = session['username'] 
+    print(menu_title,Description,Price,Customerid)
+    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
     print(output)
     if output =='Item added to cart successfully!':
         flash(output, 'success')
@@ -87,21 +98,39 @@ def addToCartPromotionHome():
     
     PromotionTitle = request.args.get('PromotionName')
     discounts = request.args.get('discount')
-    CustomerEmail = session['username'] 
+    Customerid = session['username'] 
     
-    output = DataBase.addToCartPromotion(PromotionTitle=PromotionTitle,discounts=discounts,CustomerEmail=CustomerEmail)
+    output = DataBase.addToCartPromotion(PromotionTitle=PromotionTitle,discounts=discounts,Customerid=Customerid)
+    print(output)
     if output =='Item added to cart successfully!':
+        
         flash(output, 'success')
     else:
         flash(output, 'error')
     return redirect('/home')
 
 
-@app.route('/recommendation')
+
+@app.route('/recommendation',methods=['GET','POST'])
 def Recommendation():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('user/recommendation.html')
+    query = False
+    ans = False
+    Data = []
+    input=''
+    if request.method == 'POST':
+        input = request.form['item']
+        query = True
+        dataIds = helpingFunctions.recommend(input)
+        if len(dataIds) == 0:
+            flash('Nothing found related to '+str(input),'error')
+            ans = False
+        else:
+            Data = DataBase.get_Menu_With_Id(dataIds)
+            ans = True
+
+    return render_template('user/recommendation.html',menu=Data,item_names=helpingFunctions.get_all_item_name(),query=query,ans=ans,name=input)
 
 
 @app.route('/favourites')
@@ -120,21 +149,53 @@ def addToFavourite():
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
-    CustomerEmail = session['username'] 
+    Customerid = session['username'] 
     
-    output = DataBase.addToFavourites(menu_title=menu_title,Description=Description,Price=Price,CustomerEmail=CustomerEmail)
-    if output =='Item added to cart successfully!':
+    output = DataBase.addToFavourites(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
+    if output =='Item added to cart successfully!' or output == 'Item Removed from Favourites':
         flash(output, 'success')
     else:
         flash(output, 'error')
     return redirect('/home')
 
 
+@app.route('/handle-Add-to-fav-Promotion-from-discount',methods=['GET','POST'])
+def addToFavouriteDiscount():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    Promotion = request.args.get('PromotionName')
+    Customerid = session['username'] 
+    
+    output = DataBase.addToFavourites(PromotionName=Promotion,Customerid=Customerid)
+    if output =='Item added to cart successfully!' or output == 'Item Removed from Favourites':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/discounts')
+
+
+@app.route('/handle-Add-to-cart-from-discount',methods=['GET','POST'])
+def addToCartDiscount():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    PromotionTitle = request.args.get('PromotionName')
+    Customerid = session['username'] 
+    print(PromotionTitle)
+    output = DataBase.addToCartPromotion(PromotionTitle=PromotionTitle,discounts=0,Customerid=Customerid)
+    if output =='Item added to cart successfully!':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/discounts')
+
+
 @app.route('/discounts')
 def discounts():
     if 'username' not in session:
         return redirect('/login')
-    data= DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"),all=True)
+    data= DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"),all=True,png=True)
     return render_template('user/discounts.html',data=data,result=len(data))
 
 @app.route('/cart')
@@ -143,30 +204,83 @@ def cart():
         return redirect('/login')
     
     dataa = DataBase.get_all_cart(session['username'])
-    print(dataa)
     return render_template('user/cart.html',data=dataa)
+  
+  
+@app.route('/handle-remove-from-cart',methods=['GET','POST'])
+def removefromCart():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    menuid = request.args.get('menuid')
+    Customerid = session['username'] 
+    output = DataBase.removeFromcart(menuid=menuid,Customerid=Customerid)
+    if output =='Deleted!':
+        flash('Item deleted from cart', 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/cart') 
+
+@app.route('/handle-instruction-from-cart',methods=['GET','POST'])
+def instructionfromCart():
+    if 'username' not in session:
+        return redirect('/login')
+    
+    menuid = request.args.get('menuid')
+    instruction = request.args.get('instruction')
+    Customerid = session['username'] 
+    output = DataBase.instructionUpdateFromcart(menuid=menuid,Customerid=Customerid,instruction=instruction)
+    print(output)
+    if output =='Instruction added or updated!':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/cart') 
+
+
+ 
   
 @app.route('/')
 def login_redirect():
     if 'username' in session:
-        user = DataBase.EmailCheck(session['username'])
-        if user == 'Customer':
-            return redirect(url_for('home'))
-        elif user == 'Restaurant':
-            return redirect(url_for('restaurantHome'))
-        else:
-            redirect(url_for('login'))
+        return redirect(url_for('home'))
     return redirect(url_for('login'))
 
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('user/profile.html', username=session['username'])
+    data = DataBase.get_customer_info(id = session['username'])
+    
+    if request.method == 'POST':
+        print('In post')
+        name = request.form['name']
+        email = request.form['email']
+        password = request.form['password-input']
+        phone = request.form['phone']
+        address = request.form['address']
+    
+        file = request.files['image']
+        if file:
+            imageName = secure_filename(file.filename)
+            if imageName:
+                file.save(os.path.join(app.config['UPLOAD_FOLDER'], imageName))
+        else:
+            if data[5]!='default.jpg':
+                imageName = data[5]
+            else:
+                imageName = 'default.jpg'
+        DataBase.UpdateCustomer(name=name,email=email,password=password,phone=phone,imageName=imageName,address=address,id=session['username'])  
+        data = DataBase.get_customer_info(id = session['username'])
+    
+    return render_template('user/profile.html',data=data)
 
 
-
-
+@app.route('/trackorders')
+def trackOrders():
+    
+    render_template('trackorders.html')
+    pass
 
 
 
@@ -352,6 +466,14 @@ def adminlogout():
 
 # Common for all users and resturants
 
+
+
+@app.route('/Aboutus')
+def aboutus():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    return render_template('aboutus.html')
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
@@ -386,21 +508,22 @@ def signup():
         registration_date = date.today().strftime("%Y-%m-%d")
         if account_type == 'Customer':
             status =DataBase.insert_user(email=email,password=password,registration_date=registration_date)
-            if status == '':
-                flash('Customer added successfully','success')
-                session['username'] = email
-                return redirect(url_for('home'))
-            else:
+            if isinstance(status, str):
                 flash(status,'error')
+            else:
+                flash('Customer added successfully','success')
+                session['username'] = status
+                return redirect(url_for('home'))
         elif account_type == 'restaurant':
             status =DataBase.insert_restaurants(email=email,password=password,registration_date=registration_date)
-            if status == '':
-                flash('Restaurant added successfully','success')
-                session['username'] = email
-                return redirect(url_for('home'))
-            else:
+            if isinstance(status, str):
                 flash(status,'error')
+            else:
+                flash('Restaurant added successfully','success')
+                session['username'] = status
+                return redirect(url_for('home'))
     return render_template('signup.html')
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -413,10 +536,10 @@ def login():
         if status == 'Customer' or status == 'Restaurant':
             currentUser = status
             if (currentUser == 'Customer'):
-                session['username'] = email
+                session['username'] = DataBase.get_customer_id(email,password)
                 return redirect(url_for('home'))
             else:
-                session['username'] = email
+                session['username'] = DataBase.get_restaurants_id(email,password)
                 return redirect(url_for('restaurantHome'))
         else:
             flash(status,'error')

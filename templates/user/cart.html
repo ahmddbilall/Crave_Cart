@@ -33,13 +33,26 @@
 </head>
 
 <body class="sub_page">
-
-  <div class="hero_area">
-    <div class="bg-box">
-      <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+  <div id="flash-message">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
     </div>
-    <!-- header section strats -->
-    <header class="header_section">
+
+
+
+  <!-- header section strats -->
+  <div class="hero_area">
+       <div class="bg-box">
+       <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+      </div>
+      <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
           <a class="navbar-brand" href="home">
@@ -66,18 +79,10 @@
               <li class="nav-item">
                 <a class="nav-link" href="favourites">Favourites</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="trackorders">Orders</a>
+              </li>
             </ul>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Others
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#">Resturants</a> <!-- display all the resturants when user presses a resturant open a new page that will display all menus by that resturant and rating of resturant-->
-                <a class="dropdown-item" href="#">Track Order</a> <!-- in order history add a review button -->
-                <a class="dropdown-item" href="#">About Developers</a>
-              </div>
-            </li>
-
 
             <div class="user_option">
                 <a href="profile" class="user_link">
@@ -182,9 +187,11 @@
               <div class="row d-flex justify-content-between align-items-center">
                 <div class="col-md-2 col-lg-2 col-xl-2">
                   <img
-                    src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                    src="{{url_for('static',filename='images/'+item['ImagePNG'])}}"
                     class="img-fluid rounded-3" alt="Cotton T-shirt">
                 </div>
+
+              
                 
                 <div class="col-md-3 col-lg-3 col-xl-3">
                   <p class="lead fw-normal mb-2">{{item['ItemName']}}</p>
@@ -210,10 +217,14 @@
                 </div>
                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
                   <h5 class="mb-0">{{item['OriginalPrice']}}</h5>
+                  <h5 class="mb-0">{{item['DiscountedPrice']}}</h5>
                 </div>
+
+
                 <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                  <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
-                </div>
+                  <a href="#!" class="text-danger" id="delete-button" data-menuid={{item['menuid']}}><i class="fas fa-trash fa-lg"></i></a>
+              </div>
+              
                 
             </div>
             <br>
@@ -221,29 +232,21 @@
                 <div class="container__item">
                     <form class="form">
                         {%if item['Instructions'] == ''%}
-                          <input type="Instructions" class="form__field" style="width:700px;height:30px;" placeholder="Enter Instructions for this item" />
+                          <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" placeholder="Enter Instructions for this item" />
                           {%else%}
-                          <input type="Instructions" class="form__field" style="width:700px;height:30px;" value={{item['Instructions']}} />
+                          <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" value={{item['Instructions']}} />
                         {%endif%}
                         
-                        <button type="save" class="btn btn--primary btn--inside uppercase" style="height:32px;background-color: #ffbe33;color: white;border: 0px solid #ffbe33;">Save</button>
+                        <button type="save" class="btn btn--primary btn--inside uppercase save-button" data-menuid={{item['menuid']}} style="height:32px;background-color: #ffbe33;color: white;border: 0px solid #ffbe33;">Save</button>
                     </form>
                 </div>
             </div>
+
           </div>
         </div>
         {%endfor%}
 
-        <!-- DiscountCode-->
-        <div class="card mb-4">
-          <div class="card-body p-4 d-flex flex-row" style="background-color: #353535;">
-            <div data-mdb-input-init class="form-outline flex-fill">
-              <label class="form-label" for="form1" style="color:#F7F6F6;">Discound code</label><br>
-              <input type="text" id="form1"  style="width:750px;height:50px;border: 2px solid #F7F6F6;border-radius: 6px;"/>
-              <button type="button" style="height:50px;width:100px;margin-left:15px;border-radius: 6px;background-color: #353535;color: #ffbe33;border: 2px solid #ffbe33;" >Apply</button>
-            </div>
-          </div>
-        </div>
+        
 
         <div class="card">
           <div class="card-body">
@@ -278,86 +281,39 @@
   <!-- footer section -->
   <footer class="footer_section">
     <div class="container">
-      <div class="row">
-
-        <div class="col-md-4 footer-col">
-          <div class="footer_contact">
-            <h4>
-              Contact Us
-            </h4>
-            <div class="contact_link_box">
-              <a href="">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                <span>
-                  Location
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-                <span>
-                  Call +01 1234567890
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-envelope" aria-hidden="true"></i>
-                <span>
-                  demo@gmail.com
-                </span>
-              </a>
+        <div class="row">
+            <div class="col-md-4 footer-col">
+                <div class="footer_detail">
+                    <a href="#" class="footer-logo">Crave Cart</a>
+                    <p>Crave Cart is a convenient and innovative platform that brings together a diverse range of restaurants and culinary delights, allowing users to explore and order their favorite dishes with ease.</p>
+                    <div class="footer_social">
+                        <a ><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="col-md-4 footer-col">
+                <h4></h4>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4>Contact Us</h4>
+                <p>If you have any questions or need assistance, feel free to contact us:</p>
+                
+                <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
+                <p> <i class="fa fa-phone"></i> +1234567890</p>
+                <p> <i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
+            </div>
         </div>
-        
-        <div class="col-md-4 footer-col">
-          <div class="footer_detail">
-            <a href="" class="footer-logo">
-              Feane
-            </a>
-            <p>
-              Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
+        <div class="footer-info">
+            <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
+                <span id="displayYear"></span><a href="/Aboutus"> About Developers </a>
             </p>
-            <div class="footer_social">
-              <a href="">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-instagram" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-pinterest" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
         </div>
-        <div class="col-md-4 footer-col">
-          <h4>
-            Opening Hours
-          </h4>
-          <p>
-            Everyday
-          </p>
-          <p>
-            10.00 Am -10.00 Pm
-          </p>
-        </div>
-      </div>
-      <div class="footer-info">
-        <p>
-          &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Free Html Templates</a><br><br>
-          &copy; <span id="displayYear"></span> Distributed By
-          <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-        </p>
-      </div>
     </div>
-  </footer>
-
+</footer>
   <!-- footer section -->
 
 

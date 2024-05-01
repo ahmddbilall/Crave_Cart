@@ -78,21 +78,14 @@
                 <a class="nav-link" href="discounts">Discounts</a>
               </li>
               <li class="nav-item">
-                      
                       <a class="nav-link" href="favourites">Favourites<span class="sr-only">(current)</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="trackorders">Orders</a>
               </li>
             </ul>
 
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Others
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Resturants</a> <!-- display all the resturants when user presses a resturant open a new page that will display all menus by that resturant and rating of resturant-->
-                  <a class="dropdown-item" href="#">Track Order</a> <!-- in order history add a review button -->
-                  <a class="dropdown-item" href="#">About Developers</a>
-                </div>
-              </li>
+            
 
 
             <div class="user_option">
@@ -211,6 +204,8 @@
                 <div class="detail-box">
                   <h5>
                     {{item[0]}}
+                    {{item[5]}}
+
                   </h5>
                   <p>
                     {{item[1]}}
@@ -317,86 +312,39 @@
   <!-- footer section -->
   <footer class="footer_section">
     <div class="container">
-      <div class="row">
-
-        <div class="col-md-4 footer-col">
-          <div class="footer_contact">
-            <h4>
-              Contact Us
-            </h4>
-            <div class="contact_link_box">
-              <a href="">
-                <i class="fa fa-map-marker" aria-hidden="true"></i>
-                <span>
-                  Location
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-phone" aria-hidden="true"></i>
-                <span>
-                  Call +01 1234567890
-                </span>
-              </a>
-              <a href="">
-                <i class="fa fa-envelope" aria-hidden="true"></i>
-                <span>
-                  demo@gmail.com
-                </span>
-              </a>
+        <div class="row">
+            <div class="col-md-4 footer-col">
+                <div class="footer_detail">
+                    <a href="#" class="footer-logo">Crave Cart</a>
+                    <p>Crave Cart is a convenient and innovative platform that brings together a diverse range of restaurants and culinary delights, allowing users to explore and order their favorite dishes with ease.</p>
+                    <div class="footer_social">
+                        <a ><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                        <a ><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                    </div>
+                </div>
             </div>
-          </div>
+            <div class="col-md-4 footer-col">
+                <h4></h4>
+            </div>
+            <div class="col-md-4 footer-col">
+                <h4>Contact Us</h4>
+                <p>If you have any questions or need assistance, feel free to contact us:</p>
+                
+                <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
+                <p> <i class="fa fa-phone"></i> +1234567890</p>
+                <p> <i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
+            </div>
         </div>
-        
-        <div class="col-md-4 footer-col">
-          <div class="footer_detail">
-            <a href="" class="footer-logo">
-              Feane
-            </a>
-            <p>
-              Necessary, making this the first true generator on the Internet. It uses a dictionary of over 200 Latin words, combined with
+        <div class="footer-info">
+            <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
+                <span id="displayYear"></span><a href="/Aboutus"> About Developers </a>
             </p>
-            <div class="footer_social">
-              <a href="">
-                <i class="fa fa-facebook" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-twitter" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-linkedin" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-instagram" aria-hidden="true"></i>
-              </a>
-              <a href="">
-                <i class="fa fa-pinterest" aria-hidden="true"></i>
-              </a>
-            </div>
-          </div>
         </div>
-        <div class="col-md-4 footer-col">
-          <h4>
-            Opening Hours
-          </h4>
-          <p>
-            Everyday
-          </p>
-          <p>
-            10.00 Am -10.00 Pm
-          </p>
-        </div>
-      </div>
-      <div class="footer-info">
-        <p>
-          &copy; <span id="displayYear"></span> All Rights Reserved By
-          <a href="https://html.design/">Free Html Templates</a><br><br>
-          &copy; <span id="displayYear"></span> Distributed By
-          <a href="https://themewagon.com/" target="_blank">ThemeWagon</a>
-        </p>
-      </div>
     </div>
-  </footer>
-
+</footer>
   <!-- footer section -->
 
 

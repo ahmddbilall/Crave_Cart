@@ -102,6 +102,20 @@ a:focus {
           flex-direction: column;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .bg-box {
   position: absolute;
   top: 0;
@@ -208,7 +222,27 @@ a:focus {
 
 
 
+.team-item {
+  box-shadow: 0 0 45px rgba(0, 0, 0, .08);
+  height: calc(100% - 38px);
+  transition: .5s;
+}
 
+.team-item img {
+  transition: .5s;
+}
+
+.team-item:hover img {
+  transform: scale(1.1);
+}
+
+.team-item:hover {
+  height: 100%;
+}
+
+.team-item .btn {
+  border-radius: 38px 38px 0 0;
+}
 
 
 
@@ -242,6 +276,38 @@ a:focus {
 
 
 
+
+
+
+
+#item {
+  height: 200px; /* Adjust the height to display 5 items */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+
+.container {
+  text-align: center;
+}
+
+
+.recommend-container{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#recommend {
+  border: none;
+  border-radius: 20px;
+  background-color: #ffbe33; /* Change button color as needed */
+  /*background-color: #1e1e1e; /* Change button color as needed */
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  width:200px
+}
 
 
 
