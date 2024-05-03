@@ -242,8 +242,20 @@
         </div>
         {%endfor%}
 
-        
-
+        <div class="card">
+          <div class="card-body">
+                <h2>Total bill : </h2>
+                <p> {{total}} </p>
+                <h2>Select Type : </h2>
+                <select id="order-type" name="order-type" required>
+                  <option value="Delivery" "selected">Delivery</option>
+                  <option value="Pick-up">Pick-up</option>
+                  <option value="Dine-in">Dine-in</option>
+              </select>
+          
+          </div>
+        </div>
+        <br><br><br>
         <div class="card">
           <div class="card-body">
             <button type="button" class="orderButtonCart" style="width:900px;height:50px;background-color: #ffbe33;border-radius:10px;border: 0px solid #ffbe33;font-weight: bold;font-size:20px;">Order</button>

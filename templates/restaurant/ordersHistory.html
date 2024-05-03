@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-  <!-- Basic -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <!-- Mobile Metas -->
@@ -13,7 +11,7 @@
   <meta name="author" content="" />
   <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
 
-  <title> Cart </title>
+  <title> Crave Cart </title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
@@ -34,15 +32,28 @@
 
 <body class="sub_page">
 
-    <!-- header section strats -->
-    <div class="hero_area">
-       <div class="bg-box">
+  <div id="flash-message">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+     {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          {{ message }}
+        </div>
+      {% endfor %}
+     {% endif %}
+    {% endwith %}
+  </div>
+
+ 
+  <div class="hero_area">
+    <div class="bg-box">
       <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
-      </div>
-        <header class="header_section">
+    </div>
+    <!-- header section strats -->
+    <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="home">
+          <a class="navbar-brand" href="restaurantHome">
             <span>
               Crave Cart
             </span>
@@ -57,87 +68,59 @@
               <li class="nav-item">
                 <a class="nav-link" href="home">Home </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="recommendation">Recommendations  </a>
+
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Items
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="addItem">Add item</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="deleteItem">Remove Item</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="updateItem">Update Item</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="allItems">See All Items</a>
+                </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="discounts">Discounts</a>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Promotions
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="addPromotion">Add Promotion</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="removePromotion">Remove Promotion</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="updatePromotion">Update Promotion</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="allPromotions">See All Promotions</a>
+                </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="favourites">Favourites</a>
+              
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Orders
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="placedOrders">Placed Orders</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="ordersHistory">Orders History</a>
+                </div>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="trackorders">Orders</a>
-              </li>
+            
             </ul>
             
 
 
             <div class="user_option">
-                <a href="profile" class="user_link">
+                <a href="resturantprofile" class="user_link">
                   <i class="fa fa-user" aria-hidden="true"></i>
                 </a>
-                <a class="cart_link" href="cart">
-                  <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 456.029 456.029" style="enable-background:new 0 0 456.029 456.029;" xml:space="preserve">
-                    <g>
-                      <g>
-                        <path d="M345.6,338.862c-29.184,0-53.248,23.552-53.248,53.248c0,29.184,23.552,53.248,53.248,53.248
-                     c29.184,0,53.248-23.552,53.248-53.248C398.336,362.926,374.784,338.862,345.6,338.862z" />
-                      </g>
-                    </g>
-                    <g>
-                      <g>
-                        <path d="M439.296,84.91c-1.024,0-2.56-0.512-4.096-0.512H112.64l-5.12-34.304C104.448,27.566,84.992,10.67,61.952,10.67H20.48
-                     C9.216,10.67,0,19.886,0,31.15c0,11.264,9.216,20.48,20.48,20.48h41.472c2.56,0,4.608,2.048,5.12,4.608l31.744,216.064
-                     c4.096,27.136,27.648,47.616,55.296,47.616h212.992c26.624,0,49.664-18.944,55.296-45.056l33.28-166.4
-                     C457.728,97.71,450.56,86.958,439.296,84.91z" />
-                      </g>
-                    </g>
-                    <g>
-                      <g>
-                        <path d="M215.04,389.55c-1.024-28.16-24.576-50.688-52.736-50.688c-29.696,1.536-52.224,26.112-51.2,55.296
-                     c1.024,28.16,24.064,50.688,52.224,50.688h1.024C193.536,443.31,216.576,418.734,215.04,389.55z" />
-                      </g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                    <g>
-                    </g>
-                  </svg>
-                 </a>
-                 <form class="form-inline active">
-                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()" >
-                      <i class="fa fa-search" aria-hidden="true"></i>
-                  </button>
-                 </form>
-                  <form class="form-inline">
-                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()" >
+                
+                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
                      <i class="fa fa-sign-out" aria-hidden="true"></i> 
                  </button>
                </form>
@@ -150,71 +133,35 @@
           </div>
         </nav>
       </div>
-     </header>
-    </div>
+    </header>
     <!-- end header section -->
+  </div>
 
-
-    {% if dataLength!=0%}
-
-
-        {% for item in order_details %}
-
+  {%if length != 0%}
+    {% for i in data%}
+    <div class="card">
+       <div class="card-body">
+        <h1 style="display: inline;">ItemName</h1> <p> {{ i['ItemName'] }} </p><br>
+        <h1 style="display: inline;">orderid</h1> <p> {{ i['orderid'] }} </p><br>
+        <h1 style="display: inline;">menuid</h1> <p> {{ i['menuid'] }} </p><br>
+        <h1 style="display: inline;">customerid</h1> <p> {{ i['customerid'] }} </p><br>
+        <h1 style="display: inline;">Customer Address</h1> <p> {{ i['address'] }} </p><br>
+        <h1 style="display: inline;">Order status</h1> <p> {{ i['status'] }} </p><br>
+        <h1 style="display: inline;">quantity</h1> <p> {{ i['quantity'] }} </p><br>
+        <h1 style="display: inline;">instructions</h1> <p> {{ i['instructions'] }} </p><br>
+        <h1 style="display: inline;">Type</h1> <p> {{ i['Type'] }} </p><br>
+        <h1 style="display: inline;">Date</h1> <p> {{ i['Date'] }} </p><br>
+        <h1 style="display: inline;">rating</h1> <p> {{ i['rating'] }} </p><br>
         
-          <div class="order-item">
-            <img src="{{ url_for('static', filename='images/' + item['ImageJPG']) }}">
-            <h3>{{ item['ItemName'] }}</h3>
-            <p>Quantity: {{ item['Quantity'] }}</p>
-            <p>Date: {{ item['Date'] }}</p>
-            <p>Status: {{ item['Status'] }}</p>
-            <p>Price: {{ item['Price'] }}</p>
-            {% if item['Status'] == 'complete' %}
-            <form action="/add-review" method="post">
-                <input type="hidden" name="order_id" value="{{ item['OrderID'] }}">
-                <label for="rating">Rating:</label>
-                <input type="number" name="rating" min="1" max="5" value="{{item['Rating']}}">
-                <label for="comment">Comment:</label>
-                <textarea name="comment">{{item['Comment']}}</textarea>
-                <button type="submit">Add Review</button>
-            </form>
-          
-          
-          
-            {% endif %}
-          </div>
-
-
-
-        {% endfor %}
-
-    {%else%}
-    <br><br><br><br><br><br><br>
-    
-    <h1 style="margin-left:150px;font-size:90px;">No orders placed</h1>
-    
-    
-    <br><br><br><br><br><br><br><br>
-
+       </div>
+    </div>
+    <br><br>
+    {%endfor%}
+  {%else%}
+  <br><br><br><br><br><br><br>
+    <h1>Nothing Orderd Yet</h1>
+    <br><br><br><br><br><br><br><br><br><br>
     {%endif%}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   <!-- footer section -->
   <footer class="footer_section">
@@ -247,7 +194,7 @@
         </div>
         <div class="footer-info">
             <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
-                <span id="displayYear"></span><a href="/Aboutus"> About Developers </a>
+                <span id="displayYear"></span><a href="aboutusResturant"> About Developers </a>
             </p>
         </div>
     </div>
@@ -274,11 +221,22 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
   <!-- custom js -->
   <script src="{{url_for('static',filename='js/custom.js')}}"></script>
-  <!-- Google Map -->
-  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCh39n5U-4IoWpsVGUHWdqB6puEkhRLdmI&callback=myMap">
-  </script>
-  <!-- End Google Map -->
+
+
+
+
+
+
+
 
 </body>
-
 </html>
+
+
+
+
+
+
+
+
+ 

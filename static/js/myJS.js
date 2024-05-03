@@ -222,7 +222,9 @@ orderButtonInstructionCart.forEach(function(button) {
     });
 });
 function placeorder() {
-    window.location.href = '/handle-order-from-cart';
+    var selectElement = document.getElementById('order-type');
+    var selectedValue = selectElement.value;
+    window.location.href = '/handle-order-from-cart?type=' + encodeURIComponent(selectedValue);
 }
 
 

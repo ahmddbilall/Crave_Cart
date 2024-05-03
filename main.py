@@ -2,7 +2,7 @@ from flask import Flask, render_template, redirect, request, session,flash,url_f
 import secrets
 import DataBase
 import helpingFunctions
-from datetime import date
+from datetime import date,datetime
 import os
 from werkzeug.utils import secure_filename
 
@@ -19,27 +19,24 @@ app.config['UPLOAD_FOLDER'] = 'static/images'
 
 
 
-
-
-
 # USER
       
 @app.route('/home')
 def home():
     if 'username' not in session:
         return redirect(url_for('login'))
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     data = DataBase.get_menu_data(limit=6)
     Pro = DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"), limit=2)
     return render_template('user/home.html',menu_data=data,Promotions=Pro)
-
-
 
 @app.route('/search', methods=['GET', 'POST'])
 def search():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     if request.method == 'POST':
         input = request.form['search-input']
         data = DataBase.getItemSearch(name=input)
@@ -54,11 +51,12 @@ def search():
         dataView = 'all'        
     return render_template('user/search.html', menu=data,dataView=dataView)
 
-
 @app.route('/handle-Add-to-cart-from-search',methods=['GET','POST'])
 def addToCartSearch():
     if 'username' not in session:
         return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
@@ -71,11 +69,12 @@ def addToCartSearch():
         flash(output, 'error')
     return redirect('/search')
 
-
 @app.route('/handle-Add-to-cart-from-recommend',methods=['GET','POST'])
 def addToCartrecommend():
     if 'username' not in session:
         return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
@@ -92,6 +91,8 @@ def addToCartrecommend():
 def addToCartfavourite():
     if 'username' not in session:
         return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_titlee = request.args.get('ItemName')
     Descriptionn = request.args.get('Description')
     Pricee = request.args.get('Price')
@@ -105,13 +106,12 @@ def addToCartfavourite():
         flash(output, 'error')
     return redirect('/favourites')
 
-
-
 @app.route('/handle-Add-to-cart-from-home',methods=['GET','POST'])
 def addToCartHome():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
@@ -125,12 +125,12 @@ def addToCartHome():
         flash(output, 'error')
     return redirect('/home')
 
-
 @app.route('/handle-Add-to-cart-Promotion-from-home',methods=['GET','POST'])
 def addToCartPromotionHome():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     PromotionTitle = request.args.get('PromotionName')
     discounts = request.args.get('discount')
     Customerid = session['username'] 
@@ -143,12 +143,12 @@ def addToCartPromotionHome():
         flash(output, 'error')
     return redirect('/home')
 
-
-
 @app.route('/recommendation',methods=['GET','POST'])
 def Recommendation():
     if 'username' not in session:
         return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     query = False
     ans = False
     Data = []
@@ -166,20 +166,21 @@ def Recommendation():
 
     return render_template('user/recommendation.html',menu=Data,item_names=helpingFunctions.get_all_item_name(),query=query,ans=ans,name=input)
 
-
 @app.route('/favourites')
 def Favourites():
     if 'username' not in session:
         return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     data =DataBase.get_favourite_data(session['username'])
     return render_template('user/favourites.html',menu=data,result=len(data))
-
 
 @app.route('/handle-Add-to-favourite-from-home',methods=['GET','POST'])
 def addToFavouriteHome():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
@@ -192,13 +193,12 @@ def addToFavouriteHome():
         flash(output, 'error')
     return redirect('/home')
 
-
-
 @app.route('/handle-remove-to-favourite-from-favourites',methods=['GET','POST'])
 def removeFromFavourite():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
@@ -215,7 +215,8 @@ def removeFromFavourite():
 def addToFavouriteSearch():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
@@ -232,7 +233,8 @@ def addToFavouriteSearch():
 def addToFavouriterecommend():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menu_title = request.args.get('ItemName')
     Description = request.args.get('Description')
     Price = request.args.get('Price')
@@ -249,7 +251,8 @@ def addToFavouriterecommend():
 def addToFavouriteDiscount():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     Promotion = request.args.get('PromotionName')
     Customerid = session['username'] 
     
@@ -260,12 +263,12 @@ def addToFavouriteDiscount():
         flash(output, 'error')
     return redirect('/discounts')
 
-
 @app.route('/handle-Add-to-cart-from-discount',methods=['GET','POST'])
 def addToCartDiscount():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     PromotionTitle = request.args.get('PromotionName')
     Customerid = session['username'] 
     print(PromotionTitle)
@@ -276,11 +279,12 @@ def addToCartDiscount():
         flash(output, 'error')
     return redirect('/discounts')
 
-
 @app.route('/discounts')
 def discounts():
     if 'username' not in session:
         return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     data= DataBase.get_active_promotions(current_date=date.today().strftime("%Y-%m-%d"),all=True,png=True)
     return render_template('user/discounts.html',data=data,result=len(data))
 
@@ -288,16 +292,17 @@ def discounts():
 def cart():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     dataa = DataBase.get_all_cart(session['username'])
     return render_template('user/cart.html',data=dataa)
-  
   
 @app.route('/handle-remove-from-cart',methods=['GET','POST'])
 def removefromCart():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menuid = request.args.get('menuid')
     Customerid = session['username'] 
     output = DataBase.removeFromcart(menuid=menuid,Customerid=Customerid)
@@ -311,7 +316,8 @@ def removefromCart():
 def instructionfromCart():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     menuid = request.args.get('menuid')
     instruction = request.args.get('instruction')
     quantity = request.args.get('quantity')
@@ -327,27 +333,23 @@ def instructionfromCart():
 def orderfromCart():
     if 'username' not in session:
         return redirect('/login')
-    
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     Customerid = session['username'] 
-    output = DataBase.placeOrder(customerid=Customerid,date=date.today().strftime("%Y-%m-%d"))
+    Type = request.args.get('type')
+    output = DataBase.placeOrder(customerid=Customerid,date=date.today().strftime("%Y-%m-%d"),Type=Type)
     if output =='Order placed successfully!':
         flash(output, 'success')
     else:
         flash(output, 'error')
     return redirect('/cart') 
-
  
-  
-@app.route('/')
-def login_redirect():
-    if 'username' in session:
-        return redirect(url_for('home'))
-    return redirect(url_for('login'))
-
 @app.route('/profile', methods=['GET', 'POST'])
 def profile():
     if 'username' not in session:
         return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     data = DataBase.get_customer_info(id = session['username'])
     
     if request.method == 'POST':
@@ -369,15 +371,15 @@ def profile():
                 imageName = 'default.jpg'
         DataBase.UpdateCustomer(name=name,email=email,password=password,phone=phone,imageName=imageName,address=address,id=session['username'])  
         data = DataBase.get_customer_info(id = session['username'])
-    
+    print(data)
     return render_template('user/profile.html',data=data)
-
 
 @app.route('/trackorders')
 def trackOrders():
     if 'username' not in session:
         return redirect('/login')
-
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     data = DataBase.get_order_details(customer_id=session['username'])
     return render_template('user/trackorders.html',order_details=data,dataLength=len(data))
 
@@ -385,7 +387,8 @@ def trackOrders():
 def addReview():
     if 'username' not in session:
         return redirect('/login')
-
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
     if request.method == 'POST':
         rating = request.form['rating']
         comment = request.form['comment']
@@ -396,11 +399,15 @@ def addReview():
     return redirect('trackorders')
 
 
+
+
+
+
+
+
+
+
 # resturant
-
-
-
-
 
 
 
@@ -408,7 +415,297 @@ def addReview():
 def restaurantHome():
     if 'username' not in session:
         return redirect('/login')
-    return render_template('restaurant/restaurantHome.html')
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    resturantName = DataBase.getResturantName(session['username'])
+    return render_template('restaurant/Home.html',resturantName=resturantName)
+
+@app.route('/resturantprofile',methods=['GET','POST'])
+def resturantprofile():
+    if 'username' not in session:
+        return redirect('/login')
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    data = DataBase.get_resturant_info(id = session['username'])
+    if request.method == 'POST':
+        nameInput = request.form['nameInput']
+        emailInput = request.form['emailInput']
+        descriptionInput = request.form['descriptionInput']
+        addressInput = request.form['addressInput']
+        phoneInput = request.form['phoneInput']
+        password = request.form['password-input']
+        websiteInput = request.form['websiteInput']
+        hoursInput = request.form['hoursInput']
+        DataBase.UpdateResturant(name=nameInput,email=emailInput,website=websiteInput,hours=hoursInput,description=descriptionInput,password=password,phone=phoneInput,address=addressInput,id=session['username'])  
+        data = DataBase.get_resturant_info(id = session['username'])
+        
+    return render_template('restaurant/Profile.html',data=data)
+
+
+@app.route('/addItem',methods=['GET','POST'])
+def addProduct():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    if request.method == 'POST':
+        nameInput = request.form['itemName']
+        descriptionInput = request.form['description']
+        price = request.form['price']
+        category_input = request.form['category']
+        image_png_file = request.files['imagePng']
+        image_jpg_file = request.files['imageJpg']
+        
+        image_png_file.save('static/images/' + nameInput + '.png')
+        image_jpg_file.save('static/images/' + nameInput + '.jpg')
+        
+        result = DataBase.addItem(ItemName=nameInput,Description=descriptionInput,RestaurantID=session['username'],Price=price,Category=category_input,ImageJPG=nameInput+'.jpg',ImagePNG=nameInput+'.png')
+        
+        if result == 'Item added successfully!':
+            flash(result,'success')
+        else:
+            flash(result,'error')
+    
+    return render_template('restaurant/AddProduct.html')
+    
+@app.route('/deleteItem',methods=['GET','POST'])
+def deleteProduct():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    if request.method == 'POST':
+        productid = request.form['productid']
+
+
+        result = DataBase.removeItem(productid,session['username'])
+        if result == 'Deleted!':
+            flash(result,'success')
+        else:
+            flash(result,'error')
+    
+    return render_template('restaurant/DeleteProduct.html')
+
+@app.route('/updateItem',methods=['GET','POST'])
+def updateProduct():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    idRecieved = False
+    data=[]
+    if request.method == 'POST':
+        productid = request.form['productid']
+        data = DataBase.get_Item(id=productid,RestaurantID=session['username'])
+        idRecieved =True
+
+    return render_template('restaurant/UpdateProduct.html',idRecieved=idRecieved,data=data)
+
+@app.route('/updateItemHandler',methods=['GET','POST'])
+def updateProductHandler():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+
+    if request.method == 'POST':
+        nameInput = request.form['itemName']
+        descriptionInput = request.form['description']
+        price = request.form['price']
+        category_input = request.form['category']
+        image_png_file = request.files['imagePng']
+        image_jpg_file = request.files['imageJpg']
+        menuid = request.form['menuid']
+        
+        if image_png_file.filename != '':
+            image_png_file.save('static/images/' + nameInput + '.png')
+            imageNamePNG = nameInput+'.png'
+        else:
+            imageNamePNG = category_input+'.png'
+        if image_jpg_file.filename != '':
+            image_jpg_file.save('static/images/' + nameInput + '.jpg')
+            imageNameJPG = nameInput+'.jpg'
+        else:
+            imageNameJPG = category_input+'.jpg'
+        
+        result = DataBase.updateItem(ItemName=nameInput,Description=descriptionInput,RestaurantID=session['username'],Price=price,Category=category_input,ImageJPG=imageNameJPG,ImagePNG=imageNamePNG,menuid=menuid)
+        
+        if result == 'Item updated successfully!':
+            flash(result,'success')
+        else:
+            flash(result,'error')
+    return redirect('updateItem')    
+
+@app.route('/allItems')
+def allProducts():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    data = DataBase.get_Items_ofRestaurant(session['username'])
+    print(data[0])
+    return render_template('restaurant/allProducts.html',menu=data)
+
+
+
+
+
+@app.route('/addPromotion',methods=['GET','POST'])
+def addPromotion():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    if request.method == 'POST':
+        promoName = request.form['promoName']
+        menuId = request.form['menuId']
+        description = request.form['description']
+        discount = request.form['discount']
+        startDate = request.form['startDate']
+        date_object = datetime.strptime(startDate, '%Y-%m-%d')
+        startDate = date_object.strftime('%Y-%m-%d')
+        endDate = request.form['endDate']
+        date_object = datetime.strptime(endDate, '%Y-%m-%d')
+        endDate = date_object.strftime('%Y-%m-%d')
+        
+        result = DataBase.addpromotion(MenuID=menuId,restaurantid=session['username'],PromotionName=promoName,Description=description,Discount=discount,StartDate=startDate,EndDate=endDate)
+        if result == 'Promotion added successfully!':
+            flash(result,'success')
+        else:
+            flash(result,'error')
+            
+    return render_template('restaurant/AddPromotion.html')
+
+@app.route('/removePromotion',methods=['GET','POST'])
+def removePromotion():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    if request.method == 'POST':
+        Promotionid = request.form['productid']
+
+        result = DataBase.removeItem(Promotionid,session['username'])
+        if result == 'Deleted!':
+            flash(result,'success')
+        else:
+            flash(result,'error')
+    
+    return render_template('restaurant/DeletePromotion.html')
+
+
+@app.route('/updatePromotion',methods=['GET','POST'])
+def updatePromotion():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    idRecieved = False
+    data=[]
+    if request.method == 'POST':
+        promotionid = request.form['productid']
+        data = DataBase.get_Promotion(id=promotionid,RestaurantID=session['username'])
+        idRecieved =True
+        if len(data) ==0:
+            idRecieved = False
+            flash('Cannot access that Promotion','error')
+        
+        
+    return render_template('restaurant/UpdatePromotion.html',idRecieved=idRecieved,data=data)
+
+@app.route('/updatePromotionHandler',methods=['GET','POST'])
+def updatePrmotionHandler():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+
+    if request.method == 'POST':
+        promoName = request.form['promoName']
+        menuId = request.form['menuId']
+        description = request.form['description']
+        discount = request.form['discount']
+        startDate = request.form['startDate']
+        endDate = request.form['endDate']
+        promotionid = request.form['promotionid']
+        
+               
+        result = DataBase.updatePromotion(promoName=promoName,menuId=menuId,description=description,Discount=discount,StartDate=startDate,endDate=endDate,promotionid=promotionid)
+        
+        if result == 'Promotion updated successfully!':
+            flash(result,'success')
+        else:
+            flash(result,'error')
+    return redirect('updatePromotion')    
+
+@app.route('/allPromotions')
+def allPromotions():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    data = DataBase.get_all_Promotions(RestaurantID=session['username'])
+    return render_template('restaurant/allPromotions.html',promotion=data)
+
+@app.route('/ordersHistory')
+def ordersHistory():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    data = DataBase.get_Completed_orders(session['username'])
+    return render_template('restaurant/ordersHistory.html',data=data,length=len(data))
+
+
+
+@app.route('/placedOrders',methods=['GET','POST'])
+def placedOrders():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    
+    if request.method == 'POST':
+        status = request.form['status']
+        orderid = request.form['orderid']
+        result = DataBase.Update_status(status=status,orderID=orderid)
+        if result =='Status updated successfully!':
+            flash(result,'success')
+        else:
+            flash(result,'error')
+            
+    return render_template('restaurant/placedOrders.html')
+
+
+
+
+
+@app.route('/aboutusResturant')
+def aboutusResturant():
+    if 'username' not in session:
+        return redirect(url_for('login'))
+    if not DataBase.is_Restaurant(session['username']):
+        return render_template('404.html'), 404
+    return render_template('restaurant/aboutusResturant.html')
+
+
+
+
+
+# add check in each function to not to allow user to access resturants end points
+
+
+
+
+
+
 
 
 
@@ -422,6 +719,7 @@ def restaurantHome():
 def admin():
     if 'admin' in session:
         redirect(url_for('adminHome'))
+        
     return redirect(url_for('adminlogin'))
 
 @app.route('/adminHome')
@@ -471,7 +769,7 @@ def handleremoveadmin():
     if 'admin' not in session:
         return redirect('adminlogin')
     
-    
+    print('i am here in handle remove admin')
     name = request.args.get('name')
     email = request.args.get('email')
      
@@ -576,6 +874,11 @@ def adminlogout():
 
 # Common for all users and resturants
 
+@app.route('/')
+def login_redirect():
+    if 'username' in session:
+        return redirect(url_for('home'))
+    return redirect(url_for('login'))
 
 
 @app.route('/Aboutus')
@@ -631,7 +934,7 @@ def signup():
             else:
                 flash('Restaurant added successfully','success')
                 session['username'] = status
-                return redirect(url_for('home'))
+                return redirect(url_for('restaurantHome'))
     return render_template('signup.html')
 
 

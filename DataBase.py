@@ -18,6 +18,7 @@ def create_tables():
                         FOREIGN KEY (BlockedByAdmin) REFERENCES Admin(AdminID)
                     );''')
 
+
     cursor.execute('''CREATE TABLE IF NOT EXISTS Restaurants (
                         RestaurantID INTEGER PRIMARY KEY AUTOINCREMENT,
                         Email TEXT,
@@ -38,8 +39,8 @@ def create_tables():
                         FavouriteID INTEGER PRIMARY KEY AUTOINCREMENT,
                         CustomerID INTEGER,
                         MenuID INTEGER,
-                        FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
-                        FOREIGN KEY (MenuID) REFERENCES Menus(MenuID)
+                        FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE,
+                        FOREIGN KEY (MenuID) REFERENCES Menus(MenuID) ON DELETE CASCADE
                     );''')
     
     cursor.execute('''CREATE TABLE IF NOT EXISTS Admin (
@@ -59,7 +60,7 @@ def create_tables():
                         ImagePNG TEXT,
                         ImageJPG TEXT,
                         Rating INTEGER DEFAULT 0,
-                        FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID)
+                        FOREIGN KEY (RestaurantID) REFERENCES Restaurants(RestaurantID) ON DELETE CASCADE
                     );''')
     
     cursor.execute('''CREATE TABLE IF NOT EXISTS Promotions (
@@ -70,7 +71,7 @@ def create_tables():
                         Discount REAL,
                         StartDate TEXT,
                         EndDate TEXT,
-                        FOREIGN KEY (MenuID) REFERENCES Menus (MenuID)
+                        FOREIGN KEY (MenuID) REFERENCES Menus (MenuID) ON DELETE CASCADE
                     );''')
     
     cursor.execute('''CREATE TABLE IF NOT EXISTS CART (
@@ -78,8 +79,8 @@ def create_tables():
                         customerid INTEGER,
                         Instructions TEXT,
                         quantity INTEGER DEFAULT 1,
-                        FOREIGN KEY (menuid) REFERENCES Menus (MenuID),
-                        FOREIGN KEY (customerid) REFERENCES Customers (CustomerID)
+                        FOREIGN KEY (menuid) REFERENCES Menus (MenuID) ON DELETE CASCADE,
+                        FOREIGN KEY (customerid) REFERENCES Customers (CustomerID) ON DELETE CASCADE
                     );''')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS Orders (
@@ -89,10 +90,10 @@ def create_tables():
                         status TEXT,
                         quantity INTEGER,
                         instructions TEXT,
-    
+                        Type TEXT,
                         Date TEXT,
-                        FOREIGN KEY (menuid) REFERENCES Menus (MenuID),
-                        FOREIGN KEY (customerid) REFERENCES Customers (CustomerID)
+                        FOREIGN KEY (menuid) REFERENCES Menus (MenuID) ON DELETE CASCADE,
+                        FOREIGN KEY (customerid) REFERENCES Customers (CustomerID) ON DELETE SET NULL
                     );''')
 
     cursor.execute('''CREATE TABLE IF NOT EXISTS Ratings (
@@ -103,9 +104,258 @@ def create_tables():
                         Rating INTEGER,
                         Comment TEXT,
                         FOREIGN KEY (OrderID) REFERENCES Orders(OrderID),
-                        FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID),
-                        FOREIGN KEY (MenuID) REFERENCES Menus(MenuID)
+                        FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE SET NULL,
+                        FOREIGN KEY (MenuID) REFERENCES Menus(MenuID) ON DELETE CASCADE
                     );''')
+
+
+# order status = pending , complete , in progress
+
+def Update_status(orderID,status):
+    try:
+        cursor.execute('''UPDATE Orders SET status=? where orderID=?''',
+                                [status,orderID])
+        
+        connection.commit()
+        return 'Status updated successfully!'
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return 'Database error'
+
+def get_pending_orders(RestaurantID):
+    try:
+        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating,O.address
+                          FROM Orders O
+                          INNER JOIN Menus M ON O.menuid = M.MenuID
+                          LEFT JOIN Ratings R ON O.orderid = R.OrderID
+                          WHERE o.status <> 'complete' AND M.RestaurantID = ?; ''',[RestaurantID])
+
+        order_details = cursor.fetchall()
+
+        order_details_list = []
+        for item in order_details:
+            item_dict = {
+                'ItemName': item[0],
+                'orderid': item[1],
+                'menuid': item[2],
+                'customerid': item[3],
+                'status': item[4],
+                'quantity': item[5],
+                'instructions': item[6],
+                'Type': item[7],
+                'Date': item[8],
+                'rating': item[9],
+                'address': item[9]
+            }
+            order_details_list.append(item_dict)
+        return order_details_list
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return []
+
+
+def get_Completed_orders(RestaurantID):
+    try:
+        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating,O.address
+                          FROM Orders O
+                          INNER JOIN Menus M ON O.menuid = M.MenuID
+                          LEFT JOIN Ratings R ON O.orderid = R.OrderID
+                          WHERE o.status = 'complete' AND M.RestaurantID = ?; ''',[RestaurantID])
+
+        order_details = cursor.fetchall()
+
+        order_details_list = []
+        for item in order_details:
+            item_dict = {
+                'ItemName': item[0],
+                'orderid': item[1],
+                'menuid': item[2],
+                'customerid': item[3],
+                'status': item[4],
+                'quantity': item[5],
+                'instructions': item[6],
+                'Type': item[7],
+                'Date': item[8],
+                'rating': item[9],
+                'address': item[9]
+            }
+            order_details_list.append(item_dict)
+        return order_details_list
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return []
+
+def updatePromotion(promoName,menuId,description,Discount,StartDate,endDate,promotionid):
+    try:
+        cursor.execute('''UPDATE Promotions SET PromotionName=?, MenuID=?, Description=?, Discount=?, StartDate=?, EndDate=? where promotionid=?''',
+                                [promoName,menuId,description,Discount,StartDate,endDate,promotionid])
+        
+        connection.commit()
+        return 'Promotion updated successfully!'
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return 'Database error'
+
+def get_all_Promotions(RestaurantID):
+    try:
+        cursor.execute('''SELECT p.PromotionID, p.PromotionName, p.MenuID, p.Description, p.Discount, p.StartDate, p.EndDate
+                          FROM Promotions p
+                          INNER JOIN Menus m ON p.MenuID = m.MenuID
+                          WHERE m.RestaurantID = ?''', (RestaurantID,))
+        promotions = cursor.fetchall()
+        return promotions
+    except Exception as e:
+        print(str(e))
+        return []
+
+def addpromotion(MenuID,restaurantid,PromotionName,Description,Discount,StartDate,EndDate):
+    try:
+        cursor.execute('''SELECT RestaurantID FROM Menus WHERE Menuid=?''', [MenuID])
+        ans = cursor.fetchone()[0]
+        
+        if ans!=restaurantid:
+            return 'Cannot add promotion'
+        else:
+            cursor.execute('''INSERT INTO Promotions (PromotionName, MenuID, Description, Discount, StartDate, EndDate) VALUES (?, ?, ?, ?, ?, ?)''',
+                                [PromotionName,MenuID,Description,Discount,StartDate,EndDate])
+        
+        connection.commit()
+        return 'Promotion added successfully!'
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return 'Database error'
+
+
+def is_customer(id):
+    try:
+        cursor.execute('''SELECT * FROM Customers where CustomerID=?;''',[id])
+        ans = cursor.fetchone()
+        if ans:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return False
+
+def is_Restaurant(id):
+    try:
+        cursor.execute('''SELECT * FROM Restaurants where RestaurantID=?;''',[id])
+        ans = cursor.fetchone()
+        if ans:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return False
+
+def is_Admin(id):
+    try:
+        cursor.execute('''SELECT * FROM Admin where AdminID=?;''',[id])
+        ans = cursor.fetchone()
+        if ans:
+            return True
+        else:
+            return False
+    except Exception as e:
+        print(e)
+        return False
+
+
+def addItem(ItemName,Description,RestaurantID,Price,Category,ImageJPG,ImagePNG):
+    try:
+        cursor.execute('''SELECT * FROM Menus WHERE ItemName = ? AND Description=? AND Price=? AND Category=? AND RestaurantID=?''', [ItemName,Description,Price,Category,RestaurantID])
+        existing_item = cursor.fetchone()
+        
+        if existing_item:
+            return 'Already exists'
+        else:
+            cursor.execute('''INSERT INTO Menus (ItemName, Description, Price, Category, ImagePNG, ImageJPG, RestaurantID) VALUES (?, ?, ?, ?, ?, ?, ?)''',
+                                [ItemName,Description,Price,Category,ImagePNG,ImageJPG,RestaurantID])
+        
+        connection.commit()
+        return 'Item added successfully!'
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return 'Database error'
+
+def updateItem(ItemName,Description,RestaurantID,menuid,Price,Category,ImageJPG,ImagePNG):
+    try:
+        cursor.execute('''UPDATE Menus SET ItemName=?, Description=?, Price=?, Category=?, ImagePNG=?, ImageJPG=? where menuid=? and restaurantid=?''',
+                                [ItemName,Description,Price,Category,ImagePNG,ImageJPG,menuid,RestaurantID])
+        
+        connection.commit()
+        return 'Item updated successfully!'
+    except sqlite3.Error as e:
+        print("Database error:", e)
+        return 'Database error'
+
+
+
+
+def removeItem(itemid,Restaurantid):
+    try:
+        cursor.execute('''SELECT Restaurantid FROM Menus where menuid=?;''',[itemid])
+        result = cursor.fetchone()
+        if result:
+            if result[0] == Restaurantid:
+                cursor.execute('''DELETE FROM Menus where menuid=? AND Restaurantid=?;''',[itemid,Restaurantid])
+                connection.commit()
+                return 'Deleted!'
+        else:
+                return 'Cannot delete this item'
+    except Exception as e:
+        print(str(e))
+        return 'Database error' 
+
+def removePromotion(promotionid,Restaurantid):
+    try:
+        cursor.execute('''SELECT menuid FROM Promotions where promotionid=?;''',[promotionid])
+        result = cursor.fetchone()
+        if result:
+            cursor.execute('''SELECT RestaurantID FROM Menus where menuid=?;''',[result[0]])
+            result = cursor.fetchone()
+            if result[0] == Restaurantid:
+                cursor.execute('''DELETE FROM Promotions where menuid=?;''',[promotionid,Restaurantid])
+                connection.commit()
+                return 'Deleted!'
+        else:
+                return 'Cannot delete this item'
+    except Exception as e:
+        print(str(e))
+        return 'Database error' 
+
+
+def get_Item(id,RestaurantID):
+    try:
+        cursor.execute('''SELECT * FROM Menus where Menuid = ? AND RestaurantID=?;''',[id,RestaurantID])
+        return cursor.fetchone()
+    except Exception as e:
+        print(str(e))
+        return []
+
+def get_Promotion(id,RestaurantID):
+    try:
+        cursor.execute('''SELECT * FROM Promotions where Menuid = ?;''',[id])
+        ans = cursor.fetchone()
+        cursor.execute('''SELECT * FROM Menus where Menuid = ? AND RestaurantID=?;''',[ans[2],RestaurantID])
+        check = cursor.fetchone()
+        if check:
+            return ans
+        else:
+            return []
+    except Exception as e:
+        print(str(e))
+        return []
+
+def get_Items_ofRestaurant(RestaurantID):
+    try:
+        cursor.execute('''SELECT * FROM Menus where RestaurantID=?;''',[RestaurantID])
+        return cursor.fetchall()
+    except Exception as e:
+        print(str(e))
+        return []
 
 
 def get_customer_info(id):
@@ -116,7 +366,15 @@ def get_customer_info(id):
         print(str(e))
         return []
     
-    
+def get_resturant_info(id):
+    try:
+        cursor.execute('''SELECT Email,Password,Name,Description,Address,Phone,Website,OpeningHours FROM Restaurants where RestaurantID = ?;''',[id])
+        return cursor.fetchone()
+    except Exception as e:
+        print(str(e))
+        return []
+
+
 def UpdateCustomer(name,email,password,phone,imageName,address,id):
     try:
         cursor.execute('''UPDATE Customers SET Email = ?, Password = ?, Name = ?, Address = ?, Phone = ?, Image = ? WHERE Customerid = ?;''',
@@ -126,6 +384,16 @@ def UpdateCustomer(name,email,password,phone,imageName,address,id):
     except Exception as e:
         return f'Error: {str(e)}'
 
+
+
+def UpdateResturant(name,email,website,description,password,phone,hours,address,id):
+    try:
+        cursor.execute('''UPDATE Restaurants SET Email = ?,description=?, Password = ?, Name = ?, Address = ?, Phone = ?, website = ?, OpeningHours = ? WHERE Restaurantid = ?;''',
+                       [email,description, password, name, address, phone, website,hours, id])
+        connection.commit()
+        return 'success'
+    except Exception as e:
+        return f'Error: {str(e)}'
 
 
 def insert_user(email, password, name=None, address=None, phone=None, registration_date=None,image='default.jpg'):
@@ -162,6 +430,13 @@ def get_customer_id(email,password):
 def get_restaurants_id(email,password):
     try:
         cursor.execute('''Select RestaurantId From Restaurants where email=? AND password=?;''',[email, password])
+        return cursor.fetchone()[0]
+    except Exception as e:
+        return f'Error: {str(e)}'
+
+def getResturantName(resturantid):
+    try:
+        cursor.execute('''Select Name From Restaurants where RestaurantId=?;''',[resturantid])
         return cursor.fetchone()[0]
     except Exception as e:
         return f'Error: {str(e)}'
@@ -243,12 +518,11 @@ def Add_new_admin(email,password,name):
     except Exception as e:
         return f'Error: {str(e)}'
 
-def placeOrder(customerid,date):
+def placeOrder(customerid,date,Type):
     try:
-        
-        cursor.execute('''INSERT INTO Orders (menuid, customerid, status, quantity, instructions, Date)
-                          SELECT menuid, customerid, 'delivered', quantity, Instructions, ? 
-                          FROM CART WHERE customerid = ?''', [date,customerid])
+        cursor.execute('''INSERT INTO Orders (menuid, customerid, status, quantity, instructions, Date,Type)
+                          SELECT menuid, customerid, 'pending', quantity, Instructions, ? ,?
+                          FROM CART WHERE customerid = ?''', [date,customerid,Type])
         
         cursor.execute('''DELETE FROM CART WHERE customerid = ?''', [customerid])
         

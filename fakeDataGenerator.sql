@@ -1,5 +1,5 @@
-insert into Customers values (1,'bilal@gmail.com','123',null,null,null,'default.jpg','2024-4-18',0,null);
-
+insert into Customers values (1,'bilal@gmail.com','123',null,null,null,'default.jpg','2024-04-18',0,null);
+insert into Restaurants values (1,'bilalahmad@gmail.com',null,'123',null,null,null,null,null,'2024-04-18',0,null);
 
 --Restaurants
 INSERT INTO Restaurants VALUES (1, 'jj@gmail.com', 'Jhonny Jujnu', 'jj123', 'Best Burgers in town', 'Lahore', '123456789', 'jj.com', '5PM-2AM', '2024-04-12', 0, null);
