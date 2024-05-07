@@ -20,7 +20,7 @@
     />
 
     <title>User Profile</title>
-    <link
+    <!-- <link
       rel="stylesheet"
       type="text/css"
       href="{{url_for('static',filename='css/bootstrap.css')}}"
@@ -61,6 +61,48 @@
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    /> -->
+
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static',filename='images/favicon.png')}}"
+      type=""
+    />
+    <title>Crave Cart</title>
+    <!-- bootstrap core css -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static',filename='css/bootstrap.css')}}"
+    />
+
+    <!--owl slider stylesheet -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    />
+    <!-- nice select  -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css"
+      integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ=="
+      crossorigin="anonymous"
+    />
+    <!-- font awesome style -->
+    <link
+      href="{{url_for('static',filename='css/font-awesome.min.css')}}"
+      rel="stylesheet"
+    />
+    <!-- Custom styles for this template -->
+    <link
+      href="{{url_for('static',filename='css/style.css')}}"
+      rel="stylesheet"
+    />
+    <!-- responsive style -->
+    <link
+      href="{{url_for('static',filename='css/responsive.css')}}"
+      rel="stylesheet"
     />
 
     <style>
@@ -92,9 +134,10 @@
         transition: all 0.3s ease 0s;
       }
 
-      .container {
+      .container-add {
         max-width: 800px;
         position: relative; /* Added position relative to container */
+        margin-inline: auto;
       }
 
       input[type="text"],
@@ -295,7 +338,7 @@
 
     <!-- user -->
 
-    <div class="container rounded #3a3f42 mt-5 mb-5">
+    <div class="container-add rounded #3a3f42 mt-5 mb-5">
       <img
         class="rounded-circle profile-image"
         src="{{ url_for('static', filename='images/' + data[5]) }}"

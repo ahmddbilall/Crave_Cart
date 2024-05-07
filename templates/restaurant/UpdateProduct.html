@@ -49,6 +49,12 @@
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         position: relative;
       }
+      .containerRemove {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 20px;
+            text-align: center;
+        }
            
     
       form {
@@ -154,11 +160,33 @@
         }
       }
       
+      .update-button {
+        padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            border-radius: 20px; /* Rounded corners */
+            margin-left:10px;
+      }
     
+      .update-button:hover {
+          transform: scale(1.1);
+      }
     
-    
-    
-    
+      .update-input {
+        width: 200px;
+            padding: 10px;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            border-radius: 20px; 
+      }
+      .update-input:hover {
+        transform: scale(1.1);
+      }
+
     </style>
   
 </head>
@@ -274,8 +302,8 @@
         <div class="containerRemove">
           <form id="DeleteproductForm" action="/updateItem" method="POST"  enctype="multipart/form-data">
 
-              <input type="text" id="productId" name="productid" placeholder="Enter Product ID to update" >
-              <button id="getitem" type="submit" >Get Item</button>
+              <input class="update-input" type="text" id="productId" name="productid" placeholder="Enter Product ID to update" >
+              <button id="getitem" type="submit" class="update-button" >Get Item</button>
         </div>
       <br><br><br><br><br><br><br><br>
     {%else%}
