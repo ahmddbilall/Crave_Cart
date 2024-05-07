@@ -15,7 +15,6 @@
 
   <title> Discounts </title>
 
-  <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
 
   <!--owl slider stylesheet -->
@@ -75,7 +74,7 @@
                 <a class="nav-link" href="recommendation">Recommendations  </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="discounts">Discounts</a>
+                <a class="nav-link" href="discounts">Discounts<span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="favourites">Favourites</a>
@@ -84,7 +83,7 @@
                 <a class="nav-link" href="trackorders">Orders</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="restaurants">Restaurants</a>
+                <a class="nav-link" href="restaurants">Restautrants</a>
               </li>
             </ul>
             
@@ -151,7 +150,7 @@
                  <form class="form-inline active">
                   <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()">
                       <i class="fa fa-search" aria-hidden="true"></i>
-                      <span class="sr-only">(current)</span>
+                      
                   </button>
                  </form>
                   <form class="form-inline">
@@ -159,6 +158,15 @@
                      <i class="fa fa-sign-out" aria-hidden="true"></i> 
                  </button>
                </form>
+               <form class="form-inline">
+                <button
+                  class="btn my-2 my-sm-0 nav_search-btn"
+                  type="button"
+                  onclick="logout()"
+                >
+                  <i class="fa fa-sign-out" aria-hidden="true"></i>
+                </button>
+              </form>
              </div>
 
 
@@ -177,27 +185,26 @@
 
     <!-- use if else if item not found-->
   <!-- food section -->
-  <section class="food_section layout_padding">
+  <section class="food_section layout_padding-bottom">
     <div class="container">
-      
-
-      
-
       <div class="filters-content">
         <div class="row grid">
         
         
             {% for item in data%}
             <div class="col-sm-6 col-lg-4 all category">
-            <div class="box">
+            <div class="box" id="menu-item-box">
               <div>
                 <div class="img-box">
                   <img src="{{url_for('static',filename='images/'+item['Image'])}}" alt="">
                 </div>
                 <div class="detail-box">
                   <h5>
-                    {{item['PromotionName']}}
-                    {{item['itemName']}}
+                    Promotion Name: {{item['PromotionName']}}
+                  </h5>
+                    <br>
+                  <h5>
+                    Item Name: {{item['itemName']}}
                   </h5>
                   <p>
                     {{item['Price']}}
@@ -206,8 +213,10 @@
                     <h6>
                         {{item['DiscountedPrice']}}
                     </h6>
-                    <div class="button-container">
-                      <a href="#" class="add-to-cart-btn-discount" data-name="{{ item['PromotionName'] }}">
+                    <div class="button-container" id="menu-buttons">
+                      <a href="#" 
+                          class="add-to-cart-btn-discount"
+                          data-name="{{ item['PromotionName'] }}">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">
                               <circle cx="9" cy="21" r="1"></circle>
                               <circle cx="20" cy="21" r="1"></circle>
