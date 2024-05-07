@@ -102,6 +102,20 @@ a:focus {
           flex-direction: column;
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .bg-box {
   position: absolute;
   top: 0;
@@ -165,6 +179,172 @@ a:focus {
   padding-left: 18%;
 }
 
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.add-to-cart-btn,
+.favorite-btn {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: 2px solid #000;
+  border-radius: 5px;
+  text-decoration: none;
+  color: #000;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.add-to-cart-btn:hover,
+.favorite-btn:hover {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.add-to-cart-btn svg,
+.favorite-btn svg {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+.team-item {
+  box-shadow: 0 0 45px rgba(0, 0, 0, .08);
+  height: calc(100% - 38px);
+  transition: .5s;
+}
+
+.team-item img {
+  transition: .5s;
+}
+
+.team-item:hover img {
+  transform: scale(1.1);
+}
+
+.team-item:hover {
+  height: 100%;
+}
+
+.team-item .btn {
+  border-radius: 38px 38px 0 0;
+}
+
+
+
+
+
+.favorite-btn {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 2px solid #000;
+  transition: background-color 0.3s, border-color 0.3s;
+  text-align: center;
+  line-height: 40px;
+  color: #000;
+}
+
+.favorite-btn:hover {
+  background-color: #000;
+  border-color: #000;
+  color: #fff;
+}
+
+.favorite-btn svg {
+  width: 24px;
+  height: 24px;
+  vertical-align: right;
+}
+
+
+
+
+
+
+
+
+#item {
+  height: 200px; /* Adjust the height to display 5 items */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+
+.container {
+  text-align: center;
+}
+
+
+.recommend-container{
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#recommend {
+  border: none;
+  border-radius: 20px;
+  background-color: #ffbe33; /* Change button color as needed */
+  /*background-color: #1e1e1e; /* Change button color as needed */
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-weight: bold;
+  width:200px
+}
+
+
+
+
+
+
+
+.search-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px; /* Adjust as needed */
+}
+
+#search-input {
+  border: 2px solid black;
+  border-radius: 20px;
+  width: 500px;
+  margin-left: 600px;
+  height: 30px;
+  padding: 5px 10px; /* Add padding for better appearance */
+}
+
+#search-btn {
+  border: none;
+  border-radius: 20px;
+  background-color: #ffbe33; /* Change button color as needed */
+  /*background-color: #1e1e1e; /* Change button color as needed */
+  color: white;
+  padding: 5px 10px;
+  cursor: pointer;
+  margin-left: 10px; 
+  font-weight: bold;
+  width:100px
+}
+
+
+
 .custom_nav-container .navbar-nav .nav-item .nav-link {
   padding: 5px 20px;
   color: #ffffff;
@@ -176,6 +356,17 @@ a:focus {
 }
 
 .custom_nav-container .navbar-nav .nav-item:hover .nav-link, .custom_nav-container .navbar-nav .nav-item.active .nav-link {
+  color: #ffbe33;
+}
+.nav_search-btn:focus .fa-search,
+.nav_search-btn:hover .fa-search {
+    color: #ffbe33;
+}
+
+
+.custom_nav-container .navbar-nav .nav-item:hover .nav-link,
+.custom_nav-container .navbar-nav .nav-item.active .nav-link,
+.custom_nav-container .navbar-nav .nav-item.active .nav_search-btn .form-inline.active {
   color: #ffbe33;
 }
 

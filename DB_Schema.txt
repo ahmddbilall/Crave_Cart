@@ -2,7 +2,16 @@
 
 2. Restaurants Table ( RestaurantID (Primary Key), Name, Description, Address, Phone, Website, OpeningHours )
 
-3. Menus Table ( MenuID (Primary Key), RestaurantID (Foreign Key), ItemName, Description, Price, Category)
+3. Menus Table ( MenuID (Primary Key) (auto increment) , RestaurantID (Foreign Key), ItemName, Description, Price, Category,image,rating) take image as png to give hover effect
+CART (menuid,customerid,Instructions)
+Orders(orderid,menuid,customerid,status (if true enable rating),quantity,instructions,rating)
+Favourites
+Promotions (discounts)
+
+when order completed
+Reviews(rate )
+
+
 
 4. Orders Table ( OrderID (Primary Key), UserID (Foreign Key), RestaurantID (Foreign Key), OrderDate, TotalAmount, Status (pending, confirmed, delivered), DeliveryMethod (delivery, pickup, dine-in), SpecialRequests)
 
@@ -28,16 +37,13 @@
 8. *Promotions Table*:
    - PromotionID (Primary Key)
    - RestaurantID (Foreign Key)
+   - Promotion Name
+   - Menu Id(FK) 
    - Description
    - Discount
    - StartDate
    - EndDate
 
-9. *Admins Table*:
-   - AdminID (Primary Key)
-   - Email
-   - Password (encrypted)
-   - RestaurantID (Foreign Key)
 
 10. *Recommendations Table*:
    - RecommendationID (Primary Key)

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
+    <title>Remove Admin</title>
+   
+
+    <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+
+    <style>
+
+            
+            h1 {
+                text-align: center; /* Centering the title */
+            }
+            
+            ul {
+                list-style-type: none; /* Removing default list styles */
+                padding: 0;
+                margin: 0 auto; /* Center the list horizontally */
+                max-width: 600px; /* Adjust max-width as needed */
+            }
+
+            .aa {
+                margin: 0 auto;   /* Center the card horizontally within the list */
+                margin-bottom: 20px; /* Add space between each card */
+                padding-bottom: 50px;
+                padding: 10px;
+                background-color: #fff; /* Background color for list items */
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+                transition: box-shadow 0.3s ease; /* Adding smooth transition for shadow */
+                max-width: 300px; /* Set maximum width */
+
+            
+            }
+
+            
+            
+            .aa:hover {
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increasing shadow on hover */
+                border-radius: 20px;
+                
+            }
+            
+            
+            
+            .fa-trash-o {
+                font-size: 24px; /* Adjust the size as needed */
+                color: red; /* Adjust the color as needed */
+                vertical-align: middle; /* Align the icon vertically within the container */
+                margin-top: -80px;
+                margin-left: 200px;
+            }
+            
+            .remove-admin {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #333; /* Adjust text color */
+            /* Adjust margin-top for spacing between name and remove link */
+            
+            }
+            
+            
+            
+    </style>
+</head>
+
+
+
+
+
+
+
+
+
+<body class="sub_page">
+    <div id="flash-message">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+         {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+              {{ message }}
+            </div>
+          {% endfor %}
+         {% endif %}
+        {% endwith %}
+    </div>    
+
+
+
+    <div class="hero_area">
+      <div class="bg-box">
+      <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+      </div>
+      <header class="header_section">
+      <div class="container">
+      <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <a class="navbar-brand" href="adminHome">
+          <span>
+            Crave Cart
+          </span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class=""> </span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav  mx-auto ">
+            <li class="nav-item">
+              <a class="nav-link" href="adminHome">Home </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="All-Resturants">Restaurants </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="All-Users">Customers </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Manage Admins
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="Add-new-admin">Add Admin</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="remove-admin">Remove Admin</a>
+                  
+              </div>
+            </li>
+
+            
+
+            
+
+          <div class="user_option">
+                <form class="form-inline">
+               <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
+                   <i class="fa fa-sign-out" aria-hidden="true"></i> 
+               </button>
+             </form>
+           </div>
+
+
+
+
+        </div>
+      </nav>
+      </div>
+      </header>
+    </div>
+
+
+    <br><br><br>
+    <h1>List of Admins</h1>
+    <br><br><br>
+    <ul>
+        {% for admin in admins %}
+            <li  class="aa">
+                <h5>{{ admin[0] }}</h5>
+                <a href="#" class="remove-admin" data-name="{{ admin[0] }}" data-email="{{ admin[1] }}">
+
+                    <!--<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                        <path d="M0 0h24v24H0V0z" fill="none"/>
+                        <path d="M17 5h-3V3h-4v2H7v2h10V5zM5 19h14c1.1 0 1.99-.9 1.99-2L21 8c0-1.1-.89-2-1.99-2H17l-1-1H8L7 6H5c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2zm9-14h-4v2h4V5z"/>
+                    </svg>-->
+
+
+                    <i class="fa fa-trash-o" style="font-size:24px;color:red"></i>
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    
+
+  <!-- footer section -->
+  <footer class="footer_section">
+    <div class="container">
+    <div class="row">
+        <div class="col-md-4 footer-col">
+            <div class="footer_detail">
+                <a href="#" class="footer-logo">Crave Cart</a>
+                <p>Crave Cart is a convenient and innovative platform that brings together a diverse range of restaurants and culinary delights, allowing users to explore and order their favorite dishes with ease.</p>
+                <div class="footer_social">
+                    <a ><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                    <a ><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                    <a ><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                    <a ><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                    <a ><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 footer-col">
+            <h4></h4>
+        </div>
+        <div class="col-md-4 footer-col">
+            <h4>Contact Us</h4>
+            <p>If you have any questions or need assistance, feel free to contact us:</p>
+            
+            <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
+            <p> <i class="fa fa-phone"></i> +1234567890</p>
+            <p> <i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
+        </div>
+    </div>
+    <div class="footer-info">
+        <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
+            <span id="displayYear"></span><a href="aboutusAdmin"> About Developers </a>
+        </p>
+    </div>
+    </div>
+  </footer>
+<!-- footer section -->
+
+
+
+
+
+
+
+
+
+
+<script src="{{url_for('static',filename='js/jquery-3.4.1.min.js')}}"></script>
+<!-- popper js -->
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+</script>
+<!-- bootstrap js -->
+<script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+<script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+<!-- owl slider -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+</script>
+<!-- isotope js -->
+<script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+<!-- nice select -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+<!-- custom js -->
+<script src="{{url_for('static',filename='js/custom.js')}}"></script>
+
+
+</body>
+</html>
