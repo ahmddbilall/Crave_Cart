@@ -1,17 +1,115 @@
 <!DOCTYPE html>
 <html>
 <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Admin Dashboard</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <!-- Mobile Metas -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <!-- Site Metas -->
+  <meta name="keywords" content="" />
+  <meta name="description" content="" />
+  <meta name="author" content="" />
+  <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
+    <title>Admin Dashboard</title>
+   
 
-        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
+
+  <!--owl slider stylesheet -->
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+  <!-- nice select  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+  <!-- font awesome style -->
+  <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
+
+  <!-- Custom styles for this template -->
+  <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+
+
+
+      .containerAll {
+          display: flex;
+          align-items: center; /* Center the content vertically */
+          height: 100vh; /* Makes the container fill the entire viewport */
+          flex-direction: column; /* Added to stack the chart containers vertically */
+      }
+
+      .chart-container {
+          margin: 0 auto; /* Center the container horizontally */
+          text-align: center; /* Center the content within the container */
+          width: 600px; /* Adjust as needed */
+      }
+
+
+      h1 {
+        color: white; /* Makes the text white */
+        text-align: center; /* Centers the text horizontally */
+      }
+
+
+      .container {
+        max-width: 1000px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .chart-container {
+        margin-bottom: 100px;
+        position: relative;
+      }
+
+      .x-label, .y-label {
+        font-size: 20px;
+        position: absolute;
+        opacity: 0;
+      }
+
+      .x-label {
+        bottom: -50px;
+        left: 50%;
+        transform: translateX(-50%);
+        animation: fadeInUp 1s ease forwards;
+      }
+
+      .y-label {
+        top: 50%;
+        left: -50px;
+        transform: translateY(-50%) rotate(-90deg);
+        animation: fadeInRight 1s ease forwards;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInRight {
+        from {
+          opacity: 0;
+          transform: translateX(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(-90deg);
+        }
+      }
+
+  </style>
 </head>
 
-<body>
+<body class="sub_page">
     <div id="flash-message">
         {% with messages = get_flashed_messages(with_categories=true) %}
          {% if messages %}
@@ -26,27 +124,219 @@
 
 
 
-    <!--    1. add a new admin DONE
-            2. remove an admin (only by owner) DONE
-            3. see all resturants DONE
-            4. block and unblock a restuarent DONE
-            5. see all users 
-            6. block and unblock a user -->
-    <h1>Hello {{name[0]}}</h1>
+    <div class="hero_area">
+      <div class="bg-box">
+      <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+      </div>
+      <header class="header_section">
+      <div class="container">
+      <nav class="navbar navbar-expand-lg custom_nav-container ">
+        <a class="navbar-brand" href="adminHome">
+          <span>
+            Crave Cart
+          </span>
+        </a>
 
-    <a href="/Add-new-admin">Add a new admin</a>
-    
-    <br><br><br><br>
-    <a href="/remove-admin">Remove Admin</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class=""> </span>
+        </button>
 
-    <br><br><br><br>
-    <a href="/All-Resturants">See all resturants</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav  mx-auto ">
+            <li class="nav-item">
+              <a class="nav-link" href="adminHome">Home </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="All-Resturants">Restaurants </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="All-Users">Customers </a>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Manage Admins
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <a class="dropdown-item" href="Add-new-admin">Add Admin</a>
+                  <div class="dropdown-divider"></div>
+                  <a class="dropdown-item" href="remove-admin">Remove Admin</a>
+                  
+              </div>
+            </li>
+
+            
+
+            
+
+          <div class="user_option">
+                <form class="form-inline">
+               <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
+                   <i class="fa fa-sign-out" aria-hidden="true"></i> 
+               </button>
+             </form>
+           </div>
+
+
+
+
+        </div>
+      </nav>
+      </div>
+      </header>
+    </div>
+
+    <h1 style="color:black;">Hello {{name[0][0]}}</h1>
+
+
+
+
+
+    
+    
     
 
-    <br><br><br><br>
-    <a href="/All-Users">See all resturants</a>
+
+
+
+
+
+  <!-- footer section -->
+                <footer class="footer_section">
+                  <div class="container">
+                  <div class="row">
+                      <div class="col-md-4 footer-col">
+                          <div class="footer_detail">
+                              <a href="#" class="footer-logo">Crave Cart</a>
+                              <p>Crave Cart is a convenient and innovative platform that brings together a diverse range of restaurants and culinary delights, allowing users to explore and order their favorite dishes with ease.</p>
+                              <div class="footer_social">
+                                  <a ><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                                  <a ><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                                  <a ><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                                  <a ><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                                  <a ><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+                              </div>
+                          </div>
+                      </div>
+                      <div class="col-md-4 footer-col">
+                          <h4></h4>
+                      </div>
+                      <div class="col-md-4 footer-col">
+                          <h4>Contact Us</h4>
+                          <p>If you have any questions or need assistance, feel free to contact us:</p>
+                          
+                          <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
+                          <p> <i class="fa fa-phone"></i> +1234567890</p>
+                          <p> <i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
+                      </div>
+                  </div>
+                  <div class="footer-info">
+                      <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
+                          <span id="displayYear"></span><a href="aboutusAdmin"> About Developers </a>
+                      </p>
+                  </div>
+                  </div>
+                </footer>
+  <!-- footer section -->
+
+
+
+
+
+
+
+
+
+
+  <script src="{{url_for('static',filename='js/jquery-3.4.1.min.js')}}"></script>
+  <!-- popper js -->
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
+  </script>
+  <!-- bootstrap js -->
+  <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+  <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+  <!-- owl slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  </script>
+  <!-- isotope js -->
+  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+  <!-- custom js -->
+  <script src="{{url_for('static',filename='js/custom.js')}}"></script>
+
+  <script>
+  
+    document.addEventListener("DOMContentLoaded", function() {
+      var userRestaurantCanvas = document.getElementById('userRestaurantChart').getContext('2d');
+      var monthlyUserCanvas = document.getElementById('monthlyUserChart').getContext('2d');
     
-    <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+      var userRestaurantData = {
+        labels: ['Users', 'Restaurants'],
+        datasets: [{
+          label: 'Count',
+          data: [1500, 1000],
+          backgroundColor: ['#4CAF50', '#2196F3'],
+          borderWidth: 1
+        }]
+      };
+    
+      var monthlyUserData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+          label: 'Users',
+          data: [100, 200, 300, 400, 500, 6000, 700, 80, 900, 1000, 1100, 1200],
+          borderColor: '#FFEB3B',
+          borderWidth: 2,
+          fill: false
+        }]
+      };
+    
+      var animationOptions = {
+        duration: 2000,
+        easing: 'easeOutQuad'
+      };
+    
+      var userRestaurantChart = new Chart(userRestaurantCanvas, {
+        type: 'bar',
+        data: userRestaurantData,
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          },
+          animation: animationOptions
+        }
+      });
+    
+      var monthlyUserChart = new Chart(monthlyUserCanvas, {
+        type: 'line',
+        data: monthlyUserData,
+        options: {
+          scales: {
+            yAxes: [{
+              ticks: {
+                beginAtZero: true
+              }
+            }]
+          },
+          animation: animationOptions
+        }
+      });
+    
+      userRestaurantChart.update({
+        duration: 2000,
+        easing: 'easeOutQuad'
+      });
+    });
+    
+    
+  
+  
+  </script>
+  
 
 
 </body>

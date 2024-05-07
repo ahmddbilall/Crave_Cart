@@ -295,7 +295,15 @@ def cart():
     if not DataBase.is_customer(session['username']):
         return render_template('404.html'), 404
     dataa = DataBase.get_all_cart(session['username'])
-    return render_template('user/cart.html',data=dataa)
+    #here calculate total bill with and without discount 
+    # cursor.execute('''SELECT m.ItemName, m.Price, p.Discount, m.ImagePNG, c.Instructions ,m.Menuid , c.quantity
+    total = 0
+    total_with_dicount = 0
+    for i in dataa:
+        total += i['OriginalPrice']
+        total_with_dicount += i['DiscountedPrice']
+        
+    return render_template('user/cart.html',data=dataa,total=total,total_with_dicount=total_with_dicount,dicount=total-total_with_dicount)
   
 @app.route('/handle-remove-from-cart',methods=['GET','POST'])
 def removefromCart():
@@ -398,10 +406,25 @@ def addReview():
     
     return redirect('trackorders')
 
+@app.route('/restaurants',methods=['GET','POST'])
+def AllRestaurants():
+    if 'username' not in session:
+        return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
+    data =DataBase.get_active_restaurants()
+    return render_template('user/restaurants.html',data=data,length=len(data))
 
-
-
-
+@app.route('/restaurantDetail')
+def restaurantDetails():
+    if 'username' not in session:
+        return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
+    restaurant_id = request.args.get('restaurant_id')
+    items = DataBase.get_Items_ofRestaurant(restaurant_id)
+    restaurant = DataBase.get_a_restaurant(restaurant_id)
+    return render_template('user/restaurant_detail.html',items=items,itemslength=len(items),res_data=restaurant)
 
 
 
@@ -546,12 +569,8 @@ def allProducts():
         return render_template('404.html'), 404
     
     data = DataBase.get_Items_ofRestaurant(session['username'])
-    print(data[0])
+    
     return render_template('restaurant/allProducts.html',menu=data)
-
-
-
-
 
 @app.route('/addPromotion',methods=['GET','POST'])
 def addPromotion():
@@ -663,8 +682,6 @@ def ordersHistory():
     data = DataBase.get_Completed_orders(session['username'])
     return render_template('restaurant/ordersHistory.html',data=data,length=len(data))
 
-
-
 @app.route('/placedOrders',methods=['GET','POST'])
 def placedOrders():
     if 'username' not in session:
@@ -680,12 +697,8 @@ def placedOrders():
             flash(result,'success')
         else:
             flash(result,'error')
-            
-    return render_template('restaurant/placedOrders.html')
-
-
-
-
+    data = DataBase.get_pending_orders(session['username'])
+    return render_template('restaurant/placedOrders.html',data=data,length=len(data))
 
 @app.route('/aboutusResturant')
 def aboutusResturant():
@@ -722,6 +735,17 @@ def admin():
         
     return redirect(url_for('adminlogin'))
 
+
+
+@app.route('/aboutusAdmin')
+def aboutusAdmin():
+    if 'admin' not in session:
+        return redirect(url_for('adminlogin'))
+    
+    return render_template('admin/aboutusAdmin.html')
+
+
+
 @app.route('/adminHome')
 def adminHome():
     if 'admin' not in session:
@@ -755,6 +779,8 @@ def AddNewadmin():
     
         if status == '':
             flash(name + ' add as admin','success')
+        else:
+            flash(status,'error')
     return render_template('admin/AddnewAdmin.html')
 
 @app.route('/remove-admin',methods=['GET','POST'])
@@ -799,9 +825,11 @@ def handleblockuser():
     
     
     id = request.args.get('id')
+    print(id)
     
     output = DataBase.blockUser(CustomerID=id,adminMail=session['admin'])
-    if output =='':
+    print(output)
+    if output:
         flash('User blocked successfully!', 'success')
     else:
         flash(output, 'error')
@@ -816,9 +844,11 @@ def handleunblockuser():
     
     id = request.args.get('id')
     
+    print(id)
     output = DataBase.unblockUser(CustomerID=id)
-    if output =='':
-        flash('Resturant unblocked successfully!', 'success')
+    print(output)
+    if output:
+        flash('User unblocked successfully!', 'success')
     else:
         flash(output, 'error')
     
@@ -840,7 +870,7 @@ def handleblockresturant():
     id = request.args.get('id')
     
     output = DataBase.blockResturant(resturantID=id,adminMail=session['admin'])
-    if output =='':
+    if output:
         flash('Resturant blocked successfully!', 'success')
     else:
         flash(output, 'error')
@@ -854,19 +884,15 @@ def handleunblockresturant():
     
     
     id = request.args.get('id')
-    
     output = DataBase.unblockResturant(resturantID=id)
-    if output =='':
+    if output:
         flash('Resturant unblocked successfully!', 'success')
     else:
         flash(output, 'error')
     
     return redirect('All-Resturants')
 
-@app.route('/logoutAdmin')
-def adminlogout():
-    session.pop('admin',None)
-    return redirect('/')
+
 
 # End Admin
 
@@ -889,8 +915,12 @@ def aboutus():
 
 @app.route('/logout')
 def logout():
-    session.pop('username', None)
+    if session.get('username'):
+        session.pop('username', None)
+    else:
+        session.pop('admin', None)
     return redirect('/')
+
 
 @app.errorhandler(404)
 def page_not_found(error):

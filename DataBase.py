@@ -201,7 +201,7 @@ def get_all_Promotions(RestaurantID):
         cursor.execute('''SELECT p.PromotionID, p.PromotionName, p.MenuID, p.Description, p.Discount, p.StartDate, p.EndDate
                           FROM Promotions p
                           INNER JOIN Menus m ON p.MenuID = m.MenuID
-                          WHERE m.RestaurantID = ?''', (RestaurantID,))
+                          WHERE m.RestaurantID = ?''', [RestaurantID])
         promotions = cursor.fetchall()
         return promotions
     except Exception as e:
@@ -478,6 +478,21 @@ def get_all_restaurants():
         print(str(e))
         return []
 
+def get_a_restaurant(id):
+    try:
+        cursor.execute('''SELECT * FROM Restaurants where RestaurantID=?;''',[id])
+        return cursor.fetchone()
+    except Exception as e:
+        print(str(e))
+        return []
+
+def get_active_restaurants():
+    try:
+        cursor.execute('''SELECT * FROM Restaurants where Blocked = 0;''' )
+        return cursor.fetchall()
+    except Exception as e:
+        print(str(e))
+        return []
 
 def get_all_cart(Customerid):
     try:
@@ -592,11 +607,12 @@ def get_discount_for_item_on_date(menuid, order_date):
 
 def blockResturant(resturantID,adminMail):
     try:
-        cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", (adminMail))
+        print(resturantID,adminMail)
+        cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", [adminMail])
         admin_row = cursor.fetchone()
         if admin_row:
             adminID = admin_row[0]
-
+            print(adminID)
             cursor.execute("UPDATE Restaurants SET Blocked = 1, BlockedByAdmin = ? WHERE RestaurantID = ?", [adminID, resturantID])
             connection.commit()
             return True  
@@ -608,7 +624,8 @@ def blockResturant(resturantID,adminMail):
 
 def blockUser(CustomerID,adminMail):
     try:
-        cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", (adminMail))
+        print(adminMail,CustomerID)
+        cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", [adminMail])
         admin_row = cursor.fetchone()
         if admin_row:
             adminID = admin_row[0]
@@ -633,9 +650,9 @@ def unblockUser(CustomerID):
 
 
 
-def unblockResturant(CustomerID):
+def unblockResturant(resturantID):
     try:
-        cursor.execute("UPDATE Restaurants SET Blocked = 0, BlockedByAdmin = NULL WHERE CustomerID = ?", [CustomerID])
+        cursor.execute("UPDATE Restaurants SET Blocked = 0, BlockedByAdmin = NULL WHERE RestaurantID = ?", [resturantID])
         connection.commit()
         return True  
     except Exception as e:
@@ -904,6 +921,8 @@ def addToFavourites(Customerid,menu_title='',Description='',Price='',PromotionNa
     except Exception as e:
         print(str(e))
         return 'Database error'  
+
+
 
 def close_connection():
     connection.close()

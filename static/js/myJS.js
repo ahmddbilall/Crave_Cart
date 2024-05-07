@@ -6,6 +6,8 @@ function logout() {
     window.location.href = '/logout'; 
 }
 
+
+
 setTimeout(function() {
     var flashMessage = document.getElementById('flash-message');
     if (flashMessage) {
@@ -41,7 +43,7 @@ var unblockresturant = document.querySelectorAll('.unblock-resturant');
 unblockresturant.forEach(function(button) {
     button.addEventListener('click', function(event) {
         event.preventDefault();
-        var id = button.getAttribute('id');
+        var id = button.getAttribute('data-id');
         unblockresturantt(id);
     });
 });
@@ -56,7 +58,7 @@ var unblockuser = document.querySelectorAll('.unblock-user');
 unblockuser.forEach(function(button) {
     button.addEventListener('click', function(event) {
         event.preventDefault();
-        var id = button.getAttribute('id');
+        var id = button.getAttribute('data-id');
         unblockuser(id);
     });
 });
@@ -70,7 +72,7 @@ var blockresturant = document.querySelectorAll('.block-resturant');
 blockresturant.forEach(function(button) {
     button.addEventListener('click', function(event) {
         event.preventDefault();
-        var id = button.getAttribute('id');
+        var id = button.getAttribute('data-id');
         blockresturantt(id);
     });
 });
@@ -83,7 +85,7 @@ var blockuser = document.querySelectorAll('.block-user');
 blockuser.forEach(function(button) {
     button.addEventListener('click', function(event) {
         event.preventDefault();
-        var id = button.getAttribute('id');
+        var id = button.getAttribute('data-id');
         blockuser(id);
     });
 });

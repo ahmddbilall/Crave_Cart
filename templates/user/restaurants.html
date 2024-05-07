@@ -13,7 +13,7 @@
   <meta name="author" content="" />
   <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
 
-  <title> Discounts </title>
+  <title> Restaurants </title>
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
@@ -24,7 +24,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
   <!-- font awesome style -->
   <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <!-- Custom styles for this template -->
   <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
@@ -34,27 +33,26 @@
 </head>
 
 <body class="sub_page">
-
   <div id="flash-message">
     {% with messages = get_flashed_messages(with_categories=true) %}
-     {% if messages %}
-      {% for category, message in messages %}
-        <div class="alert alert-{{ category }}">
-          {{ message }}
-        </div>
-      {% endfor %}
-     {% endif %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
     {% endwith %}
-  </div>
-
-
-
-  <div class="hero_area">
-    <div class="bg-box">
-      <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
     </div>
-    <!-- header section strats -->
-    <header class="header_section">
+
+
+
+  <!-- header section strats -->
+  <div class="hero_area">
+       <div class="bg-box">
+       <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+      </div>
+      <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
           <a class="navbar-brand" href="home">
@@ -76,7 +74,7 @@
                 <a class="nav-link" href="recommendation">Recommendations  </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="discounts">Discounts<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="discounts">Discounts</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="favourites">Favourites</a>
@@ -88,8 +86,6 @@
                 <a class="nav-link" href="restaurants">Restaurants</a>
               </li>
             </ul>
-            
-
 
             <div class="user_option">
                 <a href="profile" class="user_link">
@@ -150,13 +146,12 @@
                   </svg>
                  </a>
                  <form class="form-inline active">
-                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()">
+                  <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="openSearchPage()" >
                       <i class="fa fa-search" aria-hidden="true"></i>
-                      
                   </button>
                  </form>
                   <form class="form-inline">
-                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
+                 <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()" >
                      <i class="fa fa-sign-out" aria-hidden="true"></i> 
                  </button>
                </form>
@@ -174,84 +169,36 @@
   </div>
 
 
-    {%if result!=0%}
 
-    <!-- use if else if item not found-->
-  <!-- food section -->
-  <section class="food_section layout_padding">
-    <div class="container">
-      
-
-      
-
-      <div class="filters-content">
-        <div class="row grid">
-        
-        
-            {% for item in data%}
-            <div class="col-sm-6 col-lg-4 all category">
-            <div class="box">
-              <div>
-                <div class="img-box">
-                  <img src="{{url_for('static',filename='images/'+item['Image'])}}" alt="">
+  <section class="h-100" >
+    <div class="container h-100 py-5">
+      <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-10">
+            
+            {% if length != 0%}
+          
+            {%for i in data%}
+            <a href="/restaurantDetail?restaurant_id={{ i[0] }}">
+                <div >
+                    <h2>Name :{{i[2]}}</h2>
+                    <p>Address:{{i[5]}}</p>
+                    <p>Phone:{{i[6]}}</p>
+                    <p>Website:{{i[7]}}</p>
+                    <p>Opening Hours:{{i[8]}}</p>
                 </div>
-                <div class="detail-box">
-                  <h5>
-                    {{item['PromotionName']}}
-                    {{item['itemName']}}
-                  </h5>
-                  <p>
-                    {{item['Price']}}
-                  </p>
-                  <div class="options">
-                    <h6>
-                        {{item['DiscountedPrice']}}
-                    </h6>
-                    <div class="button-container">
-                      <a href="#" class="add-to-cart-btn-discount" data-name="{{ item['PromotionName'] }}">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">
-                              <circle cx="9" cy="21" r="1"></circle>
-                              <circle cx="20" cy="21" r="1"></circle>
-                              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h8.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                          </svg>
-                      </a>
-                      <a href="#" class="favorite-btn-discount" data-name="{{ item['PromotionName'] }}">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
-                              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                          </svg>
-                      </a>
-                  </div>
-                  
-                  
-                  </div>
-                </div>
-              </div>
-            </div>
-            </div>
+            </a>
             {%endfor%}
+            {%else%}
+            <br><br><br><br><br>
+            <h1>No registered Restaurant Found</h1>
+            <br><br><br><br><br>
+            {%endif%}
+        
+  
         </div>
       </div>
-
     </div>
   </section>
-  <!-- end food section -->
-{%else%}
-<section class="food_section layout_padding">
-  <div class="container">
-    <div class="heading_container heading_center">
-      <h2>
-        No item in Discount at this time
-      </h2>
-    </div>
-    </div>
-
-  </div>
-</section>
-
-  {%endif%}
-
-
-
 
 
 

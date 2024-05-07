@@ -82,6 +82,9 @@
               <li class="nav-item">
                 <a class="nav-link" href="trackorders">Orders</a>
               </li>
+              <li class="nav-item">
+                <a class="nav-link" href="restaurants">Restaurants</a>
+              </li>
             </ul>
 
             <div class="user_option">
@@ -256,6 +259,19 @@
           </div>
         </div>
         <br><br><br>
+
+        
+        <div class="card">
+          <div class="card-body">
+            <h1> Total Amount : {{total}}</h1>
+            <h1> Total discount : {{dicount}}</h1>
+            <h1> Net bill : {{total_with_dicount}}</h1>
+          </div>
+        </div>
+        
+        <br><br><br>
+
+
         <div class="card">
           <div class="card-body">
             <button type="button" class="orderButtonCart" style="width:900px;height:50px;background-color: #ffbe33;border-radius:10px;border: 0px solid #ffbe33;font-weight: bold;font-size:20px;">Order</button>
