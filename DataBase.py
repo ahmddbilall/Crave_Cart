@@ -187,11 +187,20 @@ def get_Completed_orders(RestaurantID):
 
 def updatePromotion(promoName,menuId,description,Discount,StartDate,endDate,promotionid):
     try:
-        cursor.execute('''UPDATE Promotions SET PromotionName=?, MenuID=?, Description=?, Discount=?, StartDate=?, EndDate=? where promotionid=?''',
+        cursor.execute('''SELECT menuid FROM Promotions where promotionid=?''',
+                                [promotionid])
+        result = cursor.fetchone()
+        cursor.execute('''SELECT * FROM menus where menuid=? and restaurantid=?''',
+                                [menuId,RestaurantID])
+        result = cursor.fetchone()
+        if result:
+            
+            cursor.execute('''UPDATE Promotions SET PromotionName=?, MenuID=?, Description=?, Discount=?, StartDate=?, EndDate=? where promotionid=?''',
                                 [promoName,menuId,description,Discount,StartDate,endDate,promotionid])
-        
-        connection.commit()
-        return 'Promotion updated successfully!'
+            connection.commit()
+            return 'Promotion updated successfully!'
+        else:
+            return 'Cannot access that Promotion'
     except sqlite3.Error as e:
         print("Database error:", e)
         return 'Database error'
@@ -537,7 +546,7 @@ def placeOrder(customerid,date,Type):
     try:
         cursor.execute('''INSERT INTO Orders (menuid, customerid, status, quantity, instructions, Date,Type)
                           SELECT menuid, customerid, 'pending', quantity, Instructions, ? ,?
-                          FROM CART WHERE customerid = ?''', [date,customerid,Type])
+                          FROM CART WHERE customerid = ?''', [date,Type,customerid])
         
         cursor.execute('''DELETE FROM CART WHERE customerid = ?''', [customerid])
         

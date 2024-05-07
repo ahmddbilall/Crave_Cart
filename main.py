@@ -346,6 +346,7 @@ def orderfromCart():
     Customerid = session['username'] 
     Type = request.args.get('type')
     output = DataBase.placeOrder(customerid=Customerid,date=date.today().strftime("%Y-%m-%d"),Type=Type)
+    print(output)
     if output =='Order placed successfully!':
         flash(output, 'success')
     else:
@@ -653,7 +654,6 @@ def updatePrmotionHandler():
         startDate = request.form['startDate']
         endDate = request.form['endDate']
         promotionid = request.form['promotionid']
-        
                
         result = DataBase.updatePromotion(promoName=promoName,menuId=menuId,description=description,Discount=discount,StartDate=startDate,endDate=endDate,promotionid=promotionid)
         
