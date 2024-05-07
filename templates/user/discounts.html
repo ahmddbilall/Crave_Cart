@@ -15,6 +15,7 @@
 
   <title> Discounts </title>
 
+  <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
 
   <!--owl slider stylesheet -->
@@ -23,6 +24,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
   <!-- font awesome style -->
   <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
   <!-- Custom styles for this template -->
   <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
@@ -83,7 +85,7 @@
                 <a class="nav-link" href="trackorders">Orders</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="restaurants">Restautrants</a>
+                <a class="nav-link" href="restaurants">Restaurants</a>
               </li>
             </ul>
             
@@ -206,16 +208,18 @@
                   <h5>
                     Item Name: {{item['itemName']}}
                   </h5>
-                  <p>
-                    {{item['Price']}}
-                  </p>
-                  <div class="options">
-                    <h6>
-                        {{item['DiscountedPrice']}}
+                  
+                  <div class="options discount-options">
+                    <h6 style="text-decoration: line-through;">
+                      ${{item['Price']}}
+                  </h6>
+                    <h6 style="margin-right: auto;">
+                        ${{item['DiscountedPrice']}}
                     </h6>
+
                     <div class="button-container" id="menu-buttons">
                       <a href="#" 
-                          class="add-to-cart-btn-discount"
+                          class="add-to-cart-btn-discount add-to-cart-btn-style"
                           data-name="{{ item['PromotionName'] }}">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-shopping-cart">
                               <circle cx="9" cy="21" r="1"></circle>
@@ -223,7 +227,7 @@
                               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h8.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                           </svg>
                       </a>
-                      <a href="#" class="favorite-btn-discount" data-name="{{ item['PromotionName'] }}">
+                      <a href="#" class="favorite-btn-discount favorite-btn-style" data-name="{{ item['PromotionName'] }}">
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-heart">
                               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                           </svg>

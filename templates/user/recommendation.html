@@ -203,7 +203,7 @@
     <br /><br /><br />
     <div class="container">
       <form action="/recommendation" id="recommend-form" method="post">
-        <select name="item" id="item">
+        <select name="item" id="item" class="form-select">
           {% for item_name in item_names %}
           <option value="{{ item_name }}">{{ item_name }}</option>
           {% endfor %}
