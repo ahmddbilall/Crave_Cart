@@ -86,8 +86,6 @@ def signup():
                 return redirect(url_for('Restaurant.restaurantHome'))
     return render_template('signup.html')
 
-
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':

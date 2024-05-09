@@ -760,21 +760,17 @@ def login_check(email,password):
     if email == None or password == None:
         return 'Enter Values'
     try:
-        cursor.execute('''SELECT * FROM Customers Where email=? AND password =?;''',[email,password])
+        cursor.execute('''SELECT * FROM Customers Where email=? AND password =? AND blocked=0;''',[email,password])
         user_data = cursor.fetchone()
         if user_data:
                 #check for blocked or not
             return 'Customer'
 
-        cursor.execute('''SELECT * FROM Restaurants Where email=? AND password =?;''',[email,password])
+        cursor.execute('''SELECT * FROM Restaurants Where email=? AND password =? AND blocked =0;''',[email,password])
         user_data = cursor.fetchone()
         if user_data:
             return 'Restaurant'
-
-        cursor.execute('''SELECT * FROM Admin Where email=? AND password =?;''',[email,password])
-        user_data = cursor.fetchone()
-        if user_data:
-            return 'admin'
+        
         return 'No data found with this email and password'
     except Exception as e:
         return f'Error: {str(e)}'
@@ -892,7 +888,8 @@ def get_Menu_With_Id(ids):
     try:
         ans = []
         for id in ids:
-            cursor.execute('''SELECT ItemName, Description, Price, ImagePNG, Category FROM Menus WHERE Menuid = ?;''', [id])
+            cursor.execute('''SELECT ItemName, m.Description, Price, ImagePNG, Category FROM Menus m Join 
+                               Restaurants r on m.restaurantid = r.restaurantid WHERE r.blocked=0 Menuid = ?;''', [id])
             ans.append(cursor.fetchone())
         return ans
     except sqlite3.Error as e:
@@ -907,6 +904,7 @@ def get_favourite_data(CustomerID):
         cursor.execute('''SELECT m.ItemName, m.Price, m.Description, m.ImagePNG 
                           FROM Favourites f
                           JOIN Menus m ON f.MenuID = m.MenuID
+                          join restaurant r on r.restaurantid = m.restaurantid 
                           WHERE f.CustomerID = ?''', [CustomerID])
         favorite_items = cursor.fetchall()
 
@@ -927,7 +925,9 @@ def get_favourite_data(CustomerID):
 
 def getItemSearch(name):
     try:
-        cursor.execute('''SELECT ItemName, Description, Price, ImagePNG, Category FROM Menus WHERE ItemName LIKE ? OR Category LIKE ?;''', ['%' + name + '%','%' + name + '%'])
+        cursor.execute('''SELECT M.ItemName, M.Description, M.Price, M.ImagePNG, M.Category FROM Menus M
+                       join Restaurants R on M.restaurantID = R.restaurantID 
+                       WHERE R.blocked = 0 AND (ItemName LIKE ? OR Category LIKE ?);''', ['%' + name + '%','%' + name + '%'])
         return cursor.fetchall()
     except sqlite3.Error as e:
         print("Error fetching data from database:", e)
