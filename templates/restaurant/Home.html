@@ -28,7 +28,7 @@
   <!-- responsive style -->
   <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
- 
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -151,7 +151,6 @@
       <h1>Welcome {{resturantName}}</h1>
     </div>
     <br><br><br>
-    <h1 id="reviews-title">Reviews</h1>
 
     
     {%else%}
@@ -160,10 +159,20 @@
     </div>
   {%endif%}
 
+    {%if graph != False%}
+      <div style="width:800px;height=400px;margin-left:100px;">
+        <canvas id="salesChart" width="200" height="100"></canvas>
+      </div>
+      <br><br><br><br><br><br><br><br><br>
+
+    {%else%}
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+        <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    {%endif%}
+
     
 
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    
   
   <!-- footer section -->
   <footer class="footer_section">
@@ -203,7 +212,36 @@
 </footer>
   <!-- footer section -->
 
+  <script>
+    var salesData = JSON.parse('{{ sales_data | tojson | safe }}');
 
+    var itemNames = Object.keys(salesData);
+    var itemSales = Object.values(salesData);
+
+    var ctx = document.getElementById('salesChart').getContext('2d');
+    var salesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: itemNames, 
+            datasets: [{
+                label: 'Sales Count',
+                data: itemSales, 
+                backgroundColor: 'rgba(75, 192, 192, 0.2)', 
+                borderColor: 'rgba(75, 192, 192, 1)', 
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true 
+                    }
+                }]
+            }
+        }
+    });
+</script>
 
 
   <!-- jQery -->

@@ -17,7 +17,14 @@ def restaurantHome():
         return render_template('404.html'), 404
     
     resturantName = DataBase.getResturantName(session['username'])
-    return render_template('restaurant/Home.html',resturantName=resturantName)
+    
+    data = DataBase.get_item_vs_sale(session['username'])
+    if len(data):
+        Graphans = True
+    else:
+        Graphans = False
+        
+    return render_template('restaurant/Home.html',resturantName=resturantName,sales_data=data,graph=Graphans)
 
 @Restaurant.route('/resturantprofile',methods=['GET','POST'])
 def resturantprofile():

@@ -109,6 +109,27 @@ def create_tables():
                     );''')
 
 
+#restaurant home
+def get_item_vs_sale(restaurantID):
+    try:
+        cursor.execute('''SELECT M.ItemName, SUM(O.quantity) AS TotalOrders
+                            FROM Menus M
+                            JOIN Orders O ON M.MenuID = O.menuid
+                            WHERE M.RestaurantID = ?
+                            GROUP BY M.ItemName;''',[restaurantID])
+        results = cursor.fetchall()
+
+        item_vs_sale = {}
+        for row in results:
+            item_name, total_orders = row
+            item_vs_sale[item_name] = total_orders
+
+        return item_vs_sale
+    except sqlite3.Error as e:
+        print("Error fetching data from database:", e)
+        return []
+
+
 #user display 
 def get_menu_data(limit=100,all=False):
     try:

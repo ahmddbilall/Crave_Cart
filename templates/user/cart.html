@@ -208,7 +208,7 @@
                       <!-- minus sign-->
                       <i class='gg-math-minus'></i>
                   </button>
-                  <input id="quantityInput" min="1" name="quantity" value="{{item['quantity']}}" type="number"
+                  <input id="quantityInput_{{ item['menuid'] }}" min="1" name="quantity" value="{{item['quantity']}}" type="number"
                       class="form-control form-control-sm" /> 
                   <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
                       onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
@@ -238,7 +238,7 @@
                           <input type="Instructions" class="form__field" id="instruction-input" style="width:700px;height:30px;" value="{{item['Instructions']}}" />
                         {%endif%}
                         
-                        <button type="save" class="btn btn--primary btn--inside uppercase save-button" data-menuid={{item['menuid']}} style="height:32px;background-color: #ffbe33;color: white;border: 0px solid #ffbe33;">Save</button>
+                        <button type="save" class="btn btn--primary btn--inside uppercase save-button" data-menuid={{item['menuid']}} data-quantity={{item['quantity']}} style="height:32px;background-color: #ffbe33;color: white;border: 0px solid #ffbe33;">Save</button>
                     </form>
                 </div>
             </div>

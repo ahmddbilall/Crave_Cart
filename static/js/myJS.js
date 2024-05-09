@@ -206,8 +206,9 @@ saveButtonInstructionCart.forEach(function(button) {
         var form = button.closest('.form');
         var instruction = form.querySelector('.form__field').value;
         var menuid = button.getAttribute('data-menuid');
-        var quantity = document.getElementById('quantityInput').value;
 
+        var quantityInput = document.getElementById('quantityInput_' + menuid);
+        var quantity = quantityInput ? quantityInput.value : null;
         instructionCart(menuid, instruction,quantity);
     });
 });

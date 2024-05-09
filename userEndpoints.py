@@ -292,12 +292,17 @@ def cart():
     dataa = DataBase.get_all_cart(session['username'])
     # cursor.execute('''SELECT m.ItemName, m.Price, p.Discount, m.ImagePNG, c.Instructions ,m.Menuid , c.quantity
     total = 0
-    total_with_dicount = 0
-    for i in dataa:
-        total += i['OriginalPrice']
-        total_with_dicount += i['DiscountedPrice']
+    total_with_discount = 0
+    for item in dataa:
+        original_price = item['OriginalPrice']
+        discounted_price = item['DiscountedPrice']  # corrected variable name
+        quantity = item['quantity']
+    
+        total += original_price * quantity
+    
+        total_with_discount += discounted_price * quantity
         
-    return render_template('user/cart.html',data=dataa,total=math.ceil(total),total_with_dicount=math.ceil(total_with_dicount),dicount=math.ceil(total-total_with_dicount))
+    return render_template('user/cart.html',data=dataa,total=math.ceil(total),total_with_dicount=math.ceil(total_with_discount),dicount=math.ceil(total-total_with_discount))
   
 @User.route('/handle-remove-from-cart',methods=['GET','POST'])
 def removefromCart():
