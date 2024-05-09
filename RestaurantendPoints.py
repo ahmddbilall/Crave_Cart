@@ -1,4 +1,4 @@
-from flask import Blueprint,Flask, render_template, redirect, request, session,flash,url_for
+from flask import Blueprint,Flask, render_template, redirect, request, session,flash,url_for,current_app
 import DataBase
 import helpingFunctions
 from datetime import date,datetime
@@ -13,7 +13,7 @@ Restaurant = Blueprint('Restaurant', __name__)
 def restaurantHome():
     if 'username' not in session:
         return redirect('/login')
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     resturantName = DataBase.getResturantName(session['username'])
@@ -23,7 +23,7 @@ def restaurantHome():
 def resturantprofile():
     if 'username' not in session:
         return redirect('/login')
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     data = DataBase.get_resturant_info(id = session['username'])
     if request.method == 'POST':
@@ -45,7 +45,7 @@ def resturantprofile():
 def addProduct():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     if request.method == 'POST':
         nameInput = request.form['itemName']
@@ -71,7 +71,7 @@ def addProduct():
 def deleteProduct():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     if request.method == 'POST':
@@ -90,22 +90,26 @@ def deleteProduct():
 def updateProduct():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     idRecieved = False
     data=[]
     if request.method == 'POST':
         productid = request.form['productid']
         data = DataBase.get_Item(id=productid,RestaurantID=session['username'])
-        idRecieved =True
-
+        if data:
+            idRecieved =True
+        else:
+            flash('You have no item with this id','error')
+            idRecieved =False
+            
     return render_template('restaurant/UpdateProduct.html',idRecieved=idRecieved,data=data)
 
 @Restaurant.route('/updateItemHandler',methods=['GET','POST'])
 def updateProductHandler():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
 
     if request.method == 'POST':
@@ -140,7 +144,7 @@ def updateProductHandler():
 def allProducts():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     data = DataBase.get_Items_ofRestaurant(session['username'])
@@ -151,7 +155,7 @@ def allProducts():
 def addPromotion():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     if request.method == 'POST':
@@ -178,13 +182,13 @@ def addPromotion():
 def removePromotion():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     if request.method == 'POST':
         Promotionid = request.form['productid']
 
-        result = DataBase.removeItem(Promotionid,session['username'])
+        result = DataBase.removePromotion(Promotionid,session['username'])
         if result == 'Deleted!':
             flash(result,'success')
         else:
@@ -197,7 +201,7 @@ def removePromotion():
 def updatePromotion():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     idRecieved = False
@@ -217,7 +221,7 @@ def updatePromotion():
 def updatePrmotionHandler():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
 
     if request.method == 'POST':
@@ -229,7 +233,7 @@ def updatePrmotionHandler():
         endDate = request.form['endDate']
         promotionid = request.form['promotionid']
                
-        result = DataBase.updatePromotion(promoName=promoName,menuId=menuId,description=description,Discount=discount,StartDate=startDate,endDate=endDate,promotionid=promotionid)
+        result = DataBase.updatePromotion(promoName=promoName,menuId=menuId,description=description,Discount=discount,StartDate=startDate,endDate=endDate,promotionid=promotionid,RestaurantID=session['username'])
         
         if result == 'Promotion updated successfully!':
             flash(result,'success')
@@ -241,7 +245,7 @@ def updatePrmotionHandler():
 def allPromotions():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     data = DataBase.get_all_Promotions(RestaurantID=session['username'])
@@ -251,7 +255,7 @@ def allPromotions():
 def ordersHistory():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     data = DataBase.get_Completed_orders(session['username'])
     return render_template('restaurant/ordersHistory.html',data=data,length=len(data))
@@ -260,7 +264,7 @@ def ordersHistory():
 def placedOrders():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     
     if request.method == 'POST':
@@ -278,7 +282,7 @@ def placedOrders():
 def aboutusResturant():
     if 'username' not in session:
         return redirect(url_for('login'))
-    if not DataBase.is_Restaurant(session['username']):
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
     return render_template('restaurant/aboutusResturant.html')
 

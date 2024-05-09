@@ -75,6 +75,8 @@ def signup():
             else:
                 flash('Customer added successfully','success')
                 session['username'] = status
+                session['email'] = email
+                session['password'] = password
                 return redirect(url_for('User.home'))
         elif account_type == 'restaurant':
             status =DataBase.insert_restaurants(email=email,password=password,registration_date=registration_date)
@@ -83,6 +85,8 @@ def signup():
             else:
                 flash('Restaurant added successfully','success')
                 session['username'] = status
+                session['email'] = email
+                session['password'] = password
                 return redirect(url_for('Restaurant.restaurantHome'))
     return render_template('signup.html')
 
@@ -97,9 +101,13 @@ def login():
             currentUser = status
             if (currentUser == 'Customer'):
                 session['username'] = DataBase.get_customer_id(email,password)
+                session['email'] = email
+                session['password'] = password
                 return redirect(url_for('User.home'))
             else:
                 session['username'] = DataBase.get_restaurants_id(email,password)
+                session['email'] = email
+                session['password'] = password
                 return redirect(url_for('Restaurant.restaurantHome'))
         else:
             flash(status,'error')

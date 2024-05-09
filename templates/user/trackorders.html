@@ -228,7 +228,7 @@
               </div>
               <p><b>Date:</b> {{ item['Date'] }}</p>
               <p><b>Price:</b> {{ item['Price'] }}</p>
-              {% if item['Status'] == 'delivered' %}
+              {% if item['Status'] == 'complete' %}
               <form action="/add-review" method="post" class="order-review">
                 <div>
                   <input

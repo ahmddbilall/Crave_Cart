@@ -128,7 +128,6 @@ def get_menu_data(limit=100,all=False):
 # User display
 def get_active_promotions(current_date,limit=100,all=False,png=False):
     try:
-        print(current_date)
         if all and png:
             cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImagePNG, m.ItemName 
                                 FROM Promotions p 
@@ -173,10 +172,11 @@ def Update_status(orderID,status):
 
 def get_pending_orders(RestaurantID):
     try:
-        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating,O.address
+        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating,C.address
                           FROM Orders O
                           INNER JOIN Menus M ON O.menuid = M.MenuID
                           LEFT JOIN Ratings R ON O.orderid = R.OrderID
+                          join Customers C on O.customerid = C.customerid 
                           WHERE o.status <> 'complete' AND M.RestaurantID = ?; ''',[RestaurantID])
 
         order_details = cursor.fetchall()
@@ -205,13 +205,12 @@ def get_pending_orders(RestaurantID):
 
 def get_Completed_orders(RestaurantID):
     try:
-        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating, C.address
+        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, C.Name, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating, C.address
                             FROM Orders O
                             INNER JOIN Menus M ON O.menuid = M.MenuID
                             LEFT JOIN Ratings R ON O.orderid = R.OrderID
                             JOIN Customers C ON C.Customerid = O.customerid
-                            WHERE O.status = 'complete' AND M.RestaurantID = ?;
-                            ; ''',[RestaurantID])
+                            WHERE O.status = 'complete' AND M.RestaurantID = ?; ''',[RestaurantID])
 
         order_details = cursor.fetchall()
 
@@ -221,14 +220,14 @@ def get_Completed_orders(RestaurantID):
                 'ItemName': item[0],
                 'orderid': item[1],
                 'menuid': item[2],
-                'customerid': item[3],
+                'customerName': item[3],
                 'status': item[4],
                 'quantity': item[5],
                 'instructions': item[6],
                 'Type': item[7],
                 'Date': item[8],
                 'rating': item[9],
-                'address': item[9]
+                'address': item[10]
             }
             order_details_list.append(item_dict)
         return order_details_list
@@ -236,7 +235,7 @@ def get_Completed_orders(RestaurantID):
         print("Database error:", e)
         return []
 
-def updatePromotion(promoName,menuId,description,Discount,StartDate,endDate,promotionid):
+def updatePromotion(promoName,menuId,description,Discount,StartDate,endDate,promotionid,RestaurantID):
     try:
         cursor.execute('''SELECT menuid FROM Promotions where promotionid=?''',
                                 [promotionid])
@@ -286,9 +285,9 @@ def addpromotion(MenuID,restaurantid,PromotionName,Description,Discount,StartDat
         return 'Database error'
 
 
-def is_customer(id):
+def is_customer(id,email,password):
     try:
-        cursor.execute('''SELECT * FROM Customers where CustomerID=?;''',[id])
+        cursor.execute('''SELECT * FROM Customers where CustomerID=? AND email = ? AND password=?;''',[id,email,password])
         ans = cursor.fetchone()
         if ans:
             return True
@@ -298,9 +297,9 @@ def is_customer(id):
         print(e)
         return False
 
-def is_Restaurant(id):
+def is_Restaurant(id,email,password):
     try:
-        cursor.execute('''SELECT * FROM Restaurants where RestaurantID=?;''',[id])
+        cursor.execute('''SELECT * FROM Restaurants where RestaurantID=? AND email = ? AND password=?;''',[id,email,password])
         ans = cursor.fetchone()
         if ans:
             return True
@@ -377,11 +376,11 @@ def removePromotion(promotionid,Restaurantid):
             cursor.execute('''SELECT RestaurantID FROM Menus where menuid=?;''',[result[0]])
             result = cursor.fetchone()
             if result[0] == Restaurantid:
-                cursor.execute('''DELETE FROM Promotions where menuid=?;''',[promotionid,Restaurantid])
+                cursor.execute('''DELETE FROM Promotions where promotionid=?;''',[promotionid])
                 connection.commit()
                 return 'Deleted!'
         else:
-                return 'Cannot delete this item'
+                return 'Cannot delete this Promotion'
     except Exception as e:
         print(str(e))
         return 'Database error' 
@@ -397,7 +396,7 @@ def get_Item(id,RestaurantID):
 
 def get_Promotion(id,RestaurantID):
     try:
-        cursor.execute('''SELECT * FROM Promotions where Menuid = ?;''',[id])
+        cursor.execute('''SELECT * FROM Promotions where Promotionid = ?;''',[id])
         ans = cursor.fetchone()
         cursor.execute('''SELECT * FROM Menus where Menuid = ? AND RestaurantID=?;''',[ans[2],RestaurantID])
         check = cursor.fetchone()
@@ -889,8 +888,10 @@ def get_Menu_With_Id(ids):
         ans = []
         for id in ids:
             cursor.execute('''SELECT ItemName, m.Description, Price, ImagePNG, Category FROM Menus m Join 
-                               Restaurants r on m.restaurantid = r.restaurantid WHERE r.blocked=0 Menuid = ?;''', [id])
-            ans.append(cursor.fetchone())
+                               Restaurants r on m.restaurantid = r.restaurantid WHERE r.blocked=0 AND Menuid = ?;''', [id])
+            row = cursor.fetchone()  
+            if row is not None:  
+                ans.append(row)
         return ans
     except sqlite3.Error as e:
         print("Error fetching data from database:", e)
@@ -904,7 +905,7 @@ def get_favourite_data(CustomerID):
         cursor.execute('''SELECT m.ItemName, m.Price, m.Description, m.ImagePNG 
                           FROM Favourites f
                           JOIN Menus m ON f.MenuID = m.MenuID
-                          join restaurant r on r.restaurantid = m.restaurantid 
+                          join Restaurants r on r.restaurantid = m.restaurantid 
                           WHERE f.CustomerID = ?''', [CustomerID])
         favorite_items = cursor.fetchall()
 

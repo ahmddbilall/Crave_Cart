@@ -15,22 +15,43 @@
 
   <title> Discounts </title>
 
-  <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
+   <!-- bootstrap core css -->
+   <link
+   rel="stylesheet"
+   type="text/css"
+   href="{{url_for('static',filename='css/bootstrap.css')}}"
+ />
 
-  <!--owl slider stylesheet -->
-  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
-  <!-- nice select  -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
-  <!-- font awesome style -->
-  <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+ <!--owl slider stylesheet -->
+ <link
+   rel="stylesheet"
+   type="text/css"
+   href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+ />
+ <!-- nice select  -->
+ <link
+   rel="stylesheet"
+   href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css"
+   integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ=="
+   crossorigin="anonymous"
+ />
+ <!-- font awesome style -->
+ <link
+   href="{{url_for('static',filename='css/font-awesome.min.css')}}"
+   rel="stylesheet"
+ />
 
-  <!-- Custom styles for this template -->
-  <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
-  <!-- responsive style -->
-  <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <!-- Custom styles for this template -->
+ <link
+   href="{{url_for('static',filename='css/style.css')}}"
+   rel="stylesheet"
+ />
+ <!-- responsive style -->
+ <link
+   href="{{url_for('static',filename='css/responsive.css')}}"
+   rel="stylesheet"
+ />
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 
 <body class="sub_page">
@@ -161,13 +182,7 @@
                  </button>
                </form>
                <form class="form-inline">
-                <button
-                  class="btn my-2 my-sm-0 nav_search-btn"
-                  type="button"
-                  onclick="logout()"
-                >
-                  <i class="fa fa-sign-out" aria-hidden="true"></i>
-                </button>
+               
               </form>
              </div>
 
@@ -189,10 +204,15 @@
         <!-- food section -->
         <section class="food_section layout_padding-bottom">
           <div class="container">
+            <div class="heading_container heading_center">
+              <br /><br />
+              <h2>Items in Discount</h2>
+              <br /><br />
+            </div>
             <div class="filters-content">
               <div class="row grid">
               
-              
+                
                   {% for item in data%}
                   <div class="col-sm-6 col-lg-4 all category">
                   <div class="box" id="menu-item-box">

@@ -66,7 +66,7 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav  mx-auto ">
               <li class="nav-item">
-                <a class="nav-link" href="home">Home </a>
+                <a class="nav-link" href="restaurantHome">Home </a>
               </li>
 
 
@@ -139,28 +139,28 @@
 
   {%if length != 0%}
     {% for i in data%}
-    <div class="card">
+    <div class="card" style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
        <div class="card-body">
-        <h1 style="display: inline;">ItemName</h1> <p> {{ i['ItemName'] }} </p><br>
-        <h1 style="display: inline;">orderid</h1> <p> {{ i['orderid'] }} </p><br>
-        <h1 style="display: inline;">menuid</h1> <p> {{ i['menuid'] }} </p><br>
-        <h1 style="display: inline;">customerid</h1> <p> {{ i['customerid'] }} </p><br>
-        <h1 style="display: inline;">Customer Address</h1> <p> {{ i['address'] }} </p><br>
-        <h1 style="display: inline;">Order status</h1> <p> {{ i['status'] }} </p><br>
-        <h1 style="display: inline;">quantity</h1> <p> {{ i['quantity'] }} </p><br>
-        <h1 style="display: inline;">instructions</h1> <p> {{ i['instructions'] }} </p><br>
-        <h1 style="display: inline;">Type</h1> <p> {{ i['Type'] }} </p><br>
-        <h1 style="display: inline;">Date</h1> <p> {{ i['Date'] }} </p><br>
-        <h1 style="display: inline;">rating</h1> <p> {{ i['rating'] }} </p><br>
+        <h3 style="display: inline;">ItemName</h3> <p> {{ i['ItemName'] }} </p>
+        <h3 style="display: inline;">Orderid</h3> <p> {{ i['orderid'] }} </p>
+        <h3 style="display: inline;">Menuid</h3> <p> {{ i['menuid'] }} </p>
+        <h3 style="display: inline;">Customer Name</h3> <p> {{ i['customerName'] }} </p>
+        <h3 style="display: inline;">Customer Address</h3> <p> {{ i['address'] }} </p>
+        <h3 style="display: inline;">Order status</h3> <p> {{ i['status'] }} </p>
+        <h3 style="display: inline;">Quantity</h3> <p> {{ i['quantity'] }} </p>
+        <h3 style="display: inline;">Instructions</h3> <p> {{ i['instructions'] }} </p>
+        <h3 style="display: inline;">Type</h3> <p> {{ i['Type'] }} </p>
+        <h3 style="display: inline;">Date</h3> <p> {{ i['Date'] }} </p>
+        <h3 style="display: inline;">Rating</h3> <p> {{ i['rating'] }} </p>
         
        </div>
     </div>
     <br><br>
     {%endfor%}
   {%else%}
-  <br><br><br><br><br><br><br>
-    <h1>Nothing Orderd Yet</h1>
-    <br><br><br><br><br><br><br><br><br><br>
+  <br><br><br><br><br><br><br><br><br><br>
+    <h1 style="margin-left:600px;font-size:80px;">Nothing Orderd Yet</h1>
+    <br><br><br><br><br><br><br><br><br><br><br><br>
     {%endif%}
 
   <!-- footer section -->
