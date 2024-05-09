@@ -850,13 +850,17 @@ def get_Menu_With_Id(ids):
         return []
 
 
-
+#user display
 def get_menu_data(limit=100,all=False):
     try:
         if all:
-            cursor.execute('''SELECT ItemName, Description, Price, ImagePNG ,Category ,Rating FROM Menus;''')
+            cursor.execute('''SELECT ItemName, M.Description, Price, ImagePNG ,Category ,Rating FROM Menus
+                              INNER JOIN Restaurants R ON M.RestaurantID = R.RestaurantID
+                              WHERE R.Blocked = 0;''')
         else:    
-            cursor.execute('''SELECT ItemName, Description, Price, ImagePNG ,Category ,Rating  FROM Menus LIMIT ?''',[limit])
+            cursor.execute('''SELECT ItemName, M.Description, Price, ImagePNG ,Category ,Rating  FROM Menus INNER JOIN Restaurants R 
+                              ON M.RestaurantID = R.RestaurantID
+                              WHERE R.Blocked = 0 LIMIT ?;''',[limit])
         return cursor.fetchall()
     except sqlite3.Error as e:
         print("Error fetching data from database:", e)
@@ -896,11 +900,19 @@ def getItemSearch(name):
 def get_active_promotions(current_date,limit=100,all=False,png=False):
     try:
         if all and png:
-            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImagePNG, m.itemname FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
-                        WHERE p.StartDate <= ? AND p.EndDate >= ?""", [current_date, current_date])
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImagePNG, m.ItemName 
+                                FROM Promotions p 
+                                JOIN Menus m ON p.MenuID = m.MenuID
+                                JOIN Restaurants r ON m.RestaurantID = r.RestaurantID
+                                WHERE r.Blocked = 0 AND p.StartDate <= ? 
+                                AND p.EndDate >= ?;""", [current_date, current_date])
         else:
-            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG,m.itemName  FROM Promotions p JOIN Menus m ON p.MenuID = m.MenuID
-                        WHERE p.StartDate <= ? AND p.EndDate >= ? Limit ?""", [current_date, current_date,limit])
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG, m.ItemName 
+                                FROM Promotions p 
+                                JOIN Menus m ON p.MenuID = m.MenuID
+                                JOIN Restaurants r ON m.RestaurantID = r.RestaurantID
+                                WHERE r.Blocked = 0 AND p.StartDate <= ? 
+                                AND p.EndDate >= ? Limit ?;""", [current_date, current_date,limit])
         rows = cursor.fetchall()
         promotions_data = []
         for row in rows:
