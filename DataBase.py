@@ -109,6 +109,55 @@ def create_tables():
                     );''')
 
 
+#user display 
+def get_menu_data(limit=100,all=False):
+    try:
+        if all:
+            cursor.execute('''SELECT ItemName, M.Description, Price, ImagePNG ,Category ,Rating FROM Menus M
+                              INNER JOIN Restaurants R ON M.RestaurantID = R.RestaurantID
+                              WHERE R.Blocked = 0;''')
+        else:    
+            cursor.execute('''SELECT ItemName, M.Description, Price, ImagePNG ,Category ,Rating  FROM Menus M INNER JOIN Restaurants R 
+                              ON M.RestaurantID = R.RestaurantID
+                              WHERE R.Blocked = 0 LIMIT ?;''',[limit])
+        return cursor.fetchall()
+    except sqlite3.Error as e:
+        print("Error fetching data from database:", e)
+        return []
+
+# User display
+def get_active_promotions(current_date,limit=100,all=False,png=False):
+    try:
+        print(current_date)
+        if all and png:
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImagePNG, m.ItemName 
+                                FROM Promotions p 
+                                JOIN Menus m ON p.MenuID = m.MenuID
+                                JOIN Restaurants r ON m.RestaurantID = r.RestaurantID
+                                WHERE r.Blocked = 0 AND p.StartDate <= ? 
+                                AND p.EndDate >= ?;""", [current_date, current_date])
+        else:
+            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG, m.ItemName 
+                                FROM Promotions p 
+                                JOIN Menus m ON p.MenuID = m.MenuID
+                                JOIN Restaurants r ON m.RestaurantID = r.RestaurantID
+                                WHERE r.Blocked = 0 AND p.StartDate <= ? 
+                                AND p.EndDate >= ? Limit ?;""", [current_date, current_date,limit])
+        rows = cursor.fetchall()
+        promotions_data = []
+        for row in rows:
+            promotion_name, price, discount, image ,itemName= row
+            discounted_price = price * (1 - discount / 100)
+            promotions_data.append({'PromotionName': promotion_name,'Price': price,'Discount': discount,'Image': image,'DiscountedPrice': discounted_price,'itemName':itemName})
+        return promotions_data
+    except sqlite3.Error as e:
+        print("Error fetching data from database:", e)
+        
+        return []
+
+
+
+
 # order status = pending , complete , in progress
 
 def Update_status(orderID,status):
@@ -764,6 +813,7 @@ def EmailCheck(id):
 
 def addToCart(menu_title,Description,Price,Customerid,instructions=' '):
     try:
+        print('in cart')
         print(menu_title,Description,Price)
         
         cursor.execute('''SELECT MenuID FROM Menus where ItemName=? and Description=? and Price=?;''',[menu_title,Description,Price])
@@ -850,21 +900,7 @@ def get_Menu_With_Id(ids):
         return []
 
 
-#user display
-def get_menu_data(limit=100,all=False):
-    try:
-        if all:
-            cursor.execute('''SELECT ItemName, M.Description, Price, ImagePNG ,Category ,Rating FROM Menus
-                              INNER JOIN Restaurants R ON M.RestaurantID = R.RestaurantID
-                              WHERE R.Blocked = 0;''')
-        else:    
-            cursor.execute('''SELECT ItemName, M.Description, Price, ImagePNG ,Category ,Rating  FROM Menus INNER JOIN Restaurants R 
-                              ON M.RestaurantID = R.RestaurantID
-                              WHERE R.Blocked = 0 LIMIT ?;''',[limit])
-        return cursor.fetchall()
-    except sqlite3.Error as e:
-        print("Error fetching data from database:", e)
-        return []
+
 
 def get_favourite_data(CustomerID):
     try:
@@ -897,33 +933,6 @@ def getItemSearch(name):
         print("Error fetching data from database:", e)
         return []
 
-def get_active_promotions(current_date,limit=100,all=False,png=False):
-    try:
-        if all and png:
-            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImagePNG, m.ItemName 
-                                FROM Promotions p 
-                                JOIN Menus m ON p.MenuID = m.MenuID
-                                JOIN Restaurants r ON m.RestaurantID = r.RestaurantID
-                                WHERE r.Blocked = 0 AND p.StartDate <= ? 
-                                AND p.EndDate >= ?;""", [current_date, current_date])
-        else:
-            cursor.execute("""SELECT p.PromotionName, m.Price, p.Discount, m.ImageJPG, m.ItemName 
-                                FROM Promotions p 
-                                JOIN Menus m ON p.MenuID = m.MenuID
-                                JOIN Restaurants r ON m.RestaurantID = r.RestaurantID
-                                WHERE r.Blocked = 0 AND p.StartDate <= ? 
-                                AND p.EndDate >= ? Limit ?;""", [current_date, current_date,limit])
-        rows = cursor.fetchall()
-        promotions_data = []
-        for row in rows:
-            promotion_name, price, discount, image ,itemName= row
-            discounted_price = price * (1 - discount / 100)
-            promotions_data.append({'PromotionName': promotion_name,'Price': price,'Discount': discount,'Image': image,'DiscountedPrice': discounted_price,'itemName':itemName})
-        return promotions_data
-    except sqlite3.Error as e:
-        print("Error fetching data from database:", e)
-        
-        return []
 
 def addToFavourites(Customerid,menu_title='',Description='',Price='',PromotionName=''):
     try:

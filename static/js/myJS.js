@@ -342,3 +342,37 @@ addToCartButtons.forEach(function(button) {
 function addToCart(itemName, description, price) {
     window.location.href = '/handle-Add-to-cart-from-home?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price);
 }
+
+
+
+// For add to cart in restaurant details 
+var addToCartButtonsresDet = document.querySelectorAll('.add-to-cart-btn-resDet');
+addToCartButtonsresDet.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        var resid = button.getAttribute('data-resid');
+        addToCartresDet(itemName, description, price,resid);
+    });
+});
+function addToCartresDet(itemName, description, price,resid) {
+    window.location.href = '/handle-Add-to-cart-from-resDet?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price) + '&resid=' +encodeURIComponent(resid);
+}
+
+//favorite-btn resDet
+var addTofavouriteresDet = document.querySelectorAll('.favorite-btn-resDet');
+addTofavouriteresDet.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+        event.preventDefault();
+        var itemName = button.getAttribute('data-item-name');
+        var description = button.getAttribute('data-description');
+        var price = button.getAttribute('data-price');
+        var resid = button.getAttribute('data-resid');
+        addfavHomeresDet(itemName, description, price,resid);
+    });
+});
+function addfavHomeresDet(itemName, description, price,resid) {
+    window.location.href = '/handle-Add-to-favourite-from-resDet?ItemName=' + encodeURIComponent(itemName) + '&Description=' + encodeURIComponent(description) + '&Price=' +encodeURIComponent(price) + '&resid=' +encodeURIComponent(resid);
+}

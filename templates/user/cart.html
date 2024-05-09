@@ -24,9 +24,11 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
   <!-- font awesome style -->
   <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
-
+  <link href='https://unpkg.com/css.gg@2.0.0/icons/css/trash.css' rel='stylesheet'>
   <!-- Custom styles for this template -->
   <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
+  <link href='https://unpkg.com/css.gg@2.0.0/icons/css/math-plus.css' rel='stylesheet'>
+  <link href='https://unpkg.com/css.gg@2.0.0/icons/css/math-minus.css' rel='stylesheet'>
   <!-- responsive style -->
   <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -204,14 +206,14 @@
                   <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
                       onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
                       <!-- minus sign-->
-                      <i class='fas'>&#xf068;</i>
+                      <i class='gg-math-minus'></i>
                   </button>
                   <input id="quantityInput" min="1" name="quantity" value="{{item['quantity']}}" type="number"
-                      class="form-control form-control-sm" />
+                      class="form-control form-control-sm" /> 
                   <button data-mdb-button-init data-mdb-ripple-init class="btn btn-link px-2"
                       onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
                       <!--plus sign-->
-                      <i class="fas fa-plus"></i>
+                      <i class="gg-math-plus"></i>
                   </button>
               </div>
                 <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
@@ -221,7 +223,7 @@
 
 
                 <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                  <a href="#!" class="text-danger" id="delete-button" data-menuid={{item['menuid']}} ><i class="fas fa-trash fa-lg"></i></a>
+                  <a href="#!" class="text-danger" id="delete-button" data-menuid={{item['menuid']}} ><i class="gg-trash"></i></a>
               </div>
               
                 
@@ -247,14 +249,20 @@
 
         <div class="card">
           <div class="card-body">
-                <h2>Total bill : </h2>
-                <p> {{total}} </p>
-                <h2>Select Type : </h2>
-                <select id="order-type" name="order-type" required>
-                  <option value="Delivery" "selected">Delivery</option>
+            <div style="white-space: nowrap;">
+              <h2 style="font-family: sans-serif; font-size: 28px; display: inline-block; white-space: nowrap;">Total bill :</h2>
+              <p style="display: inline-block; margin-left: 5px;font-size: 28px;">{{total}}</p>
+            </div>
+            <div style="white-space: nowrap;">
+              <h2 style="font-family: sans-serif; font-size: 28px; display: inline-block; white-space: nowrap;">Select Order Type :</h2>
+              <select id="order-type" name="order-type" required style="display: inline-block;">
+                  <option value="Delivery" selected>Delivery</option>
                   <option value="Pick-up">Pick-up</option>
                   <option value="Dine-in">Dine-in</option>
               </select>
+            </div>
+          
+                
           
           </div>
         </div>
@@ -263,9 +271,18 @@
         
         <div class="card">
           <div class="card-body">
-            <h1> Total Amount : {{total}}</h1>
-            <h1> Total discount : {{dicount}}</h1>
-            <h1> Net bill : {{total_with_dicount}}</h1>
+            <div style="white-space: nowrap;">
+              <h2 style="font-family: sans-serif; font-size: 28px; display: inline-block; white-space: nowrap;">Total Amount : </h2>
+              <p style="display: inline-block; margin-left: 5px;font-size: 28px;">{{total}}</p>
+            </div>
+            <div style="white-space: nowrap;">
+              <h2 style="font-family: sans-serif; font-size: 28px; display: inline-block; white-space: nowrap;">Total discount : </h2>
+              <p style="display: inline-block; margin-left: 5px;font-size: 28px;">{{dicount}}</p>
+            </div>
+            <div style="white-space: nowrap;">
+              <h2 style="font-family: sans-serif; font-size: 28px; display: inline-block; white-space: nowrap;"> Net bill : </h2>
+              <p style="display: inline-block; margin-left: 5px;font-size: 28px;">{{total_with_dicount}}</p>
+            </div>
           </div>
         </div>
         

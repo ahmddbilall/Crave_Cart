@@ -61,6 +61,18 @@
   </head>
 
   <body class="sub_page">
+
+    <div id="flash-message">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+       {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+       {% endif %}
+      {% endwith %}
+    </div>
     <!-- header section strats -->
     <div class="hero_area">
       <div class="bg-box">
@@ -193,49 +205,55 @@
     <!-- end header section -->
 
     <div class="trck-order-container">
-      {% if dataLength!=0%} {% for item in order_details %}
-
-      <div class="order-item track-order">
-        <div>
-          <img
-            src="{{ url_for('static', filename='images/' + item['ImageJPG']) }}"
-          />
+      {% if dataLength!=0%} 
+        
+        <br><br>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <h3 class="fw-normal mb-0 text-black">Your Previous Orders :</h3>
         </div>
-
-        <div>
-          <h1 style="font-family: sans-serif">{{ item['ItemName'] }}</h1>
-          <div class="order-status">
-            <p><b>Quantity:</b> {{ item['Quantity'] }}</p>
-            <p><b>Status:</b> {{ item['Status'] }}</p>
-          </div>
-          <p><b>Date:</b> {{ item['Date'] }}</p>
-          <p><b>Price:</b> {{ item['Price'] }}</p>
-          {% if item['Status'] == 'delivered' %}
-          <form action="/add-review" method="post" class="order-review">
+        {% for item in order_details %}
+          
+          <div class="order-item track-order">
             <div>
-              <input
-                type="hidden"
-                name="order_id"
-                value="{{ item['OrderID'] }}"
+              <img
+                src="{{ url_for('static', filename='images/' + item['ImageJPG']) }}"
               />
-              <label for="rating">Rating:</label>
-              <input
-                type="number"
-                name="rating"
-                min="1"
-                max="5"
-                value="{{item['Rating']}}"
-              />
-              <label for="comment">Comment:</label>
-              <textarea rows="1" name="comment">{{item['Comment']}}</textarea>
             </div>
-            <button class="btn btn-primary review-btn" type="submit">
-              Add Review
-            </button>
-          </form>
-          {% endif %}
-        </div>
-      </div>
+          
+            <div>
+              <h1 style="font-family: sans-serif">{{ item['ItemName'] }}</h1>
+              <div class="order-status">
+                <p><b>Quantity:</b> {{ item['Quantity'] }}</p>
+                <p><b>Status:</b> {{ item['Status'] }}</p>
+              </div>
+              <p><b>Date:</b> {{ item['Date'] }}</p>
+              <p><b>Price:</b> {{ item['Price'] }}</p>
+              {% if item['Status'] == 'delivered' %}
+              <form action="/add-review" method="post" class="order-review">
+                <div>
+                  <input
+                    type="hidden"
+                    name="order_id"
+                    value="{{ item['OrderID'] }}"
+                  />
+                  <label for="rating">Rating:</label>
+                  <input
+                    type="number"
+                    name="rating"
+                    min="1"
+                    max="5"
+                    value="{{item['Rating']}}"
+                  />
+                  <label for="comment">Comment:</label>
+                  <textarea rows="1" name="comment">{{item['Comment']}}</textarea>
+                </div>
+                <button class="btn btn-primary review-btn" type="submit">
+                  Add Review
+                </button>
+              </form>
+              {% endif %}
+            </div>
+          </div>
 
       {% endfor %} {%else%}
       <br /><br /><br /><br /><br /><br /><br />

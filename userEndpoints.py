@@ -114,6 +114,8 @@ def addToCartHome():
         flash(output, 'error')
     return redirect('/home')
 
+
+
 @User.route('/handle-Add-to-cart-Promotion-from-home',methods=['GET','POST'])
 def addToCartPromotionHome():
     if 'username' not in session:
@@ -284,7 +286,6 @@ def cart():
     if not DataBase.is_customer(session['username']):
         return render_template('404.html'), 404
     dataa = DataBase.get_all_cart(session['username'])
-    #here calculate total bill with and without discount 
     # cursor.execute('''SELECT m.ItemName, m.Price, p.Discount, m.ImagePNG, c.Instructions ,m.Menuid , c.quantity
     total = 0
     total_with_dicount = 0
@@ -319,6 +320,7 @@ def instructionfromCart():
     instruction = request.args.get('instruction')
     quantity = request.args.get('quantity')
     Customerid = session['username'] 
+    print(quantity,menuid,Customerid)
     output = DataBase.UpdateFromcart(menuid=menuid,Customerid=Customerid,instruction=instruction,quantity=quantity)
     if output =='item updated!':
         flash(output, 'success')
@@ -416,4 +418,42 @@ def restaurantDetails():
     restaurant = DataBase.get_a_restaurant(restaurant_id)
     return render_template('user/restaurant_detail.html',items=items,itemslength=len(items),res_data=restaurant)
 
+@User.route('/handle-Add-to-cart-from-resDet',methods=['GET','POST'])
+def addToCartresDet():
+    if 'username' not in session:
+        return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    Price = request.args.get('Price')
+    resid = request.args.get('resid')
+    Customerid = session['username'] 
+    print(menu_title,Description,Price,Customerid)
+    output = DataBase.addToCart(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
+    print(output)
+    if output =='Item added to cart successfully!':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/restaurantDetail?restaurant_id=' + str(resid))
 
+
+@User.route('/handle-Add-to-favourite-from-resDet',methods=['GET','POST'])
+def addToFavouriteresDet():
+    if 'username' not in session:
+        return redirect('/login')
+    if not DataBase.is_customer(session['username']):
+        return render_template('404.html'), 404
+    menu_title = request.args.get('ItemName')
+    Description = request.args.get('Description')
+    resid = request.args.get('resid')
+    Price = request.args.get('Price')
+    Customerid = session['username'] 
+    
+    output = DataBase.addToFavourites(menu_title=menu_title,Description=Description,Price=Price,Customerid=Customerid)
+    if output =='Item added to cart successfully!' or output == 'Item Removed from Favourites':
+        flash(output, 'success')
+    else:
+        flash(output, 'error')
+    return redirect('/restaurantDetail?restaurant_id=' + str(resid))
