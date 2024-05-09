@@ -59,10 +59,10 @@ unblockuser.forEach(function(button) {
     button.addEventListener('click', function(event) {
         event.preventDefault();
         var id = button.getAttribute('data-id');
-        unblockuser(id);
+        unblockuserr(id);
     });
 });
-function unblockuser(id) {
+function unblockuserr(id) {
     window.location.href = '/handle-unblock-user?id=' + encodeURIComponent(id);
 }
 
@@ -86,10 +86,10 @@ blockuser.forEach(function(button) {
     button.addEventListener('click', function(event) {
         event.preventDefault();
         var id = button.getAttribute('data-id');
-        blockuser(id);
+        blockuserr(id);
     });
 });
-function blockuser(id) {
+function blockuserr(id) {
     window.location.href = '/handle-block-user?id=' + encodeURIComponent(id);
 }
 
@@ -102,10 +102,10 @@ removeAdmin.forEach(function(button) {
         event.preventDefault();
         var Name = button.getAttribute('data-name');
         var email = button.getAttribute('data-email');
-        removeAdmin(Name,email);
+        removeAdminn(Name,email);
     });
 });
-function removeAdmin(name, email) {
+function removeAdminn(name, email) {
     window.location.href = '/handle-remove-admin?name=' + encodeURIComponent(name) + '&email=' + encodeURIComponent(email);
 }
 

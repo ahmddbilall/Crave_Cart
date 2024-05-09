@@ -26,6 +26,14 @@ def login_redirect():
     return redirect(url_for('login'))
 
 
+@app.route('/admin')
+def admin():
+    if 'admin' in session:
+        redirect(url_for('Admin.adminHome'))
+        
+    return redirect(url_for('Admin.adminlogin'))
+
+
 @app.route('/Aboutus')
 def aboutus():
     if 'username' not in session:

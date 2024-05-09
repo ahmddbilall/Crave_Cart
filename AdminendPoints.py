@@ -8,19 +8,13 @@ from werkzeug.utils import secure_filename
 Admin = Blueprint('Admin', __name__)
 
 
-@Admin.route('/admin')
-def admin():
-    if 'admin' in session:
-        redirect(url_for('adminHome'))
-        
-    return redirect(url_for('adminlogin'))
 
 
 
 @Admin.route('/aboutusAdmin')
 def aboutusAdmin():
     if 'admin' not in session:
-        return redirect(url_for('adminlogin'))
+        return redirect(url_for('Admin.adminlogin'))
     
     return render_template('admin/aboutusAdmin.html')
 
@@ -40,7 +34,7 @@ def adminlogin():
         status = DataBase.login_check_Admin(email=email,password=password)
         if status == 'admin':
             session['admin'] = email
-            return redirect(url_for('adminHome'))  
+            return redirect(url_for('Admin.adminHome'))  
         else:
             flash(status,'error')
     
@@ -55,12 +49,15 @@ def AddNewadmin():
         email = request.form['email']
         password = request.form['password']
         name = request.form['name']
-        status = DataBase.Add_new_admin(email=email,password=password,name=name)
-    
-        if status == '':
-            flash(name + ' add as admin','success')
+        if email == 'bilalahmad@gmail.com':
+            flash('This email cannot be used','error')
         else:
-            flash(status,'error')
+            status = DataBase.Add_new_admin(email=email,password=password,name=name)
+    
+            if status == '':
+                flash(name + ' added as admin','success')
+            else:
+                flash(status,'error')
     return render_template('admin/AddnewAdmin.html')
 
 @Admin.route('/remove-admin',methods=['GET','POST'])
@@ -78,7 +75,6 @@ def handleremoveadmin():
     print('i am here in handle remove admin')
     name = request.args.get('name')
     email = request.args.get('email')
-     
     if (session['admin'] != 'bilalahmad@gmail.com') or (name == 'Bilal Ahmad' and email == 'bilalahmad@gmail.com'):
         flash('You are not allowed to remove admin','error') 
         return redirect('remove-admin')
@@ -105,7 +101,7 @@ def handleblockuser():
     
     
     id = request.args.get('id')
-    print(id)
+    print('user id to block',id)
     
     output = DataBase.blockUser(CustomerID=id,adminMail=session['admin'])
     print(output)

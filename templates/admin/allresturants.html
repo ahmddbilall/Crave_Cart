@@ -49,13 +49,14 @@
             padding: 10px;
             background-color: #fff; /* Background color for list items */
             border-radius: 5px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+            box-shadow: rgba(0, 0, 0, 0.3) 0px 19px 38px, rgba(0, 0, 0, 0.22) 0px 15px 12px;/* Adding shadow for depth */
             transition: box-shadow 0.3s ease; /* Adding smooth transition for shadow */
             max-width: 300px; /* Set maximum width */
         }
-
+        
         .aa:hover {
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increasing shadow on hover */
+          transform: scale(1.09); 
+          transition: transform 0.3s ease;  
             border-radius: 20px;
         }
 
@@ -214,17 +215,12 @@
             <li class="aa">
                 <h5>{{ resturant[2] }}</h5>
                 <a href="#" class="block-resturant" data-id="{{ resturant[0] }}">
-
-                    
                     <i class="fa fa-lock" style="font-size:36px;color:red"></i>
-
                 </a>
 
                 <a href="#" class="unblock-resturant" data-id="{{ resturant[0] }}">
-
                     <i class="fa fa-unlock" style="font-size:36px;color: green;"></i>
                 </a>
-
             </li>
         {% endfor %}
     </ul>

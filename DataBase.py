@@ -1,6 +1,6 @@
 import sqlite3
 
-connection = sqlite3.connect('cusineCart.db',check_same_thread=False)
+connection = sqlite3.connect('cusineCart.db',check_same_thread=False, timeout=10)
 cursor = connection.cursor()
 
 def create_tables():
@@ -172,7 +172,7 @@ def Update_status(orderID,status):
 
 def get_pending_orders(RestaurantID):
     try:
-        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating,C.address
+        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, C.name, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating,C.address
                           FROM Orders O
                           INNER JOIN Menus M ON O.menuid = M.MenuID
                           LEFT JOIN Ratings R ON O.orderid = R.OrderID
@@ -187,14 +187,14 @@ def get_pending_orders(RestaurantID):
                 'ItemName': item[0],
                 'orderid': item[1],
                 'menuid': item[2],
-                'customerid': item[3],
+                'customerName': item[3],
                 'status': item[4],
                 'quantity': item[5],
                 'instructions': item[6],
                 'Type': item[7],
                 'Date': item[8],
                 'rating': item[9],
-                'address': item[9]
+                'address': item[10]
             }
             order_details_list.append(item_dict)
         return order_details_list
@@ -728,7 +728,7 @@ def get_All_admins():
 
 def removeAdmin(name,email):
     try:
-        cursor.execute('''DELETE FROM Admin where name=? and email=?;''',[email, name])
+        cursor.execute('''DELETE FROM Admin where name=? and email=?;''',[name, email])
         connection.commit()
         return ''
     except Exception as e:
