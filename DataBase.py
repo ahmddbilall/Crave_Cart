@@ -156,11 +156,13 @@ def get_pending_orders(RestaurantID):
 
 def get_Completed_orders(RestaurantID):
     try:
-        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating,O.address
-                          FROM Orders O
-                          INNER JOIN Menus M ON O.menuid = M.MenuID
-                          LEFT JOIN Ratings R ON O.orderid = R.OrderID
-                          WHERE o.status = 'complete' AND M.RestaurantID = ?; ''',[RestaurantID])
+        cursor.execute('''SELECT M.ItemName, O.orderid, O.menuid, O.customerid, O.status, O.quantity, O.instructions, O.Type, O.Date, R.Rating, C.address
+                            FROM Orders O
+                            INNER JOIN Menus M ON O.menuid = M.MenuID
+                            LEFT JOIN Ratings R ON O.orderid = R.OrderID
+                            JOIN Customers C ON C.Customerid = O.customerid
+                            WHERE O.status = 'complete' AND M.RestaurantID = ?;
+                            ; ''',[RestaurantID])
 
         order_details = cursor.fetchall()
 
@@ -566,6 +568,7 @@ def get_order_details(customer_id):
                           INNER JOIN Menus M ON O.menuid = M.MenuID
                           LEFT JOIN Ratings R ON O.orderid = R.OrderID
                           WHERE O.customerid = ?''', (customer_id,))
+        
         
         order_details = cursor.fetchall()
 
