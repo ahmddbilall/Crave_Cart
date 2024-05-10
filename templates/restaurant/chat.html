@@ -10,7 +10,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
-      <title>Update Promotion</title>
+      <title>Chat with Customers</title>
       <link rel="stylesheet" type="text/css" href="Restraunt_Profile.css">
      
   
@@ -32,133 +32,32 @@
   
   
     <style>
-      
-     
-      body {
-        font-family: Arial, sans-serif;
-        color: #ddd;
-        margin: 0; /* Remove default margin */
-        padding: 0; /* Remove default padding */
-      }
-      .containerAdd {
-        max-width: 500px;
-        margin: 50px auto;
-        padding: 20px;
-        background-color: #333;
-        border-radius: 5px;
-        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
-        position: relative;
-      }
-           
-    
-      form {
-        display: flex;
-        flex-direction: column;
-      }
-      
-      label {
-        font-weight: bold;
-      }
-      
-      input[type="number"],
-      input[type="text"],
-      textarea,
-      category,
-      button {
-        margin-bottom: 10px;
-        padding: 8px;
-        border-radius: 3px;
-        border: 1px solid #ccc;
-        transition: all 0.3s ease; /* Smooth transition for all properties */
-      }
-
-      .getitem {
-        padding: 10px 20px;
-        background-color: #4CAF50;
-        border: none;
-        color: white;
-        cursor: pointer;
-        font-size: 16px;
-        transition: transform 0.3s ease;
-        border-radius: 20px; /* Rounded corners */
-        margin-left:10px;
-      }
-
-      .getitem:hover {
-          transform: scale(1.1);
-      }
-      
-      input[type="number"]:hover,
-      input[type="text"]:hover,
-      textarea:hover,
-      category:hover,
-      button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-      }
-      
-      input[type="number"]:not(:focus):invalid,
-      input[type="text"]:not(:focus):invalid,
-      textarea:not(:focus):invalid,
-
-      input[name="restaurant_id"]:not(:focus):invalid,
-      input[name="price"]:not(:focus):invalid {
-        animation: shake 0.5s;
-      }
-      
-      @keyframes shake {
-        0% { transform: translateX(0); }
-        20% { transform: translateX(-5px); }
-        40% { transform: translateX(5px); }
-        60% { transform: translateX(-5px); }
-        80% { transform: translateX(5px); }
-        100% { transform: translateX(0); }
-      }
-      
-      button {
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        cursor: pointer;
-      }
-      
-      button:hover {
-        background-color: #0056b3;
-      }
-      
-      button:active {
-        transform: translateY(1px);
-      }
-      
-      .hidden {
-        display: none;
-      }
-      
-      #message {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: rgba(255, 255, 255, 0.9);
-        padding: 20px;
-        border-radius: 10px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-      
-      /* Center container if it's not already centered */
-      @media (max-width: 520px) {
-        .container {
-          margin: 50px auto 0 auto;
+        @media only screen and (max-width: 500px) {
+            #chat {
+                width: 90%;
+            }
         }
-      }
-      
     
+        #chat {
+            width: 500px;
+        }
     
-    
-    
-    
+        #chat input {
+            width: 99%;
+        }
+        .rounded {
+            height: 470px;
+            background-color: #cccccc;
+            color: #00000a;
+            overflow-y: scroll;
+        }
+        .box {
+            list-style: none;
+            padding: 5px 0px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+       
     </style>
   
 </head>
@@ -244,8 +143,8 @@
               </div>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="chatRes">Chat </a>
-            </li>
+                <a class="nav-link" href="chatRes">Chat </a>
+              </li>
           </ul>
           
 
@@ -273,54 +172,53 @@
     </div>
     <!-- end header section -->
 
-    {% if idRecieved!=True%}
-      <br><br><br><br><br><br><br><br><br><br><br>
-        <div class="containerRemove">
-          <form id="DeleteproductForm" action="/updatePromotion" method="POST"  enctype="multipart/form-data">
 
-              <input type="text" id="productId" name="productid" placeholder="Enter Promotion ID to update" >
-              <button id="getitem" type="submit" >Get Promotion</button>
+
+
+    <br>
+    
+
+    <section class="food_section layout_padding">
+        <div class="container">
+          <div class="heading_container heading_center">
+            <h2>
+              Customers messages
+            </h2>
+          </div>
+          <br><br>
+    
+          <div class="filters-content">
+            <div class="row grid">
+            
+            
+                <!--CHAT-->
+                <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+                     integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+                     crossorigin="anonymous">
+                </script>
+
+
+                <div id="chat" style="display:block;">
+                
+                    <ul id="chat-messages" class="rounded">
+                    </ul>
+                    <input type="text" id="message" placeholder="Type a Message" class="box">
+                </div>
+            
+              
+              
+              
+            </div>
+          </div>
+    
+    
+    
+    
+    
         </div>
-      <br><br><br><br><br><br><br><br>
-    {%else%}
-    
-    <div class="containerAdd">
-        <h1>Update Promotions</h1>
-        <form id="promoForm" action="/updatePromotionHandler" method="POST"  enctype="multipart/form-data">
-            <div class="input-group">
-                <label for="promoName">Promotion Name:</label>
-                <input type="text" id="promoName" name="promoName" value="{{data[1]}}" required>
-            </div>
-            <input type="hidden" id="promotionid" name="promotionid" value="{{data[0]}}">
+    </section>
 
-            <div class="input-group">
-                <label for="menuId">Menu ID:</label>
-                <input type="text" id="menuId" name="menuId" value="{{data[2]}}" required>
-            </div>
-            <div class="input-group">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="4" required>{{data[3]}}</textarea>
-            </div>
-            <div class="input-group">
-                <label for="discount">Discount (%):</label>
-                <input type="number" id="discount" name="discount" min="1" max="99" value="{{data[4]}}" required>
-            </div>
-            <div class="input-group">
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="startDate" name="startDate" min="" value="{{data[5]}}" required>
-            </div>
-            <div class="input-group">
-                <label for="endDate">End Date:</label>
-                <input type="date" id="endDate" value="{{data[6]}}" name="endDate" min="" required>
-            </div>
-            <button type="submit">Update Promotion</button>
-        </form>
-    </div>
-     
-    {%endif%}
-
-
-    
+    <br>
     <br>
 
 
@@ -386,9 +284,34 @@
   <!-- custom js -->
   <script src="{{url_for('static',filename='js/custom.js')}}"></script>
 
-    <script >
+    <script>
+        const socket = io({ autoConnect: false });
 
+        socket.connect();
 
+        const username = "{{ username }}";
+        socket.on("connect", function () {
+            socket.emit("user_join", username);
+        })
+
+        document.getElementById("message").addEventListener("keyup", function (event) {
+            if (event.key == "Enter") {
+                let message = document.getElementById("message").value;
+                socket.emit("new_message", message);
+                document.getElementById("message").value = "";
+            }
+        })
+
+        socket.on("chat", function (data) {
+            let ul = document.getElementById("chat-messages");
+            let li = document.createElement("li");
+            li.appendChild(document.createTextNode(data["username"] + ": " + data["message"]));
+            ul.appendChild(li);
+            ul.scrolltop = ul.scrollHeight;
+        })
+        window.addEventListener('beforeunload', function () {
+            socket.disconnect();
+        });
 
     </script>
 

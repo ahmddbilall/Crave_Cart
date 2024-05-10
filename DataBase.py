@@ -109,6 +109,34 @@ def create_tables():
                     );''')
 
 
+#restaurant Home
+def get_comments_and_ratings(restaurant_id):
+    try:
+        cursor.execute('''SELECT M.ItemName, R.Rating, R.Comment
+                          FROM Menus M
+                          LEFT JOIN Ratings R ON M.MenuID = R.MenuID
+                          WHERE M.RestaurantID = ?;''', [restaurant_id])
+        results = cursor.fetchall()
+
+        comments_and_ratings = {}
+        for row in results:
+            item_name, rating, comment = row
+            if item_name not in comments_and_ratings:
+                comments_and_ratings[item_name] = []
+            comments_and_ratings[item_name].append({'Rating': rating, 'Comment': comment})
+
+        return comments_and_ratings
+    except sqlite3.Error as e:
+        print("Error fetching data from database:", e)
+        return {}
+
+# Example usage
+restaurant_id = 1
+comments_and_ratings = get_comments_and_ratings(restaurant_id)
+print(comments_and_ratings)
+
+
+
 #restaurant home
 def get_item_vs_sale(restaurantID):
     try:

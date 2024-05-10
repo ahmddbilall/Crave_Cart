@@ -466,3 +466,18 @@ def addToFavouriteresDet():
     else:
         flash(output, 'error')
     return redirect('/restaurantDetail?restaurant_id=' + str(resid))
+
+
+@User.route('/chat',methods=['GET','POST'])
+def chat():
+    if 'username' not in session:
+        return redirect('/login')
+    if not DataBase.is_customer(session['username'],session['email'],session['password']):
+        return render_template('404.html'), 404
+    
+    restaurant_id = request.args.get('restaurant_id')
+    
+    data = DataBase.get_a_restaurant(restaurant_id)
+    
+    return render_template('user/chat.html', res_data=data,username='bilalAhmad')
+    

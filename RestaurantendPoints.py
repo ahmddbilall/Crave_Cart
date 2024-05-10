@@ -4,8 +4,19 @@ import helpingFunctions
 from datetime import date,datetime
 import os
 from werkzeug.utils import secure_filename
+from socket_events import socketio
 
 Restaurant = Blueprint('Restaurant', __name__)
+
+
+@Restaurant.route('/chatRes')
+def chatRes():
+    if 'username' not in session:
+        return redirect('/login')
+    if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
+        return render_template('404.html'), 404
+    
+    return render_template('restaurant/chat.html',username='bilal')
 
 
 
@@ -23,8 +34,13 @@ def restaurantHome():
         Graphans = True
     else:
         Graphans = False
+    reviews = DataBase.get_comments_and_ratings(session['username'])
+    if len(reviews):
+        reviewAns = True
+    else:
+        reviewAns = False
         
-    return render_template('restaurant/Home.html',resturantName=resturantName,sales_data=data,graph=Graphans)
+    return render_template('restaurant/Home.html',resturantName=resturantName,sales_data=data,graph=Graphans,reviewAns=reviewAns,review=reviews)
 
 @Restaurant.route('/resturantprofile',methods=['GET','POST'])
 def resturantprofile():

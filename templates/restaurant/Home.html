@@ -30,6 +30,86 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+  <style>
+    
+        #reviews-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: calc(100vh - 60px); /* Adjust container height */
+          overflow: hidden; /* Hide overflow content */
+        }
+
+        .review-card {
+          width: 300px; /* Set fixed width for the cards */
+          height: 200px; /* Set fixed height for the cards */
+          padding: 20px;
+          margin: 10px;
+          background-color: #333;
+          border-radius: 10px;
+          transition: transform 0.3s ease; /* Add transition */
+          overflow: hidden; /* Hide overflow content */
+        }
+
+        .review-card:hover {
+          transform: scale(1.05); /* Increase scale on hover */
+        }
+
+        .review-content {
+          text-align: center;
+        }
+
+        .customer-name {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+
+        .stars {
+          font-size: 24px;
+        }
+
+        .stars {
+          color: gold;
+        }
+
+        .comment {
+          font-size: 16px;
+          margin-top: 10px;
+        }
+
+        #reviews-title {
+          font-size: 36px;
+          text-align: center;
+          margin-top: 20px; /* Adjust margin */
+          transition: transform 0.3s ease;
+        }
+
+        #reviews-title:hover {
+          transform: scale(1.1);
+        }
+
+        .reviews-wrapper {
+          display: flex;
+          animation: slide-infinite 10s infinite linear;
+          animation-play-state: running; /* Initially set to running */
+        }
+
+        .reviews-wrapper:hover {
+          animation-play-state: paused; /* Pause animation on hover */
+        }
+
+        @keyframes slide-infinite {
+          0% {
+            transform: translateX(100%); /* Start from right */
+          }
+          100% {
+            transform: translateX(-100%); /* Move to left */
+          }
+        }
+
+  
+  </style>
+
 </head>
 
 <body class="sub_page">
@@ -112,6 +192,10 @@
                   <a class="dropdown-item" href="ordersHistory">Orders History</a>
                 </div>
               </li>
+
+              <li class="nav-item">
+                <a class="nav-link" href="chatRes">Chat </a>
+              </li>
             
             </ul>
             
@@ -163,7 +247,15 @@
       <div style="width:800px;height=400px;margin-left:100px;">
         <canvas id="salesChart" width="200" height="100"></canvas>
       </div>
-      <br><br><br><br><br><br><br><br><br>
+      <br><br><br><br>
+      
+      {%if reviewAns == True%}
+      <h1 id="reviews-title">Reviews</h1>
+      <div id="reviews-container" class="reviews-wrapper"></div>
+      
+      {%endif%}
+      <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+
 
     {%else%}
         <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
@@ -212,6 +304,52 @@
 </footer>
   <!-- footer section -->
 
+  <div id="reviews-container"></div>
+
+  <script>
+    // Function to create a review card element
+    function createReviewCard(review) {
+      const card = document.createElement('div');
+      card.classList.add('review-card');
+      card.innerHTML = `
+        <div class="review-content">
+          <h2 class="customer-name">{{ review.name }}</h2>
+          <div class="stars">
+            {{ review.star_icons }}
+          </div>
+          <p class="comment">{{ review.comment }}</p>
+        </div>
+      `;
+      return card;
+    }
+  
+    // Function to display reviews on the screen
+    function displayReviews() {
+      const container = document.getElementById('reviews-container');
+  
+      // Iterate over the reviews data passed from Flask
+      {% for review in reviewsData %}
+        const reviewData = {{ review | tojson }};
+        const card = createReviewCard(reviewData);
+        container.appendChild(card);
+      {% endfor %}
+  
+      // Add hover animation to the title
+      const title = document.getElementById('reviews-title');
+      title.addEventListener('mouseover', () => {
+        title.style.transform = 'scale(1.1)';
+      });
+  
+      title.addEventListener('mouseout', () => {
+        title.style.transform = 'scale(1)';
+      });
+    }
+  
+    // Call the displayReviews function to load reviews on page load
+    displayReviews();
+  </script>
+
+
   <script>
     var salesData = JSON.parse('{{ sales_data | tojson | safe }}');
 
@@ -241,7 +379,7 @@
             }
         }
     });
-</script>
+  </script>
 
 
   <!-- jQery -->

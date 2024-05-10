@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from AdminendPoints import Admin
 from RestaurantendPoints import Restaurant
 from userEndpoints import User
-
+from socket_events import socketio
 secret_key = secrets.token_hex(16)
 app = Flask(__name__)
 app.secret_key = secret_key
@@ -17,12 +17,12 @@ app.config['UPLOAD_FOLDER'] = 'static/images'
 app.register_blueprint(Admin)
 app.register_blueprint(Restaurant)
 app.register_blueprint(User)
-  
+socketio.init_app(app)
   
 @app.route('/')
 def login_redirect():
     if 'username' in session:
-        return redirect(url_for('home'))
+        return redirect(url_for('User.home'))
     return redirect(url_for('login'))
 
 
@@ -127,5 +127,6 @@ def login():
 if __name__ == '__main__':
     DataBase.create_tables()
     DataBase.insert_default_admin()
-    app.run(debug=True, port=5001)
+    socketio.run(app,host="0.0.0.0",port=5001,debug=True,use_reloader=True)
+    #app.run(debug=True, port=5001)
     
