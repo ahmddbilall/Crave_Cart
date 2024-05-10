@@ -34,13 +34,9 @@ def restaurantHome():
         Graphans = True
     else:
         Graphans = False
-    reviews = DataBase.get_comments_and_ratings(session['username'])
-    if len(reviews):
-        reviewAns = True
-    else:
-        reviewAns = False
+   
         
-    return render_template('restaurant/Home.html',resturantName=resturantName,sales_data=data,graph=Graphans,reviewAns=reviewAns,review=reviews)
+    return render_template('restaurant/Home.html',resturantName=resturantName,sales_data=data,graph=Graphans)
 
 @Restaurant.route('/resturantprofile',methods=['GET','POST'])
 def resturantprofile():
