@@ -507,7 +507,7 @@ def UpdateResturant(name,email,website,description,password,phone,hours,address,
 def insert_user(email, password, name=None, address=None, phone=None, registration_date=None,image='default.jpg'):
     try:
         cursor.execute('''INSERT INTO Customers (Email, Password, Name, Address, Phone, RegistrationDate,Image)
-                          VALUES (?, ?, ?, ?, ?, ?);''',
+                          VALUES (?, ?, ?, ?, ?, ?,?);''',
                        [email, password, name, address, phone, registration_date,image])
         connection.commit()
         cursor.execute('''Select CustomerID From Customers where email=? AND password=?;''',[email, password])

@@ -288,3 +288,25 @@ insert into Promotions values (3,'Discount 3',3,'discription3 discription3',25,'
 insert into Promotions values (4,'Discount 4',2,'discription4 discription4',50,'2024-04-12','2024-05-17');
 insert into Promotions values (5,'Discount 5',20,'discription5 discription5',20,'2024-04-12','2024-05-17');
 insert into Promotions values (6,'Discount 6',22,'discription6 discription6',13,'2024-04-12','2024-05-17');
+
+
+-- Orders
+insert into orders values (1,1,1,'pending',6,'no instructions','Delivery','2024-04-10');
+insert into orders values (2,11,1,'pending',5,'no instructions','Delivery','2024-03-10');
+insert into orders values (3,11,1,'pending',6,'no instructions','Delivery','2024-02-10');
+insert into orders values (4,12,1,'pending',8,'no instructions','Delivery','2024-01-10');
+insert into orders values (5,71,1,'pending',12,'no instructions','Delivery','2023-12-10');
+insert into orders values (6,61,1,'pending',14,'no instructions','Delivery','2023-11-10');
+insert into orders values (7,51,1,'pending',1,'no instructions','Delivery','2023-10-10');
+insert into orders values (8,41,1,'pending',4,'no instructions','Delivery','2023-09-10');
+insert into orders values (9,31,1,'pending',6,'no instructions','Delivery','2023-08-10');
+insert into orders values (10,21,1,'pending',7,'no instructions','Delivery','2023-07-10');
+insert into orders values (11,101,1,'pending',3,'no instructions','Delivery','2023-06-10');
+
+
+-- Ratings
+insert into ratings values (1,1,1,1,4,'very good Product');
+insert into ratings values (2,2,1,11,5,'very good Product');
+insert into ratings values (3,3,1,11,3,'very good Product');
+insert into ratings values (4,4,1,12,2,'very good Product');
+insert into ratings values (5,5,1,71,1,'very good Product');
