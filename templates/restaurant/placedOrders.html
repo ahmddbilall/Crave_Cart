@@ -28,6 +28,53 @@
   <!-- responsive style -->
   <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+  <style>
+    .order-card-item {
+      display: flex;
+      align-items: baseline;
+    }
+    .order-card-item pre {
+      font-weight: bold;
+    }
+    .order-card-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .order-status-form {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .update-button {
+        padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            border-radius: 20px; /* Rounded corners */
+            margin-left:10px;
+      }
+    
+      .update-button:hover {
+          transform: scale(1.1);
+          background-color: #4CAF50;
+      }
+      .order-container {
+        margin: 40px 20%;
+      }
+      /* .card {
+        transition: transform 0.3s ease;
+      }
+      .card:hover {
+        cursor: pointer;
+        transform: scale(1.05);
+      } */
+  </style>
+
 </head>
 
 <body class="sub_page">
@@ -140,29 +187,34 @@
   </div>
 
 
-  
+  <div class="order-container">
   {%if length != 0%}
     {% for i in data%}
-    <div class="card" style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
+    <div class="card " style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
        <div class="card-body">
-          <h3 style="display: inline;">ItemName</h3> <p> {{ i['ItemName'] }} </p>
-          <h3 style="display: inline;">orderid</h3> <p> {{ i['orderid'] }} </p>
-          <h3 style="display: inline;">menuid</h36> <p> {{ i['menuid'] }} </p>
-          <h3 style="display: inline;">customer Name</h3> <p> {{ i['customerName'] }} </p>
-          <h3 style="display: inline;">Customer Address</h3> <p> {{ i['address'] }} </p>
-          <h3 style="display: inline;">quantity</h3> <p> {{ i['quantity'] }} </p>
-          <h3 style="display: inline;">instructions</h3> <p> {{ i['instructions'] }} </p>
-          <h3 style="display: inline;">Type</h3> <p> {{ i['Type'] }} </p>
+        <h3> {{ i['ItemName'] }} </h3>
+        <div class="order-card-container">
+          <div class="order-card-item">  <pre >orderid : </pre> <p> {{ i['orderid'] }} </p></div>
+        <div class="order-card-item">  <pre >menuid : </pre> <p> {{ i['menuid'] }} </p></div>
+        <div class="order-card-item">  <pre >customer Name : </pre> <p> {{ i['customerName'] }} </p></div>
+        <div class="order-card-item">  <pre >Customer Address : </pre> <p> {{ i['address'] }} </p></div>
+        <div class="order-card-item">  <pre >quantity : </pre> <p> {{ i['quantity'] }} </p></div>
+        <div class="order-card-item">  <pre >instructions : </pre> <p> {{ i['instructions'] }} </p></div>
+        <div class="order-card-item">  <pre >Type : </pre> <p> {{ i['Type'] }} </p></div>
+        </div>
           
-          <form action="/placedOrders" method="POST">
-            <h1 style="display: inline;">Order status</h1>
+          <form class="order-status-form" action="/placedOrders" method="POST">
+            <h3 >Order status</h3>
             <select id="status" name="status" >
               <option value="pending" {{ "selected" if i['status'] == "pending" else "" }}>pending</option>
               <option value="in progress" {{ "selected" if i['status'] == "in progress" else "" }}>in progress</option>
               <option value="complete">Completed</option>
             </select>
             <input type="hidden" name="orderid" value={{ i['orderid'] }}>
-            <button type="submit">Update Status</button>
+            {%if i['status'] != "complete"%}
+            <button class="update-button" type="submit">Update Status</button>
+           
+            {%endif%}
           </form>
         </div>
     </div>
@@ -173,7 +225,7 @@
     <h1 style="margin-left:600px;font-size:80px;">No order in queue</h1>
     <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
     {%endif%}
-
+  </div>
   <!-- footer section -->
   <footer class="footer_section">
     <div class="container">

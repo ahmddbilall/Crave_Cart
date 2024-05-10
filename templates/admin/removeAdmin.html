@@ -49,22 +49,27 @@
                 margin: 0 auto;   /* Center the card horizontally within the list */
                 margin-bottom: 20px; /* Add space between each card */
                 padding-bottom: 50px;
-                padding: 10px;
+                padding: 20px 10px;
                 background-color: #fff; /* Background color for list items */
                 border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Adding shadow for depth */
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Adding shadow for depth */
                 transition: box-shadow 0.3s ease; /* Adding smooth transition for shadow */
                 max-width: 300px; /* Set maximum width */
-
-            
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                transition: all 0.3s ease;
             }
 
+            h5 {
+              margin: 0;
+            }
             
             
             .aa:hover {
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Increasing shadow on hover */
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Increasing shadow on hover */
                 border-radius: 20px;
-                
+                transform: translateY(-3px); 
             }
             
             
@@ -73,8 +78,7 @@
                 font-size: 24px; /* Adjust the size as needed */
                 color: red; /* Adjust the color as needed */
                 vertical-align: middle; /* Align the icon vertically within the container */
-                margin-top: -80px;
-                margin-left: 200px;
+
             }
             
             .remove-admin {

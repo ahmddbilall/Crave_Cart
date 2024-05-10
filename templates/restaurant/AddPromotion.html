@@ -1,333 +1,403 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-      <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!-- Mobile Metas -->
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
     <!-- Site Metas -->
     <meta name="keywords" content="" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <link rel="shortcut icon" href="{{url_for('static',filename='images/favicon.png')}}" type="">
-      <title>Add Promotion</title>
-      <link rel="stylesheet" type="text/css" href="Restraunt_Profile.css">
-     
-  
-      <!-- bootstrap core css -->
-    <link rel="stylesheet" type="text/css" href="{{url_for('static',filename='css/bootstrap.css')}}" />
-  
+    <link
+      rel="shortcut icon"
+      href="{{url_for('static',filename='images/favicon.png')}}"
+      type=""
+    />
+    <title>Add Promotion</title>
+    <link rel="stylesheet" type="text/css" href="Restraunt_Profile.css" />
+
+    <!-- bootstrap core css -->
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{url_for('static',filename='css/bootstrap.css')}}"
+    />
+
     <!--owl slider stylesheet -->
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css"
+    />
     <!-- nice select  -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css" integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ==" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/css/nice-select.min.css"
+      integrity="sha512-CruCP+TD3yXzlvvijET8wV5WxxEh5H8P4cmz0RFbKK6FlZ2sYl3AEsKlLPHbniXKSrDdFewhbmBK5skbdsASbQ=="
+      crossorigin="anonymous"
+    />
     <!-- font awesome style -->
-    <link href="{{url_for('static',filename='css/font-awesome.min.css')}}" rel="stylesheet" />
-  
+    <link
+      href="{{url_for('static',filename='css/font-awesome.min.css')}}"
+      rel="stylesheet"
+    />
+
     <!-- Custom styles for this template -->
-    <link href="{{url_for('static',filename='css/style.css')}}" rel="stylesheet" />
+    <link
+      href="{{url_for('static',filename='css/style.css')}}"
+      rel="stylesheet"
+    />
     <!-- responsive style -->
-    <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
+    <link
+      href="{{url_for('static',filename='css/responsive.css')}}"
+      rel="stylesheet"
+    />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  
-  
+
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-        }
-        
-        .containerAdd {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-            font-size: 2em;
-            color: #333;
-        }
-        
-        .input-group {
-            margin-bottom: 20px;
-            text-align: center; /* Center-align input fields */
-        }
-        
-        .input-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #666;
-        }
-        
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .containerAdd {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 2em;
+        color: #333;
+      }
+
+      .input-group {
+        margin-bottom: 20px;
+        text-align: center; /* Center-align input fields */
+        display: grid;
+        grid-template-columns: 3fr 8fr;
+      }
+
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: #666;
+      }
+
+      .input-group input,
+      .input-group textarea {
+        display: block;
+        margin: 0 auto; /* Center-align input fields */
+        width: calc(50% - 10px);
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s ease, transform 0.3s ease;
+      }
+
+      .input-group input:focus,
+      .input-group textarea:focus {
+        border-color: #007bff;
+        outline: none;
+        transform: scale(1.05);
+      }
+
+      button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.3s ease;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+        transform: translateY(-3px);
+      }
+
+      @media screen and (max-width: 768px) {
         .input-group input,
         .input-group textarea {
-            display: block;
-            margin: 0 auto; /* Center-align input fields */
-            width: calc(50% - 10px);
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: border-color 0.3s ease, transform 0.3s ease;
+          width: 100%;
         }
-        
-        .input-group input:focus,
-        .input-group textarea:focus {
-            border-color: #007bff;
-            outline: none;
-            transform: scale(1.05);
-        }
-        
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        
-        button:hover {
-            background-color: #0056b3;
-            transform: translateY(-3px);
-        }
-        
-        @media screen and (max-width: 768px) {
-            .input-group input,
-            .input-group textarea {
-                width: 100%;
-            }
-        }
-        
-       
+      }
+      .input-group input,
+      .input-group textarea {
+        width: 100%;
+      }
     </style>
-  
-</head>
-  
-<body class="sub_page">
-  
+  </head>
+
+  <body class="sub_page">
     <div id="flash-message">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-       {% if messages %}
-        {% for category, message in messages %}
-          <div class="alert alert-{{ category }}">
-            {{ message }}
-          </div>
-        {% endfor %}
-       {% endif %}
-      {% endwith %}
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
     </div>
 
-
-
-    
     <div class="hero_area">
       <div class="bg-box">
-      <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="">
+        <img src="{{url_for('static',filename='images/hero-bg.jpg')}}" alt="" />
       </div>
       <!-- header section strats -->
       <header class="header_section">
-      <div class="container">
-      <nav class="navbar navbar-expand-lg custom_nav-container ">
-        <a class="navbar-brand" href="restaurantHome">
-          <span>
-            Crave Cart
-          </span>
-        </a>
+        <div class="container">
+          <nav class="navbar navbar-expand-lg custom_nav-container">
+            <a class="navbar-brand" href="restaurantHome">
+              <span> Crave Cart </span>
+            </a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class=""> </span>
-        </button>
+            <button
+              class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target="#navbarSupportedContent"
+              aria-controls="navbarSupportedContent"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span class=""> </span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav  mx-auto ">
-            <li class="nav-item">
-              <a class="nav-link" href="restaurantHome">Home </a>
-            </li>
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Items
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href="addItem">Add item</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="deleteItem">Remove Item</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="updateItem">Update Item</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="allItems">See All Items</a>
-              </div>
-            </li>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mx-auto">
+                <li class="nav-item">
+                  <a class="nav-link" href="restaurantHome">Home </a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Items
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="addItem">Add item</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="deleteItem">Remove Item</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="updateItem">Update Item</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="allItems">See All Items</a>
+                  </div>
+                </li>
 
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Promotions
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="addPromotion">Add Promotion</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="removePromotion">Remove Promotion</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="updatePromotion">Update Promotion</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="allPromotions">See All Promotions</a>
-              </div>
-            </li>
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Promotions
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="addPromotion"
+                      >Add Promotion</a
+                    >
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="removePromotion"
+                      >Remove Promotion</a
+                    >
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="updatePromotion"
+                      >Update Promotion</a
+                    >
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="allPromotions"
+                      >See All Promotions</a
+                    >
+                  </div>
+                </li>
 
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Orders
-              </a>
-              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="placedOrders">Placed Orders</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="ordersHistory">Orders History</a>
-              </div>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="chatRes">Chat </a>
-            </li>
-          </ul>
-          
+                <li class="nav-item dropdown">
+                  <a
+                    class="nav-link dropdown-toggle"
+                    href="#"
+                    id="navbarDropdown"
+                    role="button"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    Orders
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="placedOrders"
+                      >Placed Orders</a
+                    >
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="ordersHistory"
+                      >Orders History</a
+                    >
+                  </div>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="chatRes">Chat </a>
+                </li>
+              </ul>
 
+              <div class="user_option">
+                <a href="resturantprofile" class="user_link">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                </a>
 
-          <div class="user_option">
-              <a href="resturantprofile" class="user_link">
-                <i class="fa fa-user" aria-hidden="true"></i>
-              </a>
-              
                 <form class="form-inline">
-               <button class="btn my-2 my-sm-0 nav_search-btn" type="button" onclick="logout()">
-                   <i class="fa fa-sign-out" aria-hidden="true"></i> 
-               </button>
-             </form>
-           </div>
-
-
-
-
-
+                  <button
+                    class="btn my-2 my-sm-0 nav_search-btn"
+                    type="button"
+                    onclick="logout()"
+                  >
+                    <i class="fa fa-sign-out" aria-hidden="true"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </nav>
         </div>
-      </nav>
-      </div>
       </header>
     </div>
     <!-- end header section -->
 
-
-
-
-    <br>
+    <br />
     <div class="containerAdd">
-        <h1>Add Promotions</h1>
-        <form id="promoForm" action="/addPromotion" method="POST">
-            <div class="input-group">
-                <label for="promoName">Promotion Name:</label>
-                <input type="text" id="promoName" name="promoName" required>
-            </div>
-            <div class="input-group">
-                <label for="menuId">Menu ID:</label>
-                <input type="text" id="menuId" name="menuId" required>
-            </div>
-            <div class="input-group">
-                <label for="description">Description:</label>
-                <textarea id="description" name="description" rows="4" required></textarea>
-            </div>
-            <div class="input-group">
-                <label for="discount">Discount (%):</label>
-                <input type="number" id="discount" name="discount" min="1" max="99" required>
-            </div>
-            <div class="input-group">
-                <label for="startDate">Start Date:</label>
-                <input type="date" id="startDate" name="startDate" min="" required>
-            </div>
-            <div class="input-group">
-                <label for="endDate">End Date:</label>
-                <input type="date" id="endDate" name="endDate" min="" required>
-            </div>
-            <button type="submit">Add Promotion</button>
-        </form>
+      <h1>Add Promotions</h1>
+      <form id="promoForm" action="/addPromotion" method="POST">
+        <div class="input-group">
+          <label for="promoName">Promotion Name:</label>
+          <input type="text" id="promoName" name="promoName" required />
+        </div>
+        <div class="input-group">
+          <label for="menuId">Menu ID:</label>
+          <input type="text" id="menuId" name="menuId" required />
+        </div>
+        <div class="input-group">
+          <label for="description">Description:</label>
+          <textarea
+            id="description"
+            name="description"
+            rows="4"
+            required
+          ></textarea>
+        </div>
+        <div class="input-group">
+          <label for="discount">Discount (%):</label>
+          <input
+            type="number"
+            id="discount"
+            name="discount"
+            min="1"
+            max="99"
+            required
+          />
+        </div>
+        <div class="input-group">
+          <label for="startDate">Start Date:</label>
+          <input type="date" id="startDate" name="startDate" min="" required />
+        </div>
+        <div class="input-group">
+          <label for="endDate">End Date:</label>
+          <input type="date" id="endDate" name="endDate" min="" required />
+        </div>
+        <button type="submit">Add Promotion</button>
+      </form>
     </div>
 
-    <br>
-    <br>
-
-
-
-
+    <br />
+    <br />
 
     <!-- footer section -->
-  <footer class="footer_section">
-    <div class="container">
+    <footer class="footer_section">
+      <div class="container">
         <div class="row">
-            <div class="col-md-4 footer-col">
-                <div class="footer_detail">
-                    <a href="#" class="footer-logo">Crave Cart</a>
-                    <p>Crave Cart is a convenient and innovative platform that brings together a diverse range of restaurants and culinary delights, allowing users to explore and order their favorite dishes with ease.</p>
-                    <div class="footer_social">
-                        <a ><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                        <a ><i class="fa fa-twitter" aria-hidden="true"></i></a>
-                        <a ><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-                        <a ><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                        <a ><i class="fa fa-pinterest" aria-hidden="true"></i></a>
-                    </div>
-                </div>
+          <div class="col-md-4 footer-col">
+            <div class="footer_detail">
+              <a href="#" class="footer-logo">Crave Cart</a>
+              <p>
+                Crave Cart is a convenient and innovative platform that brings
+                together a diverse range of restaurants and culinary delights,
+                allowing users to explore and order their favorite dishes with
+                ease.
+              </p>
+              <div class="footer_social">
+                <a><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                <a><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                <a><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                <a><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                <a><i class="fa fa-pinterest" aria-hidden="true"></i></a>
+              </div>
             </div>
-            <div class="col-md-4 footer-col">
-                <h4></h4>
-            </div>
-            <div class="col-md-4 footer-col">
-                <h4>Contact Us</h4>
-                <p>If you have any questions or need assistance, feel free to contact us:</p>
-                
-                <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
-                <p> <i class="fa fa-phone"></i> +1234567890</p>
-                <p> <i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
-            </div>
+          </div>
+          <div class="col-md-4 footer-col">
+            <h4></h4>
+          </div>
+          <div class="col-md-4 footer-col">
+            <h4>Contact Us</h4>
+            <p>
+              If you have any questions or need assistance, feel free to contact
+              us:
+            </p>
+
+            <p><i class="fa fa-envelope"></i> support@cravecart.com</p>
+            <p><i class="fa fa-phone"></i> +1234567890</p>
+            <p><i class="fa fa-map-marker"></i> 123 Street, City, Country</p>
+          </div>
         </div>
         <div class="footer-info">
-            <p>&copy; <span id="displayYear"></span> All Rights Reserved By <a href="https://www.nu.edu.pk/">FAST NUCES</a><br>
-                <span id="displayYear"></span><a href="aboutusResturant"> About Developers </a>
-            </p>
+          <p>
+            &copy; <span id="displayYear"></span> All Rights Reserved By
+            <a href="https://www.nu.edu.pk/">FAST NUCES</a><br />
+            <span id="displayYear"></span
+            ><a href="aboutusResturant"> About Developers </a>
+          </p>
         </div>
-    </div>
-</footer>
-  <!-- footer section -->
+      </div>
+    </footer>
+    <!-- footer section -->
 
+    <!-- jQery -->
+    <script src="{{url_for('static',filename='js/jquery-3.4.1.min.js')}}"></script>
+    <!-- popper js -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+      integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+      crossorigin="anonymous"
+    ></script>
+    <!-- bootstrap js -->
+    <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
+    <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
+    <!-- owl slider -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js"></script>
+    <!-- isotope js -->
+    <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
+    <!-- nice select -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
+    <!-- custom js -->
+    <script src="{{url_for('static',filename='js/custom.js')}}"></script>
 
-
-
-  <!-- jQery -->
-  <script src="{{url_for('static',filename='js/jquery-3.4.1.min.js')}}"></script>
-  <!-- popper js -->
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-  </script>
-  <!-- bootstrap js -->
-  <script src="{{url_for('static',filename='js/bootstrap.js')}}"></script>
-  <script src="{{url_for('static',filename='js/myJS.js')}}"></script>
-  <!-- owl slider -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
-  </script>
-  <!-- isotope js -->
-  <script src="https://unpkg.com/isotope-layout@3.0.4/dist/isotope.pkgd.min.js"></script>
-  <!-- nice select -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js"></script>
-  <!-- custom js -->
-  <script src="{{url_for('static',filename='js/custom.js')}}"></script>
-
-    <script >
-
-
-
-    </script>
-
-</body>
+    <script></script>
+  </body>
 </html>

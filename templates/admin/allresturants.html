@@ -62,8 +62,6 @@
 
         .block-resturant, .unblock-resturant {
             display: inline-block;
-            margin-top: 10px;
-            margin-left: 10px;
         }
 
         svg {
@@ -105,25 +103,28 @@
             font-size: 36px; /* Adjust the size as needed */
             color: red; /* Adjust the color as needed */
             vertical-align: middle;
-            margin-top: -130px;
-            margin-left: 200px;
+   
         }
         .fa-lock:hover {
             transform: scale(1.2); /* Scale up the icon on hover */
             color: #800000;
         }
         
-        .fa-unlock {
-            right: -40px; /* Adjust this value as needed */
-            transform: translateY(-160%);
-            transition: transform 0.3s ease,color 0.3s ease;
-            color: green;
-        }
+ 
         
-
-        .fa-unlock:hover {
-            transform: scale(1.2) translateY(-130%); /* Keep the translateY value the same on hover */
-            color: lightgreen;
+        h5 {
+          margin: 0;
+          padding: 0;
+        }
+      .restaurant-box {
+            display: flex;
+            
+            align-items: center;
+            padding: 10px;
+            gap: 20px;
+        }
+        .restaurant-box h5 {
+          margin-right: auto;
         }
 
     </style>
@@ -212,14 +213,14 @@
 
     <ul>
         {% for resturant in resturants %}
-            <li class="aa">
-                <h5>{{ resturant[2] }}</h5>
-                <a href="#" class="block-resturant" data-id="{{ resturant[0] }}">
-                    <i class="fa fa-lock" style="font-size:36px;color:red"></i>
+        <li class="aa restaurant-box"  style="background-color: {{ 'red' if resturant[10]  else 'green' }}">
+                <h5 style="color:white">{{ resturant[2] }}</h5>
+                <a href="#" class="block-resturant" data-id="{{ resturant[0] }}" >
+                    <i class="fa fa-lock" style="font-size:36px;color: pink"></i>
                 </a>
 
                 <a href="#" class="unblock-resturant" data-id="{{ resturant[0] }}">
-                    <i class="fa fa-unlock" style="font-size:36px;color: green;"></i>
+                    <i class="fa fa-unlock" style="font-size:36px;color: lightgreen"></i>
                 </a>
             </li>
         {% endfor %}

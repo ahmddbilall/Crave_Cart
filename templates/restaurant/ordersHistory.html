@@ -28,6 +28,44 @@
   <!-- responsive style -->
   <link href="{{url_for('static',filename='css/responsive.css')}}" rel="stylesheet" />
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <style>
+    .order-card-item {
+      display: flex;
+      align-items: baseline;
+    }
+    .order-card-item pre {
+      font-weight: bold;
+    }
+    .order-card-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .order-status-form {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .update-button {
+        padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            border-radius: 20px; /* Rounded corners */
+            margin-left:10px;
+      }
+    
+      .update-button:hover {
+          transform: scale(1.1);
+          background-color: #4CAF50;
+      }
+      .order-container {
+        margin: 40px 20%;
+      }
+  </style>
 </head>
 
 <body class="sub_page">
@@ -139,21 +177,24 @@
     <!-- end header section -->
   </div>
 
+  <div class="order-container">
   {%if length != 0%}
     {% for i in data%}
     <div class="card" style="box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;">
        <div class="card-body">
-        <h3 style="display: inline;">ItemName</h3> <p> {{ i['ItemName'] }} </p>
-        <h3 style="display: inline;">Orderid</h3> <p> {{ i['orderid'] }} </p>
-        <h3 style="display: inline;">Menuid</h3> <p> {{ i['menuid'] }} </p>
-        <h3 style="display: inline;">Customer Name</h3> <p> {{ i['customerName'] }} </p>
-        <h3 style="display: inline;">Customer Address</h3> <p> {{ i['address'] }} </p>
-        <h3 style="display: inline;">Order status</h3> <p> {{ i['status'] }} </p>
-        <h3 style="display: inline;">Quantity</h3> <p> {{ i['quantity'] }} </p>
-        <h3 style="display: inline;">Instructions</h3> <p> {{ i['instructions'] }} </p>
-        <h3 style="display: inline;">Type</h3> <p> {{ i['Type'] }} </p>
-        <h3 style="display: inline;">Date</h3> <p> {{ i['Date'] }} </p>
-        <h3 style="display: inline;">Rating</h3> <p> {{ i['rating'] }} </p>
+         <h3> {{ i['ItemName'] }} </h3>
+        <div class="order-card-container">
+          <div class="order-card-item"> <pre>Orderid : </pre> <p> {{ i['orderid'] }} </p></div>
+        <div class="order-card-item"> <pre>Menuid : </pre> <p> {{ i['menuid'] }} </p></div>
+        <div class="order-card-item"> <pre>Customer Name : </pre> <p> {{ i['customerName'] }} </p></div>
+        <div class="order-card-item"> <pre>Customer Address : </pre> <p> {{ i['address'] }} </p></div>
+        <div class="order-card-item"> <pre>Order status : </pre> <p> {{ i['status'] }} </p></div>
+        <div class="order-card-item"> <pre>Quantity : </pre> <p> {{ i['quantity'] }} </p></div>
+        <div class="order-card-item"> <pre>Instructions : </pre> <p> {{ i['instructions'] }} </p></div>
+        <div class="order-card-item"> <pre>Type : </pre> <p> {{ i['Type'] }} </p></div>
+        <div class="order-card-item"> <pre>Date : </pre> <p> {{ i['Date'] }} </p></div>
+        <div class="order-card-item"> <pre>Rating : </pre> <p> {{ i['rating'] }} </p></div>
+        </div>
         
        </div>
     </div>
@@ -164,6 +205,7 @@
     <h1 style="margin-left:600px;font-size:80px;">Nothing Orderd Yet</h1>
     <br><br><br><br><br><br><br><br><br><br><br><br>
     {%endif%}
+  </div>
 
   <!-- footer section -->
   <footer class="footer_section">

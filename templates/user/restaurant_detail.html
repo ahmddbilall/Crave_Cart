@@ -58,6 +58,25 @@
       rel="stylesheet"
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <style>
+      .chat-button {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+      }
+      .chat-button button {
+        background-color: #ffbe33;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 5px;
+        /* color: rgba(255, 255, 255, 0.94); */
+        box-shadow: 10px 20px 30px rgba(0, 0, 0, 0.3);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+    </style>
   </head>
 
   <body class="sub_page">
@@ -199,10 +218,12 @@
       <!-- end header section -->
     </div>
 
-    <a href="/chat?restaurant_id={{ res_data[0] }}">
-      <button>Chat with Restaurant</button>
+    <a class="chat-button" href="/chat?restaurant_id={{ res_data[0] }}">
+      <button>
+        Chat with Restaurant
+        <i class="fa fa-commenting" aria-hidden="true"></i>
+      </button>
     </a>
-  
 
     <section class="h-100">
       <div class="container h-100 py-5">
@@ -220,9 +241,9 @@
             <br /><br /><br /><br /><br /><br />
 
             {% if itemslength != 0%}
-                <h1>Items of {{res_data[2]}}:</h1>
+            <h1>Items of {{res_data[2]}}:</h1>
 
-                <section class="food_section layout_padding-bottom">
+            <section class="food_section layout_padding-bottom">
               <div class="filters-content">
                 <div class="row grid">
                   {% for item in items %}
@@ -242,8 +263,6 @@
                           <div class="options">
                             <h6>${{ item[4] }}</h6>
 
-
-                            
                             <div class="button-container" id="menu-buttons">
                               <a
                                 href="#"
@@ -302,11 +321,11 @@
                   {% endfor %}
                 </div>
               </div>
-                </section>
+            </section>
             {%else%}
-                <br /><br /><br /><br /><br />
-                <h1>{{res_data[2]}} have no item</h1>
-                <br /><br /><br /><br /><br />
+            <br /><br /><br /><br /><br />
+            <h1>{{res_data[2]}} have no item</h1>
+            <br /><br /><br /><br /><br />
             {%endif%}
           </div>
         </div>

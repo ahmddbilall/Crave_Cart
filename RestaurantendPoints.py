@@ -15,8 +15,8 @@ def chatRes():
         return redirect('/login')
     if not DataBase.is_Restaurant(session['username'],session['email'],session['password']):
         return render_template('404.html'), 404
-    
-    return render_template('restaurant/chat.html',username='bilal')
+    res = DataBase.get_resturant_info(id = session['username'])
+    return render_template('restaurant/chat.html',username=res[2])
 
 
 

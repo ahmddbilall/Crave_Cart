@@ -478,6 +478,6 @@ def chat():
     restaurant_id = request.args.get('restaurant_id')
     
     data = DataBase.get_a_restaurant(restaurant_id)
-    
-    return render_template('user/chat.html', res_data=data,username='bilalAhmad')
+    cus = DataBase.get_customer_info(session['username'])
+    return render_template('user/chat.html', res_data=data,username=cus[2])
     

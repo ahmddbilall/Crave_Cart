@@ -57,9 +57,11 @@
         }
            
     
-      form {
+      .update-form {
         display: flex;
         flex-direction: column;
+        /* justify-content: center; */
+        /* gap: 10px; */
       }
       
       label {
@@ -174,6 +176,7 @@
     
       .update-button:hover {
           transform: scale(1.1);
+          background-color: #4CAF50;
       }
     
       .update-input {
@@ -301,21 +304,21 @@
     <!-- end header section -->
 
     {% if idRecieved!=True%}
-      <br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br>
         <div class="containerRemove">
           <form id="DeleteproductForm" action="/updateItem" method="POST"  enctype="multipart/form-data">
 
               <input class="update-input" type="text" id="productId" name="productid" placeholder="Enter Product ID to update" >
               <button id="getitem" type="submit" class="update-button" >Get Item</button>
         </div>
-      <br><br><br><br><br><br><br><br>
+      <br><br><br><br><br>
     {%else%}
     
 
       <div class="containerAdd">
       <h1>Update Product</h1>
 
-      <form id="productForm" action="/updateItemHandler" method="POST"  enctype="multipart/form-data">
+      <form class="update-form" id="productForm" action="/updateItemHandler" method="POST"  enctype="multipart/form-data">
         <label for="itemName">Item Name:</label>
         <input type="text" id="itemName" name="itemName" value="{{data[2]}}"><br><br>
         <input type="hidden" name="menuid" value={{data[0]}}>
@@ -340,11 +343,11 @@
         <br><br>
         
         <div>
-          <label>Current Image (PNG):</label>
+          <label style="display: block;">Current Image (PNG):</label>
           <img src="{{ url_for('static', filename='images/' + data[6]) }}" alt="Current Image (PNG)" style="max-width: 300px; max-height: 500px;">
         </div>
         <div>
-          <label>Current Image (JPG):</label>
+          <label style="display: block;">Current Image (JPG):</label>
           <img src="{{ url_for('static', filename='images/' + data[7]) }}" alt="Current Image (JPG)" style="max-width: 300px; max-height: 500px;">
         </div>
         

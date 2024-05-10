@@ -49,9 +49,14 @@
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
         position: relative;
       }
-           
+      .containerRemove {
+            max-width: 800px;
+            margin: 100px auto;
+            padding: 20px;
+            text-align: center;
+        }
     
-      form {
+      .update-form {
         display: flex;
         flex-direction: column;
       }
@@ -154,7 +159,34 @@
         }
       }
       
+      .update-button {
+        padding: 10px 20px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            border-radius: 20px; /* Rounded corners */
+            margin-left:10px;
+      }
     
+      .update-button:hover {
+          transform: scale(1.1);
+          background-color: #4CAF50;
+      }
+    
+      .update-input {
+        width: 200px;
+            padding: 10px;
+            font-size: 16px;
+            transition: transform 0.3s ease;
+            border-radius: 20px; 
+      }
+      .update-input:hover {
+        transform: scale(1.01);
+        
+      }
     
     
     
@@ -274,19 +306,19 @@
     <!-- end header section -->
 
     {% if idRecieved!=True%}
-      <br><br><br><br><br><br><br><br><br><br><br>
+      <br><br><br><br><br><br>
         <div class="containerRemove">
           <form id="DeleteproductForm" action="/updatePromotion" method="POST"  enctype="multipart/form-data">
 
               <input type="text" id="productId" name="productid" placeholder="Enter Promotion ID to update" >
-              <button id="getitem" type="submit" >Get Promotion</button>
+              <button class="update-button" id="getitem" type="submit" >Get Promotion</button>
         </div>
-      <br><br><br><br><br><br><br><br>
+      <br><br><br><br><br>
     {%else%}
     
     <div class="containerAdd">
         <h1>Update Promotions</h1>
-        <form id="promoForm" action="/updatePromotionHandler" method="POST"  enctype="multipart/form-data">
+        <form class="update-form" id="promoForm" action="/updatePromotionHandler" method="POST"  enctype="multipart/form-data">
             <div class="input-group">
                 <label for="promoName">Promotion Name:</label>
                 <input type="text" id="promoName" name="promoName" value="{{data[1]}}" required>
