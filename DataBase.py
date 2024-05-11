@@ -506,6 +506,9 @@ def UpdateResturant(name,email,website,description,password,phone,hours,address,
 
 def insert_user(email, password, name=None, address=None, phone=None, registration_date=None,image='default.jpg'):
     try:
+        cursor.execute('''Select * from Customers where email=?;''',[email])
+        if cursor.fetchone():
+            return 'email exists'
         cursor.execute('''INSERT INTO Customers (Email, Password, Name, Address, Phone, RegistrationDate,Image)
                           VALUES (?, ?, ?, ?, ?, ?,?);''',
                        [email, password, name, address, phone, registration_date,image])
@@ -518,6 +521,9 @@ def insert_user(email, password, name=None, address=None, phone=None, registrati
 
 def insert_restaurants(email, password, name=None, address=None, phone=None, registration_date=None):
     try:
+        cursor.execute('''Select * from Restaurants where email=?;''',[email])
+        if cursor.fetchone():
+            return 'email exists'
         cursor.execute('''INSERT INTO Restaurants (Email, Password, Name, Address, Phone, RegistrationDate)
                       VALUES (?, ?, ?, ?, ?, ?);''',
                    [email, password, name, address, phone, registration_date])
@@ -633,6 +639,9 @@ def get_all_cart(Customerid):
 
 def Add_new_admin(email,password,name):
     try:
+        cursor.execute('''Select * Admin where Email = ?;''',[email])
+        if cursor.fetchall():
+            return 'email Already exists'
         cursor.execute('''INSERT INTO Admin (Email, Password, Name)
                           VALUES (?, ?, ?);''',
                        [email, password, name])
@@ -716,19 +725,16 @@ def get_discount_for_item_on_date(menuid, order_date):
 
 def blockResturant(resturantID,adminMail):
     try:
-        print(resturantID,adminMail)
         cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", [adminMail])
         admin_row = cursor.fetchone()
         if admin_row:
             adminID = admin_row[0]
-            print(adminID)
             cursor.execute("UPDATE Restaurants SET Blocked = 1, BlockedByAdmin = ? WHERE RestaurantID = ?", [adminID, resturantID])
             connection.commit()
             return True  
         else:
             return False 
     except Exception as e:
-        print(e)
         return False
 
 def blockUser(CustomerID,adminMail):
@@ -745,7 +751,6 @@ def blockUser(CustomerID,adminMail):
         else:
             return False 
     except Exception as e:
-        print(e)
         return False
     
 def unblockUser(CustomerID):
