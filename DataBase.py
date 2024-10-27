@@ -130,10 +130,7 @@ def get_comments_and_ratings(restaurant_id):
         print("Error fetching data from database:", e)
         return {}
 
-# Example usage
-restaurant_id = 1
-comments_and_ratings = get_comments_and_ratings(restaurant_id)
-print(comments_and_ratings)
+
 
 
 
@@ -739,7 +736,6 @@ def blockResturant(resturantID,adminMail):
 
 def blockUser(CustomerID,adminMail):
     try:
-        print(adminMail,CustomerID)
         cursor.execute("SELECT AdminID FROM Admin WHERE Email = ?", [adminMail])
         admin_row = cursor.fetchone()
         if admin_row:
@@ -862,16 +858,12 @@ def EmailCheck(id):
 
 def addToCart(menu_title,Description,Price,Customerid,instructions=' '):
     try:
-        print('in cart')
-        print(menu_title,Description,Price)
         
         cursor.execute('''SELECT MenuID FROM Menus where ItemName=? and Description=? and Price=?;''',[menu_title,Description,Price])
         id = cursor.fetchone()[0]
-        print(id)
         cursor.execute('''SELECT * FROM Cart where Menuid=? and CustomerId =?;''',[id,Customerid])
         if cursor.fetchall():
             return 'Item already added'
-        print('i am here')
         cursor.execute('''INSERT INTO Cart (Menuid, CustomerId, Instructions)VALUES (?, ?, ?);''',[id,Customerid,instructions])
         connection.commit()
         return 'Item added to cart successfully!'
@@ -882,7 +874,6 @@ def addToCart(menu_title,Description,Price,Customerid,instructions=' '):
 
 def addToCartPromotion(PromotionTitle,discounts,Customerid,instructions=''):
     try:
-        print('in function add to cart promotion')
         if discounts != 0:
             cursor.execute('''SELECT MenuID FROM Promotions where PromotionName=? and Discount=?;''',[PromotionTitle,discounts])
         else:
